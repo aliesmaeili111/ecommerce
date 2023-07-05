@@ -1,0 +1,34 @@
+{% extends 'accounts/base_register.html' %}
+{% load widget_tweaks %}
+{% block title %}
+   Register
+{% endblock %}
+{% block register %}
+
+    <div class="col-md-6">
+        <div class="heading mb-1">
+            <h2 class="title">Register</h2>
+        </div>
+        
+        <!-- Register form -->
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            <!-- <label for="register-email">
+                User name 
+                <span class="required">*</span>
+            </label>
+            {{form.user_name|add_class:'form-input form-wide'}} -->
+
+          {{form.as_p}}
+
+            <div class="form-footer mb-2">
+                <button type="submit" class="btn btn-dark btn-md w-100 mr-0">
+                    Register
+                </button>
+            </div>
+        </form>
+        <!-- end Register form -->
+
+    </div>
+
+{% endblock %}

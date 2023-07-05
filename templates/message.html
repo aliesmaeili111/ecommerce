@@ -1,0 +1,11 @@
+{% if messages %}
+    {% for msg in messages %}
+        <div class="top-notice bg-light text-dark" id="mydiv">
+            <div class="container text-center">
+                
+                <h5 {% if msg.tags %} class="text-{{msg.tags}}" {% endif %}>{{msg}}</h5>
+                <button title="Close (Esc)" type="button" class="mfp-close text-dark">×</button>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

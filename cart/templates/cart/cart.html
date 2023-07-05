@@ -1,0 +1,151 @@
+﻿{% extends '_base.html' %}
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block body %}
+		<main class="main">
+			<div class="container">
+				<ul class="checkout-progress-bar d-flex justify-content-center flex-wrap">
+					<li class="active">
+						<a href="{% url 'cart:cart_detail' %}">Shopping Cart</a>
+					</li>
+					<li>
+						<a href="checkout.html">Checkout</a>
+					</li>
+					<li class="disabled">
+						<a href="{% url 'cart:cart_detail' %}">cart</a>
+					</li>
+				</ul>
+
+				{% if request.user.is_authenticated %}
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="cart-table-container table-responsive">
+							{% if cart %}
+						
+								<table class="table table-cart">
+									<thead>
+										<tr>
+											<th class="price-col">#</th>
+											<th class="thumbnail-col">Image</th>
+											<th class="product-col">Product</th>
+											<th class="price-col">Price</th>
+											<th class="price-col">Size</th>
+											<th class="price-col">Color</th>
+											<th class="price-col">Quantity</th>
+											<th class="text-right">Total price</th>
+											<th class="text-right">Remove</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for c in cart %}
+											<tr class="product-row">
+												<td>{{forloop.counter}}</td>
+												<td>
+													<figure class="product-image-container">
+														<a href="{% url 'home:detail' c.product.slug c.product.id %}" class="product-image">
+															<img src="{{c.product.image.url}}" style="max-width:80px;min-width:80px;max-height: 80px;min-height:80px;" alt="{{c.product.name}}">
+														</a>
+													</figure>
+												</td>
+												<td class="product-col">
+													<h5 class="product-title">
+														<a href="{% url 'home:detail' c.product.slug c.product.id %}">{{c.product.name}}</a>
+													</h5>
+												</td>
+												<td>
+													{% if c.product.status != "None" %}
+														{{c.variant.total_price}}
+													{% else %}
+														{{c.product.total_price}}
+													{% endif %}
+												</td>
+												<td>{{c.variant.size_variant.name}}</td>
+												<td>{{c.variant.color_variant.name}}</td>
+												<td>
+													{{c.quantity}}
+												</td>
+												<td class="text-right">
+													<span class="subtotal-price">
+														{% if c.product.status != "None" %}
+															{% widthratio c.variant.total_price 1 c.quantity %}
+														{% else %}
+															{% widthratio c.product.total_price 1 c.quantity %}
+														{% endif %}
+													</span>
+												</td>
+												<td>
+													<a href="{% url 'cart:remove_cart' c.id %}" class="btn btn-sm text-align-center icon-cancel"
+													style="display:flex;align-items:center;justify-content:center;font-size:15px"
+													title="Remove Product"></a>
+												</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							{% else %}
+								<h3>No product in your cart</h3>
+							{% endif %}
+						</div><!-- End .cart-table-container -->
+					</div><!-- End .col-lg-8 -->
+
+					<div class="col-lg-4">
+						<div class="cart-summary">
+							<h3>CART TOTALS</h3>
+
+							<table class="table table-totals">
+								<tbody>
+								
+									<tr>
+										<td colspan="2" class="text-left">
+											<h4>Shipping</h4>
+											<form action="{% url 'order:order_create' %}" method="post">{% csrf_token %}
+
+												<div class="form-group form-group-sm">
+													<input required type="email"name="email" value='{{user.email}}' class="form-control form-control-sm" placeholder="Emali">
+												</div><!-- End .form-group -->
+
+												<div class="form-group form-group-sm">
+													<input required type="text"name="f_name" value='{{user.first_name}}' class="form-control form-control-sm" placeholder="First name">
+												</div><!-- End .form-group -->
+
+												<div class="form-group form-group-sm">
+													<input required type="text"name="l_name" value='{{user.last_name}}' class="form-control form-control-sm" placeholder="Last name">
+												</div><!-- End .form-group -->
+
+												<div class="form-group form-group-sm">
+													<input required type="text" name="address" {% if user.profile.address %} value='{{user.profile.address}}' {% else %} value=""
+														 {% endif %} class="form-control form-control-sm" placeholder="Address">
+												</div><!-- End .form-group -->
+
+												<button type="submit" class="btn btn-shop btn-update-total">
+													Order
+												</button>
+											</form>
+										</td>
+									</tr>
+								</tbody>
+
+								<tfoot>
+									<tr>
+										<td>Total</td>
+										<td>{{total}}</td>
+									</tr>
+								</tfoot>
+							</table>
+
+							<div class="checkout-methods">
+								<a href="cart.html" class="btn btn-block btn-dark">Proceed to Checkout
+									<i class="fa fa-arrow-right"></i></a>
+							</div>
+						</div><!-- End .cart-summary -->
+					</div><!-- End .col-lg-4 -->
+				</div><!-- End .row -->
+				{% endif %}
+				
+			</div><!-- End .container -->
+
+			<div class="mb-6"></div><!-- margin -->
+		</main><!-- End .main -->
+{% endblock %}

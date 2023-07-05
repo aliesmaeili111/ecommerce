@@ -1,0 +1,40 @@
+﻿{% extends '_base.html' %}
+
+{% block body %}
+		<main class="main">
+			<div class="page-header">
+				<div class="container d-flex flex-column align-items-center">
+					<nav aria-label="breadcrumb" class="breadcrumb-nav">
+						<div class="container">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="demo4.html">Home</a></li>
+								<li class="breadcrumb-item"><a href="category.html">Shop</a></li>
+								<li class="breadcrumb-item active" aria-current="page">
+									My Account
+								</li>
+							</ol>
+						</div>
+					</nav>
+
+					<h1>My Account</h1>
+				</div>
+			</div>
+
+			<div class="container login-container">
+				<div class="row">
+					<div class="col-lg-10 mx-auto">
+						<div class="row">
+							{% block login %}
+							
+							{% endblock %}
+
+							{% block register %}
+							
+							{% endblock %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</main><!-- End .main -->
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends '_base.html' %}
+{% block title %}
+    Order
+{% endblock %}
+
+{% block body %}
+    Order {{ order.get_price}}
+    <div class="float-left">
+        <div class="cart-discount">
+            <form action="{% url 'order:coupon' order.id %}" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="code" class="form-control form-control-sm" placeholder="Coupon Code" required="">
+                    <div class="input-group-append">
+                        <button class="btn btn-sm" type="submit">Apply
+                            Coupon</button>
+                    </div>
+                </div><!-- End .input-group -->
+            </form>
+        </div>
+    </div><!-- End .float-left -->
+{% endblock %}
