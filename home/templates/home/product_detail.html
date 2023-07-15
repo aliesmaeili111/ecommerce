@@ -1,7 +1,12 @@
 ﻿{% extends '_base.html' %}
 {% load static %}
+{% load jformat %}
 {% block title %}
     Product
+{% endblock %}
+
+{% block src_chart %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 
@@ -33,11 +38,11 @@
                     <div class="col-lg-5 col-md-6 product-single-gallery">
                         <div class="product-slider-container">
                             <div class="label-group">
-                                <div class="product-label label-hot">HOT</div>
-
+                                {% if product.discount %}
                                 <div class="product-label label-sale">
-                                    -16%
+                                    %{{product.discount}}
                                 </div>
+                                {% endif %}
                             </div>
 
                             <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
@@ -54,11 +59,13 @@
 
                         <!-- start gallery image product -->
                         <div class="prod-thumbnail owl-dots">
-                            {% for img in images %}
-                                <div class="owl-dot">
-                                    <img src="{{img.image.url}}" width="110" height="110" alt="{{img.name}}">
-                                </div>
-                            {% endfor %}
+                            {% if images %}
+                                {% for img in images %}
+                                    <div class="owl-dot">
+                                        <img src="{{img.image.url}}" width="110" height="110" alt="{{img.name}}">
+                                    </div>
+                                {% endfor %} 
+                            {% endif %}
                         </div>
                         <!-- end gallery image product -->
                     </div>
@@ -66,39 +73,6 @@
 
                     <div class="col-lg-7 col-md-6 product-single-details">
                         <h1 class="product-title">{{product.name}}</h1>
-
-
-                        <!-- start pagination detail product -->
-                            <div class="product-nav">
-                                <div class="product-prev">
-                                    <a href="#">
-                                        <span class="product-link"></span>
-
-                                        <span class="product-popup">
-                                            <span class="box-content">
-                                                <img alt="product" width="150" height="150" src="assets/images/products/product-3.jpg" style="padding-top: 0px;">
-
-                                                <span>Circled Ultimate 3D Speaker</span>
-                                        </span>
-                                        </span>
-                                    </a>
-                                </div>
-
-                                <div class="product-next">
-                                    <a href="#">
-                                        <span class="product-link"></span>
-
-                                        <span class="product-popup">
-                                            <span class="box-content">
-                                                <img alt="product" width="150" height="150" src="assets/images/products/product-4.jpg" style="padding-top: 0px;">
-
-                                                <span>Blue Backpack for the Young</span>
-                                        </span>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        <!-- end pagination detail product -->
 
                         <div class="ratings-container comment-rating">
        
@@ -122,16 +96,7 @@
 
                         <hr class="short-divider">
 
-                        <div class="price-box">
-                            {% if variants %} 
-                                <span class="old-price">{{variants.unit_price}}</span>
-                                <span class="new-price">{{variants.total_price}}</span>
-                            {% elif product.discount %}
-                                <span class="old-price">{{product.unit_price}}</span>
-                                <span class="new-price">{{product.total_price}}</span>
-                            {% endif %}
-                        </div>
-                        <!-- End .price-box -->
+                       {% include 'home/price_box.html' %}
 
                         <div class="product-desc">
                             <p>
@@ -243,16 +208,27 @@
                                             <a href="{% url 'home:product_unlike' product.id %}" class="social-icon social-like fa fa-thumbs-down {% if is_like %} d-none {% endif %}" title="like "></a>
                                   
                                     {% endif %}
-                              
-
-
                                  
                                 </div>
                                 <!-- End .social-icons -->
-
-                                <a href="wishlist.html" class="btn-icon-wish add-wishlist" title="Add to Wishlist"><i class="icon-wishlist-2"></i><span>Add to
-                                        Wishlist</span></a>
-                            </div>
+                                {% if request.user.is_authenticated %}
+                                    {% if is_favourite %}
+                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="text-danger " title="Remove to Wishlist">
+                                            <i class="icon-wishlist-2"></i>
+                                            <span>
+                                                Remove to Wishlist
+                                            </span>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="text-primary" title="Add to Wishlist">
+                                            <i class="icon-wishlist-2"></i>
+                                            <span>
+                                                Add to Wishlist
+                                            </span>
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                                </div>
                         <!-- end share social btn -->
 
                         <!-- End .product single-share -->
@@ -474,6 +450,97 @@
                 <!-- End .products-slider -->
             </div>
             <!-- End .products-section -->
+
+            {% block script %}
+                {% if product.status != 'None' %}
+                    <script>
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                    
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: [{% for i in change %}{% if variants.id == i.variant_id %}'{{ i.update|jformat:"%A %d %b %Y" }}'{% endif %},{% endfor %}],
+                                datasets: [{
+                                label: '# نمودار تغییر قیمت',
+                                data: [{% for i in change %}{% if variants.id == i.variant_id %}{{ i.unit_price}}{% endif %},{% endfor %}],
+                                backgroundColor: [
+                                    'rgba(255,99,132,0.4)',
+                                    'rgba(54,162,235,0.4)',
+                                    'rgba(255,206,86,0.4)',
+                                    'rgba(75,102,102,0.4)',
+                                    'rgba(153,105,255,0.4)',
+                                    'rgba(255,159,54,0.4)',
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,0.8)',
+                                    'rgba(54,162,235,0.8)',
+                                    'rgba(255,206,86,0.8)',
+                                    'rgba(75,102,102,0.8)',
+                                    'rgba(153,105,255,0.8)',
+                                    'rgba(255,159,54,0.8)',
+                                ],
+                                borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+                            });
+                    </script>
+                {% else %}
+                    <script>
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                    
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: [{% for i in update %} '{{ i.update|jformat:"%A %d %b %Y" }}', {% endfor %}],
+                                datasets: [{
+                                label: '# نمودار تغییر قیمت',
+                                data: [{% for i in update %} {{ i.unit_price }}, {% endfor %}],
+                                backgroundColor: [
+                                    'rgba(255,99,132,0.4)',
+                                    'rgba(54,162,235,0.4)',
+                                    'rgba(255,206,86,0.4)',
+                                    'rgba(75,102,102,0.4)',
+                                    'rgba(153,105,255,0.4)',
+                                    'rgba(255,159,54,0.4)',
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,0.8)',
+                                    'rgba(54,162,235,0.8)',
+                                    'rgba(255,206,86,0.8)',
+                                    'rgba(75,102,102,0.8)',
+                                    'rgba(153,105,255,0.8)',
+                                    'rgba(255,159,54,0.8)',
+                                ],
+                                borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+                            });
+                    </script>
+                {% endif %}
+            {% endblock %}
+            <hr class="mt-0 m-b-5">
+
+            <div class="product-widgets-container row pb-2">
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
         <!-- End .container -->
     </main>

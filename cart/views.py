@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from order.models import OrderForm
 
+
 # Cart detail views
 @login_required(login_url='accounts:login')
 def cart_detail(request):
@@ -74,3 +75,36 @@ def remove_cart(request,id):
     Cart.objects.filter(id=id).delete()
     return redirect(url)
     
+    
+def add_single(request,id):
+    url = request.META.get("HTTP_REFERER")
+    cart = Cart.objects.get(id=id)
+    if cart.product.status == 'None':
+        product = Product.objects.get(id=cart.product.id)
+        if product.amount > cart.quantity:
+            cart.quantity += 1
+            messages.success(request,'Add one other product','success')
+        else:
+            messages.error(request,'You cant Add one other product','danger')
+    else:
+        variant = Variants.objects.get(id=cart.variant.id)
+        if variant.amount > cart.quantity:
+            cart.quantity += 1
+            messages.success(request,'Add one other product','success')
+        else:
+            messages.error(request,'You cant Add one other product','danger')
+    cart.save()
+    return redirect(url)
+
+
+
+def remove_single(request,id):
+    url = request.META.get("HTTP_REFERER")  
+    cart = Cart.objects.get(id=id)
+    if cart.quantity < 2 :
+        cart.delete()
+    else:
+        cart.quantity -= 1
+        cart.save()
+    return redirect(url)
+

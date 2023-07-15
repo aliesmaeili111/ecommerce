@@ -45,7 +45,12 @@ INSTALLED_APPS = [
     'colorfield',
     'ckeditor',
     'ckeditor_uploader',
+    'django_jalali',
     'taggit',
+    'sorl.thumbnail',
+    'extensions',
+    'django_filters',
+    'chartjs',
 ]
 
 MIDDLEWARE = [
@@ -112,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa-ir'
 
 TIME_ZONE = 'Asia/Tehran'
 
@@ -153,3 +158,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.request",
 )
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'aliesmaeili1177@gmail.com'
+EMAIL_HOST_PASSWORD = 'uqfetivtxklqmric'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

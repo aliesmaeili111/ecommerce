@@ -16,14 +16,17 @@
                     <a href="#">Links</a>
                     <div class="header-menu">
                         <ul>
-                            <li><a href="{% url 'accounts:profile' %}">My Account</a></li>
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="wishlist.html">My Wishlist</a></li>
-                            <li><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
+                               
                             {% if request.user.is_authenticated %}
+                                <li><a href="{% url 'accounts:profile' %}">My Account</a></li>
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="{% url 'accounts:favourite' %}">My Wishlist</a></li>
+                                <li><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
                                 <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
                             {% else %}
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="blog.html">Blog</a></li>
                                 <li><a href="{% url 'accounts:login' %}">Log In</a></li>
                                 <li><a href="{% url 'accounts:register' %}">Register</a></li>
                             {% endif %}
@@ -94,7 +97,7 @@
 
                 <a href="{% url 'accounts:login' %}" class="header-icon" title="login"><i class="icon-user-2"></i></a>
 
-                <a href="wishlist.html" class="header-icon" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                <a href="{% url 'accounts:favourite' %}" class="header-icon" title="wishlist"><i class="icon-wishlist-2"></i></a>
 
                 <!-- Start .dropdown -->
                     {% cart %}
@@ -111,35 +114,64 @@
         <div class="container">
             <nav class="main-nav w-100">
                 <ul class="menu">
-                    <li class="active">
+                   
+                    <li
+                    {% if request.resolver_match.url_name == 'home' %}
+                        class="active" 
+                    {% endif %}>
                         <a href="{% url 'home:home' %}">Home</a>
                     </li>
-                    <li>
-                        <a href="">Categories</a>
+
+                    <li
+                    {% if request.resolver_match.url_name == 'category' %}
+                        class="active" 
+                    {% endif %}>
+                        <a href="#">Categories</a>
                             {% category_navbar %}
                         <!-- End .megamenu -->
                     </li>
-                    <li>
+                    <li 
+                    {% if request.resolver_match.url_name == 'products' %}
+                        class="active" 
+                    {% endif %}>
                         <a href="{% url 'home:products' %}">Products</a>
-          
                     </li>
                     <li>
                         <a href="#">Pages</a>
                         <ul>
-                            <li><a href="wishlist.html">Wishlist</a></li>
-                            <li><a href="{% url 'cart:cart_detail' %}">Shopping Cart</a></li>
-                            <li><a href="checkout.html">Checkout</a></li>
-                            <li><a href="{% url 'accounts:profile' %}">Dashboard</a></li>
+                            <li><a href="{% url 'accounts:favourite' %}">Wishlist</a></li>
+                            {% if request.user.is_authenticated %}
+                                <li 
+                                {% if request.resolver_match.url_name == 'cart_detail' %}
+                                    class="active" 
+                                {% endif %}>
+                                <a href="{% url 'cart:cart_detail' %}">Shopping Cart</a></li>
+                                <li 
+                                {% if request.resolver_match.url_name == 'profile' %}
+                                    class="active" 
+                                {% endif %}>
+                        
+                                    <a href="{% url 'accounts:profile' %}">Dashboard</a></li>
+                            {% endif %}
                             <li><a href="about.html">About Us</a></li>
                             <li><a href="#">Blog</a></li>
-                            <li><a href="contact.html">Contact Us</a></li>
-                            <li><a href="{% url 'accounts:login' %}">Login</a></li>
-                            <li><a href="forgot-password.html">Forgot Password</a></li>
+                            <li><a href="{% url 'home:contact' %}">Contact Us</a></li>
+                            {% if request.user.is_authenticated %}
+                                <li><a href="{% url 'accounts:logout' %}">Log out</a></li>
+                            {% else %}
+                                <li
+                                    {% if request.resolver_match.url_name == 'login' %}
+                                        class="active" 
+                                    {% endif %}>
+                                    <a href="{% url 'accounts:login' %}">Login</a>
+                                </li>
+                            {% endif %}
+                            <li><a href="{% url 'accounts:reset' %}">Forgot Password</a></li>
                         </ul>
                     </li>
                     <li><a href="blog.html">Blog</a></li>
 
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="{% url 'home:contact' %}">Contact Us</a></li>
                 </ul>
             </nav>
         </div>

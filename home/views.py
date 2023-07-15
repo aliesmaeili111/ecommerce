@@ -1,10 +1,15 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
-from home.models import Category,Product,Variants,Comment,CommentForm,ReplyForm,Images
+from home.models import Category,Product,Variants,Comment,CommentForm,ReplyForm,Images,Chart
 from django.contrib import messages
 from home.forms import SearchForm
-from django.db.models import Q
+from django.db.models import Q,Max,Min
 from cart.models import CartForm
+from django.core.mail import EmailMessage
+from django.core.paginator import Paginator
+from home.filters import ProductFilter
+from urllib.parse import urlencode
+
 
 def home(request):
     category = Category.objects.filter(sub_cat=False)
@@ -16,8 +21,23 @@ def home(request):
     
 def all_product(request,slug=None,id=None):
     products = Product.objects.all()
+    Filter = ProductFilter(request.GET,queryset=products)
+    products = Filter.qs
+    min_ = Product.objects.aggregate(unit_price=Min('unit_price'))
+    min_price = int(min_['unit_price'])
+    max_ = Product.objects.aggregate(unit_price=Max('unit_price'))
+    max_price = int(max_['unit_price'])
+    paginator = Paginator(products,3)
+    page_num = request.GET.get('page')
+    data = request.GET.copy()
+    
+    if 'page' in data:
+        del data['page']
+    
+    page_obj = paginator.get_page(page_num)
     form = SearchForm()
     category = Category.objects.filter(sub_cat=False)
+
     if 'search' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -26,18 +46,29 @@ def all_product(request,slug=None,id=None):
             
     if slug and id :
         data = get_object_or_404(Category,slug=slug,id=id)
-        products = products.filter(category=data)
+        page_obj = products.filter(category=data)
+        paginator = Paginator(page_obj,3)
+        page_num = request.GET.get('page')
+        page_obj = paginator.get_page(page_num)
     
     context = {
-        'products':products,
+        'products':page_obj,
         'category':category,
         'form':form,
+        'page_num':page_num,
+        'filter':Filter,
+        'min_price':min_price,
+        'max_price':max_price,
+        'data':urlencode(data),
     }
+
     return render(request,'home/products.html',context)
 
 
 def product_detail(request,slug,id):
     product = get_object_or_404(Product,slug=slug,id=id)
+    update = Chart.objects.filter(product_id=id)
+    change = Chart.objects.all()
     images = Images.objects.filter(product_id=id)
     similar = product.tags.similar_objects()[:5]
     comment_form = CommentForm()
@@ -52,7 +83,11 @@ def product_detail(request,slug,id):
     is_unlike = False
     if product.unlike.filter(id=request.user.id).exists():
         is_unlike = True
-        
+    
+    is_favourite = False
+    if product.favourite.filter(id=request.user.id).exists():
+        is_favourite = True    
+
     if product.status != 'None':
         if request.method == "POST":
             variant = Variants.objects.filter(product_variant_id=id)
@@ -73,10 +108,12 @@ def product_detail(request,slug,id):
             'reply_form':reply_form,
             'images':images,
             'cart_form':cart_form,
-        }  
+            'is_favourite':is_favourite,
+            'change':change,
+        }
+    
         return render(request,'home/product_detail.html',context)
     else:
-    
         context = {
             'product':product,
             'similar':similar,
@@ -87,8 +124,11 @@ def product_detail(request,slug,id):
             'reply_form':reply_form,
             'images':images,
             'cart_form':cart_form,
+            'is_favourite':is_favourite,
+            'update':update,
         }
         return render(request,'home/product_detail.html',context)
+
 
 # like product
 def product_like(request,id):
@@ -178,3 +218,40 @@ def product_search(request):
             }
             return render(request,'home/products.html',context)
         
+        
+def favourite_product(request,slug,id):
+    url = request.META.get("HTTP_REFERER")
+    product = get_object_or_404(Product,slug=slug,id=id)
+    is_favourite = False
+    if product.favourite.filter(id=request.user.id).exists():
+        product.favourite.remove(request.user)
+        product.total_favourite -= 1
+        product.save()
+        is_favourite = False
+    else:
+        product.favourite.add(request.user)
+        product.total_favourite += 1
+        product.save()
+        is_favourite = True
+        
+    return redirect(url)
+
+
+
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        subject = request.POST['subject']
+        email = request.POST['email']
+        msg = request.POST['message']
+        body = name + '\n' + subject + '\n' + email + '\n' + msg
+        form = EmailMessage(
+            'Contact Form',
+            body,
+            'test',
+            ('aliesmaeili11@gmailcom',),
+        )
+        form.send(fail_silently=False)
+
+    return render(request,'home/contact.html')

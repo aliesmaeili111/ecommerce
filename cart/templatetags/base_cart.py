@@ -17,5 +17,6 @@ def cart(context):
     context = {
         'cart':cart,
         'total':total,
+        'request':request,
     }
     return context

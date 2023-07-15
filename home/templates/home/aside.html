@@ -1,0 +1,113 @@
+
+    <div class="sidebar-wrapper">
+        <form action="">
+            <div class="widget">
+                <h3 class="widget-title">
+                    <a data-toggle="collapse" href="#widget-body-2" role="button" aria-expanded="true" aria-controls="widget-body-2">Brands</a>
+                </h3>
+
+                <div class="collapse show" id="widget-body-2">
+                    <div class="widget-body">
+                        <ul class="cat-list">
+                            <li>    
+                                    {{filter.form.brand}}
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- End .widget-body -->
+                </div>
+                <!-- End .collapse -->
+            </div>
+            <!-- End .widget -->
+
+            <div class="widget">
+                <h3 class="widget-title">
+                    <a data-toggle="collapse" href="#widget-body-3" role="button" aria-expanded="true" aria-controls="widget-body-3">Price</a>
+                </h3>
+
+                <div class="collapse show" id="widget-body-3">
+                    <div class="widget-body pb-0">
+                                <section class="range-slider container">
+                                    <span class="output outputOne"></span>
+                                    <span class="output outputTwo"></span>
+                                    <span class="full-range"></span>
+                                    <span class="incl-range"></span>
+                                    <input name="price_1" value="{{min_price}}" min="{{min_price}}" max="{{max_price}}" step="1" type="range">
+                                    <input value="{{max_price}}" name="price_2" min="{{min_price}}" max="{{max_price}}" step="1" type="range">
+                                </section>
+                                <!-- End #price-slider -->
+                            <!-- End .filter-price-action -->
+                    </div>
+                    <!-- End .widget-body -->
+                </div>
+                <!-- End .collapse -->
+            </div>
+            <!-- End .widget -->
+
+
+            <!-- Filter Color -->
+            <div class="widget widget-color">
+                <h3 class="widget-title">
+                    <a data-toggle="collapse" href="#widget-body-4" role="button" aria-expanded="true" aria-controls="widget-body-4">Color</a>
+                </h3>
+
+                <div class="collapse show" id="widget-body-4">
+                    <div class="widget-body pb-0">
+                        <ul class="config-swatch-list">
+                            {% for i in filter.form.color %}                        
+                                <li class="active">
+                                    <a href="#">{{i}}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- End .widget-body -->
+                </div>
+                <!-- End .collapse -->
+            </div>
+            <!-- End .widget -->
+
+            <div class="widget widget-size">
+                <h3 class="widget-title">
+                    <a data-toggle="collapse" href="#widget-body-5" role="button" aria-expanded="true" aria-controls="widget-body-5">Sizes</a>
+                </h3>
+
+                <div class="collapse show" id="widget-body-5">
+                    <div class="widget-body pb-0">
+                        <ul class="config-size-list">
+                            {% for i in filter.form.size %}  
+                                <li class="active"><a href="#">{{i}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- End .widget-body -->
+                </div>
+                <!-- End .collapse -->
+            </div>
+            <!-- End .widget -->
+
+            <div class="widget widget-size">
+                <h3 class="widget-title">
+                    <a data-toggle="collapse" href="#widget-body-5" role="button" aria-expanded="true" aria-controls="widget-body-5">Sort By</a>
+                </h3>
+                <div class="collapse show" id="widget-body-5">
+                    <div class="widget-body pb-0">
+                        <ul class="config-size-list">
+                            <li class="active"><a href="#"><input name="price" value="گران ترین" type="submit"></a></li>
+                            <li class="active"><a href="#"><input name="price" value="ارزان ترین" type="submit"></a></li>
+                            <li class="active"><a href="#"><input name="create" value="جدید ترین" type="submit"></a></li>
+                            <li class="active"><a href="#"><input name="discount" value="پر تخفیف" type="submit"></a></li>
+                            <li class="active"><a href="#"><input name="favourite" value="محبوب ترین" type="submit"></a></li>
+                            <li class="active"><a href="#"><input name="sell" value="پر فروش ترین" type="submit"></a></li>
+                        </ul>
+                    </div>
+                    <!-- End .widget-body -->
+                </div>
+                <!-- End .collapse -->
+                <button type="submit" class="btn btn-primary mt-1">Filter</button>
+            </div>
+        </form>
+     </div>
+    <!-- End .sidebar-wrapper -->
+
+

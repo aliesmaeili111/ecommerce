@@ -14,7 +14,7 @@ error = {
 class UserRegisterForm(forms.Form):
     user_name = forms.CharField(max_length=50,error_messages=error,widget=forms.TextInput(attrs={'placeholder':'plz username'}))
     email =  forms.EmailField(error_messages=error,widget=forms.TextInput(attrs={'placeholder':'plz email'}))
-    first_name = forms.CharField(max_length=50,error_messages=error,min_length=5,widget=forms.TextInput(attrs={'placeholder':'plz first name'}))
+    first_name = forms.CharField(max_length=50,error_messages=error,min_length=3,widget=forms.TextInput(attrs={'placeholder':'plz first name'}))
     last_name = forms.CharField(max_length=50,error_messages=error,min_length=5,widget=forms.TextInput(attrs={'placeholder':'plz last name'}))
     password_1 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'plz password'}))
     password_2 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'plz Confirm password'}))
@@ -72,7 +72,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['phone','address']
+        fields = ['phone','address','profile_image']
         
         
 # Login with mobile 

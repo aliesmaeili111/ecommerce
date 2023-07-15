@@ -1,0 +1,75 @@
+
+
+            
+            {% extends '_base.html' %}
+
+            {% block title %}
+                History order
+            {% endblock %}
+            {% block body %}
+            
+                <main class="main">
+                    <div class="page-header">
+                        <div class="container d-flex flex-column align-items-center">
+                            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                                <div class="container">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">
+                                            History
+                                        </li>
+                                    </ol>
+                                </div>
+                            </nav>
+            
+                            <h1>History</h1>
+                        </div>
+                    </div>
+            
+                    <div class="container">
+                        <div class="wishlist-title">
+                            <h2 class="p-2">My History on Porto Shop 4</h2>
+                        </div>
+                        <div class="wishlist-table-container">
+                            <table class="table table-order text-left">
+                                <thead>
+                                    <tr>
+                                        <th class="order-id">#</th>
+                                        <th class="order-date">Name</th>
+                                        <th class="order-price">Image</th>
+                                        <th class="order-price">quantity</th>
+                                        <th class="order-price">Price</th>
+                                        <th class="order-price">Address</th>
+                                        <th class="order-status">Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in data %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>
+                                                {{i.product.name}}
+                                            </td>
+                                            <td>
+                                                <img src="{{i.product.image.url}}" alt="{{i.product.name}}"
+                                                style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px">
+                                            </td>
+                                            <td>{{i.quantity}}</td>
+                                            <td>{{i.order.get_price}}</td>
+                                            <td>{{i.order.address}}</td>
+                                            <td>
+                                                {% if i.order.paid %}
+                                                    <p>yes</p>
+                                                {% else %}
+                                                    <p>no</p>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                            </table>
+                        </div><!-- End .cart-table-container -->
+                    </div><!-- End .container -->
+                </main>
+                <!-- End .main -->
+            {% endblock %}
+            

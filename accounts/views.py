@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,reverse
 from accounts.forms import UserRegisterForm,UserLoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -12,6 +12,25 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from random import randint
 from kavenegar import *
+from django.core.mail import EmailMessage
+from django.views import View
+from django.utils.encoding import force_str,force_bytes
+from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from six import text_type
+from django.contrib.auth import views as auth_view
+from django.urls import reverse_lazy
+from order.models import ItemOrder
+from home.models import Product
+
+
+
+class EmailToken(PasswordResetTokenGenerator):
+    def _make_hash_value(self,user,timestamp):
+        return (text_type(user.is_active) + text_type(user.id) + text_type(timestamp))
+    
+email_generator = EmailToken()
 
 
 # Register View
@@ -25,8 +44,20 @@ def user_register(request):
                                 first_name=data['first_name'],
                                 last_name=data['last_name'],
                                 password=data['password_2'])
+            user.is_active = False
             user.save()
-            messages.success(request,f'User create suucesfuly .Login Now','success')
+            domain = get_current_site(request).domain
+            uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+            url = reverse('accounts:active',kwargs={'uidb64':uidb64,'token':email_generator.make_token(user)})
+            link = 'http://' + domain + url
+            email = EmailMessage(
+                'Active User',
+                'hi user pleaze active link  ' + link ,
+                'test <aliesmaeili1177@gmail.com>',
+                [data['email']]
+            )
+            email.send(fail_silently=False)
+            messages.warning(request,f'User for active email.Pleaze','warning')
             return redirect('home:home')
     else:
         form = UserRegisterForm()
@@ -35,6 +66,15 @@ def user_register(request):
     }
     return render(request,'accounts/register.html',context)
 
+
+class RegisterEmail(View):
+    def get(self,request,uidb64,token):
+        id = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=id)
+        if user and email_generator.check_token(user,token):
+            user.is_active = True
+            user.save()
+            return redirect('accounts:login')
 
 
 # Login View
@@ -78,7 +118,7 @@ def user_profile(request):
     
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST,instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST,instance=request.user.profile)
+        profile_form = ProfileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
         if (user_form.is_valid() and profile_form.is_valid()):
             user_form.save()
             profile_form.save()
@@ -161,3 +201,50 @@ def verify(request):
         'form':form
     }
     return render(request,'accounts/code.html',context)
+
+
+def favourite(request):
+    product = request.user.fa_user.all()
+    context = {
+        'product':product
+    }
+    return render(request,'accounts/favourite.html',context)
+
+
+@login_required(login_url='accounts:login')
+def remove_favourite(request,id):
+    url = request.META.get("HTTP_REFERER")
+    Product.objects.filter(id=id).delete()
+    return redirect(url)
+    
+
+
+def history(request):
+    data = ItemOrder.objects.filter(user_id=request.user.id)
+    context = {
+        'data':data,
+    }
+    return render(request,'accounts/history.html',context)
+
+
+
+
+class ResetPassword(auth_view.PasswordResetView):
+    template_name = 'accounts/reset.html'
+    success_url = reverse_lazy('accounts:reset_done')
+    email_template_name = 'accounts/link.html'
+    
+    
+class DonePassword(auth_view.PasswordResetDoneView):
+    template_name='accounts/done.html'
+    
+    
+class ConfirmPassword(auth_view.PasswordResetConfirmView):
+    template_name = 'accounts/confirm.html'
+    success_url = reverse_lazy('accounts:complete')
+    
+    
+class Complete(auth_view.PasswordResetCompleteView):
+    template_name = 'accounts/complete.html'
+    
+    

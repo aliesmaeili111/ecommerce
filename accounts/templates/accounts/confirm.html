@@ -1,0 +1,14 @@
+{% extends 'accounts/base_register.html' %}
+{% block title %}
+   Confirm password
+{% endblock %}
+
+{% block login %}
+    <form action="" method="post">
+        {% if validlink %}
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-primary">change password</button>
+        {% endif %}
+    </form>
+{% endblock %}

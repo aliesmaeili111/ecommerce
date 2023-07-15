@@ -1,0 +1,72 @@
+{% for product in products %}
+    <div class="product-default appear-animate" data-animation-name="fadeInRightShorter">
+        <figure>
+            <a href="{{product.get_absolute_url}}">
+                <img src="{{product.image.url}}" style="max-width:260px;max-height:260px;min-height:260px;min-width:260px" 
+                alt="{{product.name}}">
+                <img src="{{product.image.url}}" style="max-width:260px;max-height:260px" alt="{{product.name}}">
+            </a>
+            <div class="label-group">
+                <div class="product-label label-sale">
+                    {% if product.discount %}
+                        %{{product.discount}}
+                    {% endif %}
+                </div>
+            </div>
+        </figure>
+        <div class="product-details">
+            {% for cat in product.category.active %} 
+                <div class="category-list">
+                    <a href="{% url 'home:category' cat.slug cat.id %}" class="product-category">
+                        {{cat.name}}
+                    </a>
+                </div>
+            {% endfor %}
+            <h3 class="product-title">
+                <a href="{{product.get_absolute_url}}">{{product.name}}</a>
+            </h3>
+            <div class="product-ratings">
+                <span class="ratings-container">
+                    {% if product.average %}
+                        {% if product.average >= 5 %}
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        {% elif 0 <= product.average <= 4 %}
+                            <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}"></i>
+                        {% endif %}
+                    {% else %}
+                        <span>No rating</span>
+                    {% endif %}
+                   
+                </span>
+            </div>
+            <!-- End .product-container -->
+            
+            {% include 'home/price_box.html' %}
+        
+            <!-- End .price-box -->
+            {% if request.user.is_authenticated %}
+            {% if is_favourite %}
+                <div class="product-action">
+                    <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-dark text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                    <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>SELECT
+                            OPTIONS</span></a>
+                </div>
+            {% else %}
+            <div class="product-action">
+                <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>SELECT
+                    OPTIONS</span></a>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+        <!-- End .product-details -->
+    </div>
+{% endfor %}

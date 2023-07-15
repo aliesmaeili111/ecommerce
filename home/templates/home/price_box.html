@@ -1,0 +1,12 @@
+<div class="price-box">
+    {% if variants %} 
+        <span class="old-price">{{variants.unit_price}}</span>
+        <span class="new-price">{{variants.total_price}}</span>
+    {% elif product.discount %}
+        <span class="old-price">{{product.unit_price}}</span>
+        <span class="new-price">{{product.total_price}}</span>
+    {% else %}
+        <span class="new-price">{{product.unit_price}}</span>
+    {% endif %}
+</div>
+<!-- End .price-box -->
