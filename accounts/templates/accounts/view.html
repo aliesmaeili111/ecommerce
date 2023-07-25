@@ -4,7 +4,7 @@
             {% extends '_base.html' %}
 
             {% block title %}
-                تاریخچه سفارشات
+                Resent view
             {% endblock %}
             {% block body %}
             
@@ -14,69 +14,64 @@
                             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                                 <div class="container">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
+                                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">
-                                            تاریخچه
+                                            Resent
                                         </li>
                                     </ol>
                                 </div>
                             </nav>
             
-                            <h1>تاریخچه سفارشات</h1>
+                            <h1>Resent</h1>
                         </div>
                     </div>
             
                     <div class="container">
-               
-
-                        {% if data %}
-                            <div class="wishlist-title">
-                                <h2 class="p-2">لیست تاریخچه سفارشات</h2>
-                            </div>
+                        <div class="wishlist-title">
+                            <h2 class="p-2">My Resent on Porto Shop 4</h2>
+                        </div>
+                        {% if product %}
                             <div class="wishlist-table-container">
                                 <table class="table table-order text-left">
                                     <thead>
                                         <tr>
                                             <th class="order-id">#</th>
-                                            <th class="order-date">نام محصول</th>
-                                            <th class="order-price">تصویر محصول</th>
-                                            <th class="order-price">تعداد سفارش محصول</th>
-                                            <th class="order-price">قیمت محصول</th>
-                                            <th class="order-price">آدرس</th>
-                                            <th class="order-status">پرداخت شده</th>
+                                            <th class="order-date">Name</th>
+                                            <th class="order-price">Image</th>
+                                            <th class="order-price">Price</th>
+                                            <th class="order-price">Discount</th>
+                                            <th class="order-status">Brand</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for i in data %}
+                                        {% for i in product %}
                                             <tr>
                                                 <td>{{forloop.counter}}</td>
                                                 <td>
-                                                    {{i.product.name}}
+                                                    <a href="{{i.product.get_absolute_url}}">
+                                                        {{i.product.name}}
+                                                    </a>
                                                 </td>
                                                 <td>
-                                                    <img src="{{i.product.image.url}}" alt="{{i.product.name}}"
+                                                    <a href="{{i.product.get_absolute_url}}">
+                                                        <img src="{{i.product.image.url}}" alt="{{i.name}}"
                                                     style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px">
+                                                    </a>
                                                 </td>
-                                                <td>{{i.quantity}}</td>
-                                                <td>{{i.order.get_price}}</td>
-                                                <td>{{i.order.address}}</td>
-                                                <td>
-                                                    {% if i.order.paid %}
-                                                        <p>yes</p>
-                                                    {% else %}
-                                                        <p>no</p>
-                                                    {% endif %}
-                                                </td>
+                                                <td>{{i.product.total_price}}</td>
+                                                <td>%{{i.product.discount}}</td>
+                                                <td>{{i.product.brand}}</td>
+                                                
                                             </tr>
                                         {% endfor %}
                                 </table>
                             </div><!-- End .cart-table-container -->
                         {% else %}
                             <div class="wishlist-title">
-                                <h2 class="p-2">شما هیچ تاریخچه سفارشی ندارید</h2>
+                                <h2 class="p-2">No Resent on Porto Shop 4</h2>
                             </div>
                         {% endif %}
-                  
+                      
                     </div><!-- End .container -->
                 </main>
                 <!-- End .main -->

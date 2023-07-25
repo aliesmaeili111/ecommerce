@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
     'cart.apps.CartConfig',
@@ -50,7 +52,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'extensions',
     'django_filters',
-    'chartjs',
+    
 ]
 
 MIDDLEWARE = [
@@ -89,12 +91,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django_shop',
+        'USER': 'postgres',
+        'PASSWORD': '97287104ali',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -134,15 +138,15 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
+STATICFILES_DIRS = (
+    BASE_DIR / 'static',
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
 CKEDITOR_UPLOAD_PATH = 'ck/'
-CKEDITOR_CONFIGS ={
+CKEDITOR_CONFIGS = {
     'default':{
         'toolbar':'full',
     }    
@@ -166,3 +170,15 @@ EMAIL_HOST_USER = 'aliesmaeili1177@gmail.com'
 EMAIL_HOST_PASSWORD = 'uqfetivtxklqmric'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# AUTH_USER_MODEL = 'accounts.User'
+
+# Secure
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 86400
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True

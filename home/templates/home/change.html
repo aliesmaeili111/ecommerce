@@ -1,0 +1,59 @@
+{% extends 'admin/change_list.html' %}
+
+{% block extrahead %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.0/Chart.js" integrity="sha512-GZ6R8SgrTbX5YVxN5U9QhOXw/wOcs6wNIfSIr5kWGFcySi6/yJyJROUTfCQEcAwKh0FsohaBjkNU/e20XNxHKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.0/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        window.onload = function (){
+
+        
+        var ctx = document.getElementById('myChart').getContext('2d');
+        {% regroup cl.queryset|dictsort:'sell' by sell as sell_list %}
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for i in sell_list %}'{{i.list|safe|cut:"Product:"}}',{% endfor %}],
+                datasets: [{
+                label: '# نمودار فروش محصولات',
+                data: [{% for i in sell_list %}'{{i.grouper}}',{% endfor %}],
+                backgroundColor: [
+                    'rgba(255,99,132,0.8)',
+                    'rgba(54,162,235,0.8)',
+                    'rgba(255,206,86,0.8)',
+                    'rgba(75,102,102,0.8)',
+                    'rgba(153,105,255,0.8)',
+                    'rgba(255,159,54,0.8)',
+                ],
+                borderColor: [
+                    'rgba(255,99,132,0.8)',
+                    'rgba(54,162,235,0.8)',
+                    'rgba(255,206,86,0.8)',
+                    'rgba(75,102,102,0.8)',
+                    'rgba(153,105,255,0.8)',
+                    'rgba(255,159,54,0.8)',
+                ],
+                borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+            });
+        }
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+    {{block.super}}
+    <canvas id="myChart" width="140" height="50"></canvas>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends '_base.html' %}
 
 {% block title %}
-    Wihslist
+    Compare product
 {% endblock %}
 {% block body %}
 
@@ -13,21 +13,20 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="demo4.html">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                Wishlist
+                                Compare
                             </li>
                         </ol>
                     </div>
                 </nav>
 
-                <h1>Wishlist</h1>
+                <h1>Compare</h1>
             </div>
         </div>
 
         <div class="container">
-           
-            {% if product %}
+            {% if data %}
                 <div class="wishlist-title">
-                    <h2 class="p-2">My wishlist on Porto Shop 4</h2>
+                    <h2 class="p-2">My Compare on Porto Shop 4</h2>
                 </div>
                 <div class="wishlist-table-container">
                     <table class="table table-wishlist mb-0">
@@ -43,42 +42,34 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for i in product %}
+                            {% for i in data %}
                                 <tr class="product-row">
                                     <td>{{forloop.counter}}</td>
                                     <td>
                                         <figure class="product-image-container">
-                                            <a href="{{i.get_absolute_url}}" class="product-image">
-                                                <img src="{{i.image.url}}" style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px" alt="{{i.name}}">
+                                            <a href="{{i.product.get_absolute_url}}" class="product-image">
+                                                <img src="{{i.product.image.url}}" style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px" alt="{{i.prodcut.name}}">
                                             </a>
                                         </figure>
-                                    </td>
+                                    </td> 
                                     <td>
                                         <h5 class="product-title">
-                                            <a href="{{i.get_absolute_url}}">{{i.name}}</a>
+                                            <a href="{{i.product.get_absolute_url}}">{{i.product.name}}</a>
                                         </h5>
                                     </td>
 
                                     <td class="price-box">
-                                        {{i.unit_price}}
+                                        {{i.product.unit_price}}
                                     </td>
 
                                     <td class="price-box">
-                                        <a href="{% url 'accounts:remove_favourite' i.id %}" class=" icon-cancel" title="Remove Product"></a>
+                                        <a href="{% url 'cart:remove_compare' i.id %}" class="icon-cancel" title="Remove Product"></a>
                                     </td>
 
                                     <td class="action">
-                                        <form action="{% url 'cart:add_cart' i.id %}" method="post">
-                                            {% csrf_token %}
-                                            <div class="product-single-qty">
-                                                <input type="number" name="quantity"
-                                                min="1"
-                                                value="1"
-                                                max="{{ i.amount }}" required
-                                                oninvalid="setCustomValidity('pleaze between 1 to {{i.amount}}')">
-                                            </div>
-                                            <button type="submit" class="btn btn-dark mr-2" title="Add to Cart">Add to Cart</button>
-                                        </form>
+                                        <button class="btn btn-dark btn-add-cart product-type-simple btn-shop">
+                                            ADD TO CART
+                                        </button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -87,8 +78,9 @@
                 </div><!-- End .cart-table-container -->
             {% else %}
                 <div class="wishlist-title">
-                    <h2 class="p-2">No Wishlist</h2>
+                    <h2 class="p-2">No Compare </h2>
                 </div>
+
             {% endif %}
         </div><!-- End .container -->
     </main>

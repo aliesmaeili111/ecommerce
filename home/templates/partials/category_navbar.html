@@ -4,13 +4,13 @@
             <ul class="submenu">
                 {% for cat in category %}
                     <li><a href="{{cat.get_absolute_url}}">{{cat.name}}</a></li>
+                        <ul class="submenu">
                             {% for info in cat.sub.all %}  
-                                    <ul class="submenu">
-                                        <li style="padding:0 0 0 25px">        
-                                            <a href="{{info.get_absolute_url}}">{{info.name}}</a>
-                                        </li>
-                                    </ul>
+                                <li style="padding:0 0 0 28px">        
+                                    <a href="{{info.get_absolute_url}}">{{info.name}}</a>
+                                </li>
                             {% endfor %}
+                        </ul>
                 {% endfor %}
             </ul>
         </div>         

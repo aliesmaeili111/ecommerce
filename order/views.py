@@ -69,48 +69,59 @@ def coupon_order(request,order_id):
     
            
 
-MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
-phone = '09371595811'  # Optional
-# Important: need to edit for realy server.
-CallbackURL = 'http://127.0.0.1:8000/order:verify/'
+# MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+# client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+# description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
+# phone = '09371595811'  # Optional
+# # Important: need to edit for realy server.
+# CallbackURL = 'http://127.0.0.1:8000/order/verify/'
+ 
+
+# def send_request(request,order_id,price):
+#     global amount
+#     amount = price
+#     result = client.service.PaymentRequest(MERCHANT,amount,description,request.user.email,'09371595811',CallbackURL)
+#     if result.Status == 100:
+#         return redirect('https://www.zarinpal.com/pg/StartPay/') + str(result.Authority)
+#     else:
+#         order = Order.objects.get(id=order_id)
+#         order.paid = True
+#         order.save()
+#         cart = ItemOrder.objects.filter(order_id=order_id)
+#         for c in cart :
+#             product = Product.objects.get(id=c.product.id)
+#             product.sell += c.quantity
+#             product.save()        
+#             phone = f"0{request.user.profile.phone}"
+#             code = order.code
+#             api = KavenegarAPI('546E4F51563753746455367265306D4B5672486B494C467077456B5A6C4932503231675935496B483563673D')
+#             params = { 'sender' : '', 'receptor': phone, 'message' : f'کد سفارش شما { code }'}
+#             response = api.sms_send( params)     
+#         return HttpResponse('Error code :' + str(result.Status))
 
 
-def send_request(request,order_id,price):
-    global amount
-    amount = price
-    result = client.service.PaymentRequest(MERCHANT,amount,description,request.user.email,'09371595811',CallbackURL)
-    if result.Status == 100:
-        return redirect('https://www.zarinpal.com/pg/StartPay/') + str(result.Authority)
-    else:
-        order = Order.objects.get(id=order_id)
-        order.paid = True
-        order.save()
-        cart = ItemOrder.objects.filter(order_id=order_id)
-        for c in cart :
-            product = Product.objects.get(id=c.product.id)
-            product.sell += c.quantity
-            product.save()        
-            phone = f"0{request.user.profile.phone}"
-            code = order.code
-            api = KavenegarAPI('546E4F51563753746455367265306D4B5672486B494C467077456B5A6C4932503231675935496B483563673D')
-            params = { 'sender' : '', 'receptor': phone, 'message' : f'کد سفارش شما { code }'}
-            response = api.sms_send( params)     
-        return HttpResponse('Error code :' + str(result.Status))
+# def verify(request):
+#     if request.GET.get('Status') == 'Ok':
+#         result = client.service.PaymentVerification(MERCHANT,request.GET['Authority'],amount)
+#         if result.Status == 100:
 
-
-def verify(request):
-    if request.GET.get('Status') == 'Ok':
-        result = client.service.PaymentVerification(MERCHANT,request.GET['Authority'],amount)
-        if result.Status == 100:
-            return HttpResponse('transaction success')
-        elif result.Status == 101:
-            return HttpResponse('transaction submitted :' + str(result.Status))
-        else:
-            return HttpResponse('transaction failed' + str(result.Status))
-    else:
-        return HttpResponse('transaction failed or canceled by user ')
+            # start in remover one as session cart
+            # cart = Cart(request)
+            # for c in cart :
+            #     variants = Variants.objects.filter(id=c['varinat'].id)
+            #     for data in variants :
+            #         data.amount-= c['quantity']
+            #         data.save()
+            # return redirect('home:home')
+            # end in remover one as session cart
+            
+#             return HttpResponse('transaction success')
+#         elif result.Status == 101:
+#             return HttpResponse('transaction submitted :' + str(result.Status))
+#         else:
+#             return HttpResponse('transaction failed' + str(result.Status))
+#     else:
+#         return HttpResponse('transaction failed or canceled by user ')
     
     
     

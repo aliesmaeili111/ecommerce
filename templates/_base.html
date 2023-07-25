@@ -230,7 +230,7 @@
     <script src="{% static 'assets/js/plugins.min.js' %}"></script>
     <script src="{% static 'assets/js/jquery.appear.min.js' %}"></script>
     <script src="{% static 'assets/js/main.min.js' %}"></script>
-    
+   
     <script>
       setTimeout(function () {
         $("#mydiv").fadeOut("fast");
@@ -282,8 +282,10 @@
           });
       });
     </script>
-    
+
+
     {% block script %}{% endblock %}
+    {% block script_fav %}{% endblock %}
   </body>
 
   <!-- Copied from https://portotheme.com/html/porto_ecommerce/demo4.html by Cyotek WebCopy 1.7.0.600, Friday, November 11, 2022, 8:44:32 PM -->

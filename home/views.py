@@ -1,20 +1,27 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
-from home.models import Category,Product,Variants,Comment,CommentForm,ReplyForm,Images,Chart
+from home.models import (Category,Product,Variants,
+                        Comment,CommentForm,ReplyForm,
+                        Images,Chart,Views,Gallery,Brand)
 from django.contrib import messages
 from home.forms import SearchForm
 from django.db.models import Q,Max,Min
 from cart.models import CartForm
+from cart.forms import CartAddForm
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from home.filters import ProductFilter
 from urllib.parse import urlencode
-
+from django.http import JsonResponse
 
 def home(request):
     category = Category.objects.filter(sub_cat=False)
+    gallery = Gallery.objects.all()
+    brand = Brand.objects.all()
     context = {
         'category':category,
+        'gallery':gallery,
+        'brand':brand,
     }
     return render(request,'home/home.html',context)
     
@@ -27,29 +34,34 @@ def all_product(request,slug=None,id=None):
     min_price = int(min_['unit_price'])
     max_ = Product.objects.aggregate(unit_price=Max('unit_price'))
     max_price = int(max_['unit_price'])
-    paginator = Paginator(products,3)
+    paginator = Paginator(products,1)
     page_num = request.GET.get('page')
-    data = request.GET.copy()
-    
-    if 'page' in data:
-        del data['page']
+  
     
     page_obj = paginator.get_page(page_num)
     form = SearchForm()
     category = Category.objects.filter(sub_cat=False)
+    
 
     if 'search' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             data = form.cleaned_data['search']
-            products = products.filter(Q(name__icontains=data))
+            page_obj = products.filter(Q(name__icontains=data))
+            paginator = Paginator(page_obj,1)
+            page_num = request.GET.get('page')
+            data = request.GET.copy()
+            if 'page' in data :
+                del data['page']
+            page_obj = paginator.get_page(page_num)
+            
             
     if slug and id :
         data = get_object_or_404(Category,slug=slug,id=id)
         page_obj = products.filter(category=data)
-        paginator = Paginator(page_obj,3)
+        paginator = Paginator(page_obj,1)
         page_num = request.GET.get('page')
-        page_obj = paginator.get_page(page_num)
+        page_obj = paginator.get_page(page_num)    
     
     context = {
         'products':page_obj,
@@ -59,14 +71,23 @@ def all_product(request,slug=None,id=None):
         'filter':Filter,
         'min_price':min_price,
         'max_price':max_price,
-        'data':urlencode(data),
     }
 
     return render(request,'home/products.html',context)
-
+    
 
 def product_detail(request,slug,id):
     product = get_object_or_404(Product,slug=slug,id=id)
+    form = CartAddForm()
+    ip = request.META.get('REMOTE_ADDR')
+    view = Views.objects.filter(product_id=product.id,ip=ip)
+    if not view.exists():
+        Views.objects.create(product_id=product.id,ip=ip)
+        product.num_view += 1
+        product.save()
+        
+    if request.user.is_authenticated:
+        product.view.add(request.user)
     update = Chart.objects.filter(product_id=id)
     change = Chart.objects.all()
     images = Images.objects.filter(product_id=id)
@@ -84,49 +105,42 @@ def product_detail(request,slug,id):
     if product.unlike.filter(id=request.user.id).exists():
         is_unlike = True
     
-    is_favourite = False
-    if product.favourite.filter(id=request.user.id).exists():
-        is_favourite = True    
-
+    # is_favourite = False
+    # if product.favourite.filter(id=request.user.id).exists():
+    #     is_favourite = True    
+    
+    context = {
+            'product':product,
+            'similar':similar,
+            'is_like':is_like,
+            'is_unlike':is_unlike,
+            'comment_form':comment_form,
+            'comment':comment,
+            'reply_form':reply_form,
+            'images':images,
+            'cart_form':cart_form,
+            # 'is_favourite':is_favourite,
+            'change':change,
+            'form':form,
+        }
+    
     if product.status != 'None':
         if request.method == "POST":
             variant = Variants.objects.filter(product_variant_id=id)
             var_id = request.POST.get('select')
             variants = Variants.objects.get(id=var_id)
+            colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.size_variant_id)
+            size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
         else:
             variant = Variants.objects.filter(product_variant_id=id)
             variants = Variants.objects.get(id=variant[0].id)
-        context = {
-            'product':product,
-            'variant':variant,
-            'variants':variants,
-            'similar':similar,
-            'is_like':is_like,
-            'is_unlike':is_unlike,
-            'comment_form':comment_form,
-            'comment':comment,
-            'reply_form':reply_form,
-            'images':images,
-            'cart_form':cart_form,
-            'is_favourite':is_favourite,
-            'change':change,
-        }
+            colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.color_variant_id)
+            size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
+        context.update({'variant':variant,'variants':variants,'colors':colors,'size':size})
     
         return render(request,'home/product_detail.html',context)
     else:
-        context = {
-            'product':product,
-            'similar':similar,
-            'is_like':is_like,
-            'is_unlike':is_unlike,
-            'comment_form':comment_form,
-            'comment':comment,
-            'reply_form':reply_form,
-            'images':images,
-            'cart_form':cart_form,
-            'is_favourite':is_favourite,
-            'update':update,
-        }
+        context.update({'update':update,'colors':colors,'size':size,'form':form})
         return render(request,'home/product_detail.html',context)
 
 
@@ -220,23 +234,22 @@ def product_search(request):
         
         
 def favourite_product(request,slug,id):
-    url = request.META.get("HTTP_REFERER")
+    # url = request.META.get("HTTP_REFERER")
     product = get_object_or_404(Product,slug=slug,id=id)
-    is_favourite = False
+    # is_favourite = False
     if product.favourite.filter(id=request.user.id).exists():
         product.favourite.remove(request.user)
         product.total_favourite -= 1
-        product.save()
-        is_favourite = False
+        # is_favourite = False
+        messages.error(request,'you wishlist remove','danger')
     else:
         product.favourite.add(request.user)
         product.total_favourite += 1
-        product.save()
-        is_favourite = True
-        
-    return redirect(url)
-
-
+        # is_favourite = True
+        messages.success(request,'you wishlist added','success')
+    product.save()
+    data = {'success':'OK'}
+    return JsonResponse(data)
 
 
 def contact(request):

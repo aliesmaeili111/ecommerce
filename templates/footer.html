@@ -1,23 +1,25 @@
+{% load base_tags %}
+
 <footer class="footer bg-dark">
     <div class="footer-middle">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
                     <div class="widget">
-                        <h4 class="widget-title">Contact Info</h4>
+                        <h4 class="widget-title">تماس با ما</h4>
                         <ul class="contact-info">
                             <li>
-                                <span class="contact-info-label">Address:</span>123 Street Name, City, England
+                                <span class="contact-info-label">آدرس:</span>قزوین, الوند
                             </li>
                             <li>
-                                <span class="contact-info-label">Phone:</span><a href="tel:">(123)
-                                    456-7890</a>
+                                <span class="contact-info-label">تلفن تماس:</span><a href="tel:">+98 (937)
+                                    159-5811</a>
                             </li>
                             <li>
-                                <span class="contact-info-label">Email:</span> <a href="mailto:mail@example.com">mail@example.com</a>
+                                <span class="contact-info-label">ایمیل وبسایت:</span> <a href="ali.esmaeili.2000.8@gmail.com">ali.esmaeili.2000.8@gmail.com</a>
                             </li>
                             <li>
-                                <span class="contact-info-label">Working Days/Hours:</span> Mon - Sun / 9:00 AM - 8:00 PM
+                                <span class="contact-info-label">ساعت کاری</span> شنبه تا جمعه
                             </li>
                         </ul>
                         <div class="social-icons">
@@ -33,19 +35,12 @@
 
                 <div class="col-lg-3 col-sm-6">
                     <div class="widget">
-                        <h4 class="widget-title">Customer Service</h4>
+                        <h4 class="widget-title">سرویس های رایگان فروشگاه</h4>
 
                         <ul class="links">
-                            <li><a href="#">Help & FAQs</a></li>
-                            <li><a href="#">Order Tracking</a></li>
-                            <li><a href="#">Shipping & Delivery</a></li>
-                            <li><a href="#">Orders History</a></li>
-                            <li><a href="#">Advanced Search</a></li>
-                            <li><a href="dashboard.html">My Account</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="#">Corporate Sales</a></li>
-                            <li><a href="#">Privacy</a></li>
+                            <li><a href="">blog</a></li>
+                            <li><a href="{% url 'home:contact' %}">contact Us</a></li>
+                            <li><a href="">about Us</a></li>
                         </ul>
                     </div>
                     <!-- End .widget -->
@@ -54,21 +49,8 @@
 
                 <div class="col-lg-3 col-sm-6">
                     <div class="widget">
-                        <h4 class="widget-title">Popular Tags</h4>
-
-                        <div class="tagcloud">
-                            <a href="#">Bag</a>
-                            <a href="#">Black</a>
-                            <a href="#">Blue</a>
-                            <a href="#">Clothes</a>
-                            <a href="#">Fashion</a>
-                            <a href="#">Hub</a>
-                            <a href="#">Shirt</a>
-                            <a href="#">Shoes</a>
-                            <a href="#">Skirt</a>
-                            <a href="#">Sports</a>
-                            <a href="#">Sweater</a>
-                        </div>
+                        <h4 class="widget-title">دسته بندی های محبوب</h4>
+                        {% tags %}
                     </div>
                     <!-- End .widget -->
                 </div>
@@ -99,7 +81,7 @@
         <div class="footer-bottom">
             <div class="container d-sm-flex align-items-center">
                 <div class="footer-left">
-                    <span class="footer-copyright">© Porto eCommerce. 2021. All Rights Reserved</span>
+                    <span class="footer-copyright">© Porto eCommerce. {% now 'Y' %}. All Rights Reserved</span>
                 </div>
 
                 <div class="footer-right ml-auto mt-1 mt-sm-0">

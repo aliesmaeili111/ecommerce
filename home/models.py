@@ -9,12 +9,16 @@ from django.db.models import Avg
 from extensions.utils import jalali_conveter
 from django_jalali.db import models as jmodels
 from django.db.models.signals import post_save 
+from django.utils import timezone
 
 
-
+# Manager for active category
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(sub_cat=False)
+    
+    def sub_true(self):
+        return self.filter(sub_cat=True)
     
 
 # Category model
@@ -38,13 +42,9 @@ class Category(models.Model):
         return jalali_conveter(self.create)
     jpublish_create.short_description = "زمان انتشار دسته بندی "
         
-    def jpublish_update(self):
-        return jalali_conveter(self.update)
-    jpublish_update.short_description = "زمان بروز رسانی دسته بندی "
-        
     # Rename model
     class Meta:
-        verbose_name = 'دستخ بندی'
+        verbose_name = 'دسته بندی'
         verbose_name_plural = 'دسته بندی ها ' 
         
     objects = CategoryManager()
@@ -56,6 +56,7 @@ class Product(models.Model):
         ('None','none'),
         ('Size','size'),
         ('Color','color'),
+        ('Both','Both'),
     )
     
     category = models.ManyToManyField(Category,blank=True,verbose_name='دسته بندی')
@@ -64,17 +65,17 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product',verbose_name='تصویر محصول')
     amount = models.PositiveIntegerField(verbose_name='تعداد محصول')
     unit_price = models.PositiveIntegerField(verbose_name='قیمت محصول')
-    change = models.BooleanField(default=True)
+    change = models.BooleanField(default=True,verbose_name='عوض کردن')
     information = RichTextUploadingField(blank=True, null=True,verbose_name='جزئیات محصول')
     discount = models.PositiveIntegerField(blank=True, null=True,verbose_name='درصد تخفیف محصول')
-    total_price = models.PositiveIntegerField(verbose_name='قیمت کل')
+    total_price = models.PositiveIntegerField(verbose_name='قیمت کل',blank=True, null=True)
     create = models.DateTimeField(auto_now_add=True)
     update = jmodels.jDateTimeField(auto_now=True)
     tags = TaggableManager(blank=True,verbose_name='تگ')
     available = models.BooleanField(default=True,verbose_name='فعال')
     status = models.CharField(blank=True, null=True,max_length=200,choices=VARIANT,verbose_name='وضعیت گونه محصول')
-    color = models.ManyToManyField('Color',blank=True)
-    size = models.ManyToManyField('Size',blank=True)
+    color = models.ManyToManyField('Color',blank=True,verbose_name='رنگ محصول')
+    size = models.ManyToManyField('Size',blank=True,verbose_name='سایز محصول')
     brand = models.ForeignKey('Brand', on_delete=models.CASCADE,blank=True,null=True,verbose_name='برند')
     like = models.ManyToManyField(User,blank=True,related_name='product_like',verbose_name='لایک')
     total_like = models.PositiveIntegerField(default=0,verbose_name='مجموع لایک ها')
@@ -83,7 +84,8 @@ class Product(models.Model):
     favourite = models.ManyToManyField(User,blank=True,related_name='fa_user',verbose_name='محصولات محبوب')
     total_favourite = models.PositiveIntegerField(default=0,verbose_name='مجموع محبوب ها')
     sell = models.PositiveIntegerField(default=0,verbose_name='پر فروش')
-    
+    view = models.ManyToManyField(User,blank=True,related_name='product_view',verbose_name='بازدید ها')
+    num_view = models.PositiveIntegerField(default=0,verbose_name='مجموع بازدید ها')
     
     
     def __str__(self):
@@ -103,10 +105,7 @@ class Product(models.Model):
         return jalali_conveter(self.create)
     jpublish_create.short_description = "زمان انتشار دسته بندی "
         
-    def jpublish_update(self):
-        return jalali_conveter(self.update)
-    jpublish_update.short_description = "زمان بروز رسانی دسته بندی "
-    
+
     def category_to_str(self):
         return ", ".join([category.name for category in self.category.active()])
     category_to_str.short_description = "دسته بندی"
@@ -119,6 +118,16 @@ class Product(models.Model):
             total = (self.discount * self.unit_price) / 100
             return int(self.unit_price - total)
         return self.total_price
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.old_price = self.unit_price
+
+
+    def save(self,*args,**kwargs):
+        if self.old_price != self.unit_price:
+            self.update = timezone.now() 
+        super().save(*args,**kwargs)
     
     
     def total_like(self):
@@ -163,15 +172,15 @@ class Color(models.Model):
 # Variants model
 class Variants(models.Model):
     name = models.CharField(max_length=100,verbose_name='نام گونه محصول')
-    update = jmodels.jDateTimeField(auto_now=True)
+    update = jmodels.jDateTimeField(auto_now=True,verbose_name='زمان بروزرسانی محصول')
     product_variant = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='pr',verbose_name='انتخاب گونه محصول')
     size_variant = models.ForeignKey(Size,on_delete=models.CASCADE,null=True,blank=True,verbose_name='انتخاب سایز محصول')
     color_variant = models.ForeignKey(Color,on_delete=models.CASCADE,null=True,blank=True,verbose_name='انتخاب رنگ محصول')
     amount = models.PositiveIntegerField(verbose_name='تعداد گونه محصول')
     unit_price = models.PositiveIntegerField(verbose_name='قیمت گونه محصول')
-    change = models.BooleanField(default=True)
+    change = models.BooleanField(default=True,verbose_name='عوض کردن')
     discount = models.PositiveIntegerField(null=True,blank=True,verbose_name='در تخفیف گونه محصول')
-    total_price = models.PositiveIntegerField()
+    total_price = models.PositiveIntegerField(verbose_name='قیمت کل',blank=True, null=True)
     
     
     def __str__(self):
@@ -179,13 +188,23 @@ class Variants(models.Model):
     
     @property
     def total_price(self):
-        if not self.discount :
+        if not self.discount:
             return self.unit_price
         elif self.discount:
             total = (self.discount * self.unit_price) / 100
             return int(self.unit_price - total)
         return self.total_price   
     
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.old_price = self.unit_price
+
+
+    def save(self,*args,**kwargs):
+        if self.old_price != self.unit_price:
+            self.update = timezone.now() 
+        super().save(*args,**kwargs)
+
     # Rename model
     class Meta:
         verbose_name = 'گونه محصول'
@@ -202,12 +221,11 @@ class Comment(models.Model):
     reply = models.ForeignKey('self',related_name='comment_reply',on_delete=models.CASCADE,blank=True, null=True,verbose_name='ریپلای نظر')
     is_reply = models.BooleanField(default=False,verbose_name='آیا ریپلای نظر است ؟')
     comment_like = models.ManyToManyField(User,related_name='com_like',blank=True,verbose_name='لایک نظر')
-    total_comment_like = models.PositiveIntegerField(default=0)
+    total_comment_like = models.PositiveIntegerField(default=0,verbose_name='مجموع لایک های کامنت')
     
-    
+
     def total_comment_like(self):
         return self.comment_like.count()
-    
     
     def __str__(self):
         return self.product.name
@@ -254,6 +272,7 @@ class Images(models.Model):
 # Brand Models
 class Brand(models.Model):
     name = models.CharField(max_length=100,blank=True,verbose_name="نام برند")
+    image = models.ImageField(upload_to='brand/',blank=True, null=True,verbose_name='تصویر برند ')
     
     def __str__(self):
         return self.name 
@@ -265,13 +284,13 @@ class Brand(models.Model):
         
 # Chart models
 class Chart(models.Model):
-    name = models.CharField(max_length=50,blank=True, null=True)
-    unit_price = models.PositiveIntegerField(default=0)
+    name = models.CharField(max_length=50,blank=True, null=True,verbose_name='نام محصول')
+    unit_price = models.PositiveIntegerField(default=0,verbose_name='قیمت محصول')
     update = jmodels.jDateTimeField(auto_now=True)
-    color = models.CharField(max_length=50,blank=True, null=True)
-    size = models.CharField(max_length=50,blank=True, null=True)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='pr_update',blank=True, null=True)
-    variant = models.ForeignKey(Variants,on_delete=models.CASCADE,related_name='v_update',blank=True, null=True)
+    color = models.CharField(max_length=50,blank=True, null=True,verbose_name='رنگ محصول')
+    size = models.CharField(max_length=50,blank=True, null=True,verbose_name='سایز محصول')
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='pr_update',blank=True, null=True,verbose_name='انتخاب محصول')
+    variant = models.ForeignKey(Variants,on_delete=models.CASCADE,related_name='v_update',blank=True, null=True,verbose_name='انتخاب گونه محصول')
     
     def __str__(self):
         return self.name 
@@ -281,24 +300,63 @@ class Chart(models.Model):
         verbose_name = 'چارت محصول'
         verbose_name_plural = 'چارت محصولات'
         
-        
-        
+    def save(self,*args,**kwargs):
+        old_data_product = Chart.objects.filter(product__exact=self.product,unit_price__exact=self.unit_price)
+        old_data_variants = Chart.objects.filter(variant__exact=self.variant,unit_price__exact=self.unit_price)
+        if not old_data_product.exists() or not old_data_variants.exists():
+            return super(Chart,self).save(*args,**kwargs)
+ 
         
 # Signal for create product models no Variants
 def product_post_save(sender,instance,created,*args,**kwargs):
     data = instance
-    if data.change == False :
-        Chart.objects.create(product=data,unit_price=data.unit_price,update=data.update,name=data.name)
-    
-    
+    Chart.objects.create(product=data,unit_price=data.unit_price,update=data.update,name=data.name)
 post_save.connect(product_post_save,sender=Product)
 
 
 # Signal for create product models with Variants
 def variant_post_save(sender,instance,created,*args,**kwargs):
     data = instance
-    if data.change == False :
-        Chart.objects.create(variant=data,unit_price=data.unit_price,update=data.update,name=data.name,size=data.size_variant,color=data.color_variant)
-    
-    
+    Chart.objects.create(variant=data,unit_price=data.unit_price,update=data.update,name=data.name,size=data.size_variant,color=data.color_variant)
 post_save.connect(variant_post_save,sender=Variants)
+
+# Views for product
+class Views(models.Model):
+    ip = models.CharField(max_length=200,blank=True, null=True,verbose_name='آدرس آی پی کاربر')
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,blank=True, null=True,verbose_name='بازدید محصول')
+    create = models.DateTimeField(auto_now_add=True,verbose_name='تاریخ و زمان بازدید')
+    
+    
+    def __str__(self):
+        return self.product.name
+    
+
+    #rename model
+    class Meta:
+        verbose_name = 'بازدید محصول'
+        verbose_name_plural = 'بازدید های محصولات'
+        
+        
+# Gallery for slider in home page
+class Gallery(models.Model):
+    SALE_OFF = (
+        ('بهار','بهار'),
+        ('تابستان','تابستان'),
+        ('پاییز','پاییز'),
+        ('زمستان','زمستان'),
+    )
+    
+    name = models.CharField(max_length=100,blank=True, null=True,verbose_name='متن اسلایدر')
+    image = models.ImageField(upload_to='gallery/',blank=True,verbose_name='عکس اسلایدر')
+    sale_session = models.CharField(max_length=10,choices=SALE_OFF,blank=True,verbose_name='فروش فصلی')
+    sale_off = models.PositiveIntegerField(default=0,blank=True,verbose_name='نخفیف محصول')
+    
+    
+    def __str__(self):
+        return self.name
+    
+    #rename model
+    class Meta:
+        verbose_name = 'عکس اسلایدر'
+        verbose_name_plural = 'عکس های اسلایدر'
+        

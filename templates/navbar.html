@@ -139,8 +139,14 @@
                     <li>
                         <a href="#">Pages</a>
                         <ul>
-                            <li><a href="{% url 'accounts:favourite' %}">Wishlist</a></li>
+                           
                             {% if request.user.is_authenticated %}
+                                <li {% if request.resolver_match.url_name == 'favourite' %}class="active" 
+                                {% endif %}><a href="{% url 'accounts:favourite' %}">Wishlist</a></li>
+                                <li {% if request.resolver_match.url_name == 'show' %}class="active" 
+                                {% endif %} ><a href="{% url 'cart:show' %}">Compare products</a></li>
+                                <li {% if request.resolver_match.url_name == 'product_view' %}class="active" 
+                                {% endif %}><a href="{% url 'accounts:product_view' %}">resent visits</a></li>
                                 <li 
                                 {% if request.resolver_match.url_name == 'cart_detail' %}
                                     class="active" 

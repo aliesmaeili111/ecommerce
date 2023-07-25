@@ -1,9 +1,10 @@
 ﻿{% extends '_base.html' %}
 
 {% load static %}
-
+{% load base_tags %}
+{% load humanize %}
 {% block title %}
-    Products
+    صفحه محصولات
 {% endblock %}
 
 {% block style %}
@@ -175,14 +176,13 @@
                     <div class="container position-relative">
                         <div class="row">
                             <div class="pl-lg-5 pb-5 pb-md-0 col-md-5 col-xl-4 col-lg-4 offset-1">
-                                <h3>Electronic<br>Deals</h3>
-                                <a href="{% url 'home:products' %}" class="btn btn-dark">Get Yours!</a>
+                                <h3>وسایل برقی را<br>از ما خرید کنید</h3>
                             </div>
                             <div class="pl-lg-3 col-md-4 offset-md-0 offset-1 pt-3">
                                 <div class="coupon-sale-content">
-                                    <h4 class="m-b-1 coupon-sale-text bg-white text-transform-none">Exclusive COUPON
+                                    <h4 class="m-b-1 coupon-sale-text bg-white text-transform-none">دارای کد تخفیف 
                                     </h4>
-                                    <h5 class="mb-2 coupon-sale-text d-block ls-10 p-0"><i class="ls-0">UP TO</i><b class="text-dark">$100</b> OFF</h5>
+                                    <h5 class="mb-2 coupon-sale-text d-block ls-10 p-0"><i class="ls-0"></i><b class="text-dark">%50</b></h5>
                                 </div>
                             </div>
                         </div>
@@ -194,15 +194,12 @@
                 <nav aria-label="breadcrumb" class="breadcrumb-nav">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'home:home' %}"><i class="icon-home"></i></a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Men</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Accessories</li>
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
                     </ol>
                 </nav>
 
                 <div class="row">
                     <div class="col-lg-9 main-content">
-                       
                  
                         <div class="row">
                             {% for product in products %}
@@ -213,19 +210,21 @@
                                                 <img src="{{product.image.url}}" style="max-width:280px;max-height:280px;min-hieght:280px;  min-width:280px;" alt="{{product.name}}">
                                             </a>
 
-                                            <div class="label-group">
-                                                <div class="product-label label-sale">
-                                                    {% if product.discount %}
-                                                        %{{product.discount}}
-                                                    {% endif %}
+                                            {% if product.discount %}
+                                                <div class="label-group">
+                                                    <div class="product-label label-sale">
+                                                            %{{product.discount}}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            {% endif %}
                                         </figure>
 
                                         <div class="product-details">
-                                            <div class="category-wrap">                                  
+                                            <div class="category-wrap">   
                                                 {% for cat in product.category.active %} 
+                                     
                                                     <div class="category-list">
+                                                        دسته بندی 
                                                         <a href="{{category.get_absolute_url}}" >
                                                             {{cat.name}},
                                                         </a>
@@ -235,7 +234,7 @@
 
                                             <h3 class="product-title"> <a href="{{product.get_absolute_url}}">{{product.name}}</a> </h3>
 
-                                            <div class="ratings-container">
+                                            <div class="ratings-container comment-rating" style='color:gold;'>
                                                 {% if product.average >= 5 %}
                                                     <i class="fa fa-star"></i>
                                                     <i class="fa fa-star"></i>
@@ -251,24 +250,26 @@
                                             </div>
                                             <!-- End .product-container -->
 
+
                                             {% include 'home/price_box.html' %}
                                             <!-- End .price-box -->
 
                                             {% if request.user.is_authenticated %}
                                                 {% if is_favourite %}
                                                     <div class="product-action">
-                                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-dark text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>SELECT
-                                                                OPTIONS</span></a>
+                                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
+                                                        <a href="{% url 'cart:compare' product.id %}" ></a>
                                                     </div>
                                                 {% else %}
-                                                <div class="product-action">
-                                                    <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                                    <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>SELECT
-                                                        OPTIONS</span></a>
-                                                </div>
+                                                    <div class="product-action">
+                                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right text-danger"></i><span>جزئیات کالا</span></a>
+                                                        <a style="font-size:15px;" href="{% url 'cart:compare' product.id %}">&rarr;</a>
+                                                    </div>
                                                 {% endif %}
-                                                {% endif %}
+                                            {% endif %}
+                                           
                                         </div>
                                         <!-- End .product-details -->
                                     </div>
@@ -282,12 +283,12 @@
                                 <ul class="pagination toolbox-item">
                                                   
                                     <li class="page-item">
-                                        <a class="page-link page-link-btn" title="First page" href="?page=1">Fisrt page</a>
+                                        <a class="page-link page-link-btn" title="First page" href="?page=1">اولین صفحه</a>
                                     </li>
     
                                     {% if products.has_previous %}
                                         <li class="page-item">
-                                            <a class="page-link page-link-btn" title="Previous" href="?page={{products.previous_page_number}}"><i class="icon-angle-left"></i></a>
+                                            <a class="page-link page-link-btn" title="Previous" href="{% filter_url products.previous_page_number 'page' request.GET.urlencode %}"><i class="icon-angle-left"></i></a>
                                         </li>
                                     {% endif %}
 
@@ -296,27 +297,27 @@
                                     {% endif %}
 
                                     {% for i in products.paginator.page_range %}
-                                        {% if products.number == i %}
-                                            <li class="page-item {% if page_num == i %} active {% endif %}"><a class="page-link page-link-btn" href="?page={{products.number}}&{{data}}">{{i}}</a></li>
+                                        {% if products.number == i %}   
+                                            <li class="page-item {% if page_num == i %} active {% endif %}"><a class="page-link page-link-btn" href="{% filter_url products.number 'page' request.GET.urlencode %}">{{i}}</a></li>
                                         {% elif i > products.number|add:'-2' and i < products.number|add:'2' %}
-                                            <li class="page-item"><a class="page-link page-link-btn" href="?page={{i}}&{{data}}">{{i}}</a></li>
+                                            <li class="page-item"><a class="page-link page-link-btn" href="{% filter_url i 'page' request.GET.urlencode %}">{{i}}</a></li>
                                         {% endif %}
                                     {% endfor %}
 
                                     {% if products.paginator.num_pages > products.number|add:'3' %}
-                                        <li class="page-item"><a class="page-link page-link-btn" href="?page={{products.number}}&{{data}}">&hellip;</a></li>
-                                
-                                        <li class="page-item"><a class="page-link page-link-btn" href="?page={{products.paginator.num_pages}}&{{data}}">{{ products.paginator.num_pages }}</a></li>
+                                        <li class="page-item"><a class="page-link page-link-btn" href="{% filter_url products.number 'page' request.GET.urlencode %}">&hellip;</a></li>
+                                        
+                                        <li class="page-item"><a class="page-link page-link-btn" href="{% filter_url products.paginator.num_pages 'page' request.GET.urlencode %}">{{ products.paginator.num_pages }}</a></li>
                                     {% endif %}
 
                                     {% if products.has_next %}                                        
                                         <li class="page-item">
-                                            <a class="page-link page-link-btn" title="Next" href="?page={{products.next_page_number}}&{{data}}"><i class="icon-angle-right"></i></a>
+                                            <a class="page-link page-link-btn" title="Next" href="{% filter_url products.next_page_number 'page' request.GET.urlencode %}"><i class="icon-angle-right"></i></a>
                                         </li>
                                     {% endif %}
 
                                     <li class="page-item">
-                                        <a class="page-link page-link-btn" title="Last page" href="?page={{products.paginator.num_pages}}&{{data}}">Last page</a>
+                                        <a class="page-link page-link-btn" title="Last page" href="{% filter_url products.paginator.num_pages 'page' request.GET.urlencode %}">آخرین صفحه</a>
                                     </li>
                                 </ul>
                             </nav>

@@ -6,13 +6,13 @@
                 alt="{{product.name}}">
                 <img src="{{product.image.url}}" style="max-width:260px;max-height:260px" alt="{{product.name}}">
             </a>
-            <div class="label-group">
-                <div class="product-label label-sale">
-                    {% if product.discount %}
-                        %{{product.discount}}
-                    {% endif %}
+            {% if product.discount %}
+                <div class="label-group">
+                    <div class="product-label label-sale">
+                            %{{product.discount}}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </figure>
         <div class="product-details">
             {% for cat in product.category.active %} 
@@ -29,16 +29,16 @@
                 <span class="ratings-container">
                     {% if product.average %}
                         {% if product.average >= 5 %}
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star" style='color:gold;'></i>
+                            <i class="fa fa-star" style='color:gold;'></i>
+                            <i class="fa fa-star" style='color:gold;'></i>
+                            <i class="fa fa-star" style='color:gold;'></i>
+                            <i class="fa fa-star" style='color:gold;'></i>
                         {% elif 0 <= product.average <= 4 %}
-                            <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}"></i>
-                            <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}"></i>
-                            <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}"></i>
-                            <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}" style='color:gold;'></i>
+                            <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}" style='color:gold;'></i>
+                            <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}" style='color:gold;'></i>
+                            <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}" style='color:gold;'></i>
                         {% endif %}
                     {% else %}
                         <span>No rating</span>

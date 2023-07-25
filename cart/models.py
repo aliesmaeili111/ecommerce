@@ -7,7 +7,7 @@ from django.forms import ModelForm
 class Cart(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,verbose_name='انتخاب محصول')
     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='انتخاب کاربر')
-    variant = models.ForeignKey(Variants,on_delete=models.CASCADE,blank=True, null=True,verbose_name='انتخاب گونه محصول')
+    variant = models.ForeignKey(Variants,on_delete=models.CASCADE,blank=True,null=True,verbose_name='انتخاب گونه محصول')
     quantity = models.PositiveIntegerField(verbose_name='تعداد')
 
 

@@ -6,7 +6,8 @@ from accounts.views import (user_register,user_login,
                             ResetPassword,
                             DonePassword,
                             ConfirmPassword,
-                            Complete,favourite,history,remove_favourite)
+                            Complete,favourite,history,
+                            remove_favourite,product_view)
 
 
 app_name = 'accounts'
@@ -27,4 +28,6 @@ urlpatterns = [
     path('favourite/',favourite,name='favourite'),
     path('remove_favourite/<int:id>/',remove_favourite,name='remove_favourite'),
     path('history/',history,name='history'),
+    path('history/',history,name='history'),
+    path('view/',product_view,name='product_view'),
 ]

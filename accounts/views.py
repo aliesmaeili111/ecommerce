@@ -1,6 +1,7 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render,redirect,reverse,get_object_or_404
 from accounts.forms import UserRegisterForm,UserLoginForm
 from django.contrib.auth.models import User
+
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from accounts.models import Profile
@@ -22,7 +23,7 @@ from six import text_type
 from django.contrib.auth import views as auth_view
 from django.urls import reverse_lazy
 from order.models import ItemOrder
-from home.models import Product
+from home.models import Product,Views
 
 
 
@@ -83,6 +84,7 @@ def user_login(request):
         login_form = UserLoginForm(request.POST)
         if login_form.is_valid():
             data = login_form.cleaned_data
+            remember = data['remember']
             try:
                 user = authenticate(request,username=User.objects.get(email=data['user']),password=data['password'])
             except :
@@ -90,6 +92,10 @@ def user_login(request):
                 
             if user is not None:
                 login(request,user)
+                if not remember:
+                    request.session.set_expiry(0)
+                else:
+                    request.session.set_expiry(86400)
                 messages.success(request,f'Welcome {request.user.username}','primary')
                 return redirect('home:home')
             else:
@@ -128,10 +134,10 @@ def user_profile(request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
         
-        context = {
-            'profile':profile,
-            'user_form':user_form,
-            'profile_form':profile_form,
+    context = {
+        'profile':profile,
+        'user_form':user_form,
+        'profile_form':profile_form,
         }
     return render(request,'accounts/profile.html',context)
 
@@ -214,7 +220,9 @@ def favourite(request):
 @login_required(login_url='accounts:login')
 def remove_favourite(request,id):
     url = request.META.get("HTTP_REFERER")
-    Product.objects.filter(id=id).delete()
+    product = get_object_or_404(Product,id=id)
+    product.favourite.remove(request.user)
+    messages.error(request,'you wishlist remove','danger')
     return redirect(url)
     
 
@@ -226,6 +234,13 @@ def history(request):
     }
     return render(request,'accounts/history.html',context)
 
+
+def product_view(request):
+    product = Views.objects.filter(ip=request.META.get('REMOTE_ADDR')).order_by('-create')[:20]
+    context = {
+        'product':product,
+    }
+    return render(request,'accounts/view.html',context)
 
 
 

@@ -65,16 +65,20 @@ class ItemOrder(models.Model):
     
     def size(self):
         return self.variant.size_variant.name
+    size.short_description = 'سایز'
     
     def color(self):
         return self.variant.color_variant.name
+    color.short_description = 'رنگ'
     
     def price(self):
         if self.product.status != 'None':
             return self.variant.total_price * self.quantity
         else:
             return self.product.total_price * self.quantity
-        
+    price.short_description = 'قیمت'
+
+    
     class Meta:
         verbose_name = 'مورد سفارش'
         verbose_name_plural = 'مورد سفارشات'

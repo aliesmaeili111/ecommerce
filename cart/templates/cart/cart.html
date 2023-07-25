@@ -65,9 +65,31 @@
 												<td>{{c.variant.color_variant.name}}</td>
 
 												<td>
-													<a href="{% url 'cart:remove_single' c.id %}"><i class="fa fa-minus"></i></a>
-													{{c.quantity}}
-													<a href="{% url 'cart:add_single' c.id %}"><i class="fa fa-plus disabled"></i> </a>
+													{% if c.product.status != "None" %}
+														<a href="{% url 'cart:remove_single' c.id %}"><i class="fa fa-minus"></i></a>
+														<!-- {{c.quantity}} -->
+														<div class="product-single-qty">
+															<input type="number" id='number{{c.variant.id}}' name="quantity"
+															min="1"
+															value="{{c.quantity}}"
+															max="{{ c.variant.amount }}" required
+															oninvalid="setCustomValidity('pleaze between 1 to {{product.amount}}')">
+														</div>
+														<a href="{% url 'cart:add_single' c.id %}"><i class="fa fa-plus disabled"></i> </a>
+													{% else %}
+														<a href="{% url 'cart:remove_single' c.id %}"><i class="fa fa-minus"></i></a>
+														<!-- {{c.quantity}} -->
+														
+														<div class="product-single-qty">
+														<input type="number" name="quantity"
+														min="1"
+														value="{{c.quantity}}"
+														max="{{ c.product.amount }}" required
+														oninvalid="setCustomValidity('pleaze between 1 to {{product.amount}}')">
+														</div>
+
+														<a href="{% url 'cart:add_single' c.id %}"><i class="fa fa-plus disabled"></i> </a>
+														{% endif %}
 												</td>
 
 												<td class="text-right">
@@ -150,4 +172,26 @@
 
 			<div class="mb-6"></div><!-- margin -->
 		</main><!-- End .main -->
+
+	<!-- <script>
+		function add(id){
+			const num = $('#number' + id).val();
+			const num2 = $('#number' + id).attr('max');
+		
+			quantity = 0;
+			quantity += parseInt(num) + 1;
+			if(quantity <= num2){
+				$('#number' + id).val(quantity);
+				$.ajax({
+					url:$(this).attr('href'),
+					type: 'GET',
+					data : $(this).serialize(),
+               		dataType : 'json',
+					success:function(data){
+						alert('ok');
+					},
+				});
+			};
+		};
+	</script> -->
 {% endblock %}

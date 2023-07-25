@@ -10,13 +10,13 @@ def cart(context):
     cart = Cart.objects.filter(user_id=request.user.id)
     total = 0
     for p in cart :
-        if p.product.status != 'None':
+        if p.product.status == 'Color' or p.product.status == 'Size':
             total += p.variant.total_price * p.quantity
         else:
             total += p.product.total_price * p.quantity
     context = {
         'cart':cart,
         'total':total,
-        'request':request,
+        'request':request
     }
     return context

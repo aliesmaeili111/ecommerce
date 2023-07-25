@@ -1,7 +1,44 @@
 from django import forms
 from django.contrib.auth.models import User
 from accounts.models import Profile
+# from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+
+# class UserCreateForm(forms.ModelForm):
+#     password_1 = forms.CharField(widget=forms.PasswordInput)
+#     password_2 = forms.CharField(widget=forms.PasswordInput)
+    
+#     class Meta:
+#         model = User
+#         fields = ['email','username','phone']
+        
+#     def clean_password_2(self):
+#         data = self.cleaned_data
+#         if data['password_2'] and data['password_1'] and data['password_2'] != data['password_1']:
+#             raise forms.ValidationError('plz check')
+
+#         return data['password_2']
+    
+#     def save(self,commit=True):
+#         user = super().save(commit=False)
+#         user.set_password(self.cleaned_data['password_2'])
+#         if commit:
+#             user.save()
+#         return user
+    
+
+# class UserChangeForm(forms.ModelForm):
+#     password = ReadOnlyPasswordHashField
+    
+#     class Meta:
+#         model = User
+#         fields = ['email','username','phone']
+        
+#     def clean_password(self):
+#         return self.initial['password']
+    
+
+    
 # error form accounts(login,register)
 error = {
     'min_length' : 'حداقل باید 5 حرف باشد',
@@ -61,6 +98,7 @@ class UserRegisterForm(forms.Form):
 class UserLoginForm(forms.Form):
     user = forms.CharField(max_length=50)
     password = forms.CharField(max_length=50)
+    remember = forms.BooleanField(required=False,widget=forms.CheckboxInput())
     
 # User Update form
 class UserUpdateForm(forms.ModelForm):

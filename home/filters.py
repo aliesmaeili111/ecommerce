@@ -29,6 +29,11 @@ class ProductFilter(django_filters.FilterSet):
         ('محبوب ترین','محبوب ترین'),
     }
     
+    choices_6 = {
+        ('v','کم بازدید ترین'),
+        ('پر بازدید ترین','پر بازدید ترین'),
+    }
+    
     price_1 = django_filters.NumberFilter(field_name='unit_price',lookup_expr='gte')
     price_2 = django_filters.NumberFilter(field_name='unit_price',lookup_expr='lte')
     brand = django_filters.ModelMultipleChoiceFilter(queryset=Brand.objects.all(),widget=forms.CheckboxSelectMultiple)
@@ -39,6 +44,7 @@ class ProductFilter(django_filters.FilterSet):
     discount = django_filters.ChoiceFilter(choices=choices_3 ,method='discount_filter')
     sell = django_filters.ChoiceFilter(choices=choices_4 ,method='sell_filter')
     favourite = django_filters.ChoiceFilter(choices=choices_5 ,method='favourite_filter')
+    view = django_filters.ChoiceFilter(choices=choices_6 ,method='views_filter')
     
     
     def price_filter(self,queryset,nama,value):
@@ -59,5 +65,10 @@ class ProductFilter(django_filters.FilterSet):
     
     def favourite_filter(self,queryset,nama,value):
         data = 'total_favourite' if value == 'f' else '-total_favourite'
+        return queryset.order_by(data)
+    
+    
+    def views_filter(self,queryset,nama,value):
+        data = 'num_view' if value == 'v' else '-num_view'
         return queryset.order_by(data)
     
