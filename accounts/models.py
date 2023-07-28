@@ -57,6 +57,8 @@ from django.db.models.signals import post_save
 # Model Profile
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,verbose_name='کاربر')
+    first_name = models.CharField(max_length=250,blank=True, null=True,verbose_name='نام')
+    last_name = models.CharField(max_length=250,blank=True, null=True,verbose_name='نام خانوادگی')
     phone = models.IntegerField(blank=True, null=True,verbose_name='شماره تلفن')
     address = models.CharField(max_length=250,blank=True, null=True,verbose_name='آدرس')
     profile_image = models.ImageField(upload_to='profile/',default='user.png',blank=True, null=True,verbose_name='تصویر پروفایل')

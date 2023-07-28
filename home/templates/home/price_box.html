@@ -1,13 +1,13 @@
 {% load humanize %}
-<div class="price-box">
+<div class="price-box myfont">
     {% if variants %} 
-        <span class="old-price">{{variants.unit_price|floatformat:1|intcomma}}</span>
-        <span class="new-price">{{variants.total_price|floatformat:1|intcomma}} تومان</span>
+        <span class="old-price f-1">{{variants.unit_price|floatformat:1|intcomma}}</span>
+        <span class="new-price">{{variants.total_price|floatformat:1|intcomma}}</span>
     {% elif product.discount %}
-        <span class="old-price">{{product.unit_price|floatformat:1|intcomma}}</span>
-        <span class="new-price">{{product.total_price|floatformat:1|intcomma}} تومان</span>
+        <span class="old-price f-1">{{product.unit_price|floatformat:1|intcomma}}</span>
+        <span class="new-price">{{product.total_price|floatformat:1|intcomma}}</span>
     {% else %}
-        <span class="new-price">{{product.unit_price|floatformat:1|intcomma}} تومان</span>
+        <span class="new-price">{{product.unit_price|floatformat:1|intcomma}}</span>
     {% endif %}
 </div>
 <!-- End .price-box -->

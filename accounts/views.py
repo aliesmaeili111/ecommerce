@@ -58,7 +58,7 @@ def user_register(request):
                 [data['email']]
             )
             email.send(fail_silently=False)
-            messages.warning(request,f'User for active email.Pleaze','warning')
+            messages.warning(request,f'کاربر محترم لطفا ایمیل خود را فعال کنید','warning')
             return redirect('home:home')
     else:
         form = UserRegisterForm()
@@ -96,10 +96,10 @@ def user_login(request):
                     request.session.set_expiry(0)
                 else:
                     request.session.set_expiry(86400)
-                messages.success(request,f'Welcome {request.user.username}','primary')
+                messages.success(request,f'خوش آمدید {request.user.profile.first_name}','primary')
                 return redirect('home:home')
             else:
-                messages.error(request,f'User or password is wrong! {request.user.username}','danger')
+                messages.error(request,f'رمز عبور شما اشتباه است! {request.user.profile.first_name}','danger')
                 
             
     else:
@@ -113,7 +113,7 @@ def user_login(request):
 # Logout view
 def user_logout(request):
     logout(request)
-    messages.success(request,'Your logout','success')
+    messages.success(request,'شما خارج شدید','success')
     return redirect('home:home')
 
 
@@ -128,7 +128,7 @@ def user_profile(request):
         if (user_form.is_valid() and profile_form.is_valid()):
             user_form.save()
             profile_form.save()
-            messages.success(request,'Update profile successfuly','success')    
+            messages.success(request,'پروفایل شما بروزرسانی شد','success')    
             return redirect('accounts:profile')
     else:
         user_form = UserUpdateForm(instance=request.user)
@@ -151,10 +151,10 @@ def change_password(request):
         if form.is_valid() :
             form.save()
             update_session_auth_hash(request,form.user)
-            messages.success(request,'Change password successfuly','success')
+            messages.success(request,'رمز عبور شما با موفقیت تغییر کرد','success')
             return redirect('accounts:profile')
         else:
-            messages.error(request,'password id Wrong!','danger')
+            messages.error(request,'رمز عبور اشتباه است','danger')
             return redirect('accounts:profile') 
     else:
         form = PasswordChangeForm(request.user)
@@ -197,10 +197,10 @@ def verify(request):
                 profile = Profile.objects.get(phone=phone)
                 user = User.objects.get(profile__id=profile.id)
                 login(request,user)
-                messages.success(request,'Welcome user','success')
+                messages.success(request,f'خوش آمدید {request.user.profile.first_name} ','success')
                 return redirect("home:home")
             else:
-                messages.error(request,'Wrong your code. Try again',"danger")
+                messages.error(request,'کد ورود اشتباه است',"danger")
       
     else:
         form = CodeForm()
@@ -224,7 +224,7 @@ def remove_favourite(request,id):
     url = request.META.get("HTTP_REFERER")
     product = get_object_or_404(Product,id=id)
     product.favourite.remove(request.user)
-    messages.error(request,'you wishlist remove','danger')
+    messages.error(request,'با موفقیت از لیست علاقه مندی حذف شد','danger')
     return redirect(url)
     
 

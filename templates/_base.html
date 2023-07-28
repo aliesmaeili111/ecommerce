@@ -58,6 +58,7 @@
 
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/rtl.css' %}" />
 
     {% block css_filter %} {% endblock %}
     <!-- Main CSS File -->
@@ -71,8 +72,10 @@
 
   <body>
     <div class="page-wrapper">
-      {% include 'message.html' %} {% include 'navbar.html' %} {% block body %}
-      {% endblock %} {% include 'footer.html' %}
+      {% include 'message.html' %}
+      {% include 'navbar.html' %} 
+      {% block body %}{% endblock %}
+      {% include 'footer.html' %}
     </div>
     <!-- End .page-wrapper -->
 
@@ -92,57 +95,44 @@
         <span class="mobile-menu-close"><i class="fa fa-times"></i></span>
         <nav class="mobile-nav">
           <ul class="mobile-menu">
-            <li><a href="{% url 'home:home' %}">Home</a></li>
+            <li><a href="{% url 'home:home' %}">خانه</a></li>
+
             <li>
-              <a href="category.html">Categories</a>
-              <ul>
-                {% for cat in category %}
-                  <li><a href="{{cat.get_absolute_url}}">{{cat.name}}</a></li>
-                {% for info in cat.sub.all %}
-                <ul>
-                  <li>
-                    <a href="{{info.get_absolute_url}}">{{info.name}}</a>
-                  </li>
-                </ul>
-                {% endfor %} {% endfor %}
-              </ul>
+              <a href="{% url 'home:products' %}">محصولات</a>
             </li>
             <li>
-              <a href="{% url 'home:products' %}">Products</a>
-            </li>
-            <li>
-              <a href="#">Pages<span class="tip tip-hot">Hot!</span></a>
+              <a href="#">صفحات فروشگاه</a>
               <ul>
                 <li>
-                  <a href="{% url 'accounts:favourite' %}">Wishlist</a>
+                  <a href="{% url 'accounts:favourite' %}">علاقه مندی ها</a>
                 </li>
                 <li>
-                  <a href="{% url 'cart:cart_detail' %}">Shopping Cart</a>
+                  <a href="{% url 'cart:cart_detail' %}">سبد خرید</a>
                 </li>
                 <li>
-                  <a href="checkout.html">Checkout</a>
+                  <a href="checkout.html">تکمیل سفارش</a>
                 </li>
                 <li>
-                  <a href="{% url 'accounts:profile' %}">Dashboard</a>
+                  <a href="{% url 'accounts:profile' %}">حساب کاربری</a>
                 </li>
                 <li>
-                  <a href="{% url 'accounts:login' %}">Login</a>
+                  <a href="{% url 'accounts:login' %}">ورود</a>
                 </li>
                 <li>
-                  <a href="{% url 'accounts:reset' %}">Forgot Password</a>
+                  <a href="{% url 'accounts:reset' %}">فراموشی گذرواژه</a>
                 </li>
               </ul>
             </li>
-            <li><a href="blog.html">Blog</a></li>
+            <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
           </ul>
 
           <ul class="mobile-menu">
-            <li><a href="{% url 'accounts:profile' %}">My Account</a></li>
-            <li><a href="{% url 'home:contact' %}">Contact Us</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="{% url 'accounts:favourite' %}">My Wishlist</a></li>
-            <li><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
-            <li><a href="{% url 'accounts:login' %}" class="">Log In</a></li>
+            <li><a href="{% url 'accounts:profile' %}">حساب من</a></li>
+            <li><a href="{% url 'home:contact' %}">ارتیلط با ما</a></li>
+            <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
+            <li><a href="{% url 'accounts:favourite' %}">علاق مندی ها</a></li>
+            <li><a href="{% url 'cart:cart_detail' %}">سبد خرید</a></li>
+            <li><a href="{% url 'accounts:login' %}">ورود</a></li>
           </ul>
         </nav>
         <!-- End .mobile-nav -->
@@ -155,13 +145,14 @@
           {% csrf_token %}
           <input
             type="text"
+            style="text-align: right; padding-right: 30px;"
             name="search"
-            class="form-control mb-0"
-            placeholder="Search..."
+            class="form-control mb-0 myfont"
+            placeholder="جستجو"
             required=""
           />
           <button
-            class="btn icon-search text-white bg-transparent p-0"
+            class="btn pl-4 icon-search text-white bg-transparent p-0"
             type="submit"
           ></button>
         </form>
@@ -193,28 +184,28 @@
 
     <div class="sticky-navbar">
       <div class="sticky-info">
-        <a href="{% url 'home:home' %}"> <i class="icon-home"></i>Home </a>
+        <a href="{% url 'home:home' %}" class="myfont"> <i class="icon-home "></i>خانه </a>
       </div>
       <div class="sticky-info">
-        <a href="{% url 'home:products' %}" class="Products">
-          <i class="icon-bars"></i>Products
+        <a href="{% url 'home:products' %}" class="Products myfont">
+          <i class="icon-bars"></i>محصولات
         </a>
       </div>
       <div class="sticky-info">
-        <a href="{% url 'accounts:favourite' %}" class="">
-          <i class="icon-wishlist-2"></i>Wishlist
+        <a href="{% url 'accounts:favourite' %}" class="myfont">
+          <i class="icon-wishlist-2"></i>علاقه مندی ها
         </a>
       </div>
       <div class="sticky-info">
-        <a href="{% url 'accounts:login' %}" class="Login">
-          <i class="icon-user-2"></i>Account
+        <a href="{% url 'accounts:login' %}" class="Login myfont">
+          <i class="icon-user-2"></i>حساب کاربری
         </a>
       </div>
       <div class="sticky-info">
-        <a href="{% url 'cart:cart_detail' %}" class="cart">
+        <a href="{% url 'cart:cart_detail' %}" class="cart myfont">
           <i class="icon-shopping-cart position-relative">
             <span class="cart-count badge-circle">{{cart.count}}</span> </i
-          >Cart
+          >سبد خرید
         </a>
       </div>
     </div>

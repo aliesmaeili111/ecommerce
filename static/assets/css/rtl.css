@@ -1,0 +1,15 @@
+@import url(fonts.css);
+
+body{
+    font-family: 'IRANSANS'!important;
+}
+
+.myfont {
+    font-family: 'IRANSANS' !important;
+}
+.text-right{
+    text-align: right;
+}
+.f-1{
+    font-size: 13px !important;
+}

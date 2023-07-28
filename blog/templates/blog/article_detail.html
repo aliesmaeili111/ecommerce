@@ -33,7 +33,7 @@
 
 								<h2 class="post-title">{{object.title}}</h2>
 								<a href="" class="float-right">
-									{% for cat in object.category_published.all %}
+									{% for cat in object.category.active %}
 										{% if cat.children.active %}
 											<a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
 										{% endif %}
@@ -80,14 +80,13 @@
 									<h3><i class="far fa-user"></i>نویسنده</h3>
 
 									<figure>
-										<a href="#">
-											<img src="assets/images/blog/author.jpg" alt="ali">
+										<a href="{% url 'blog:author' article.author  %}">
+											<img src="{% static 'assets/images/blog/author.jpg' %}" alt="{{article.author.username}}">
 										</a>
 									</figure>
 
 									<div class="author-content">
-										<h4><a href="#">علی اسماعیلی</a></h4>
-										<p>توضیخاتی در مورد نویسنده.</p>
+										<h4><a href="{% url 'blog:author' article.author  %}">{{article.author.profile.first_name}} {{article.author.profile.last_name}}</a></h4>
 									</div><!-- End .author.content -->
 								</div><!-- End .post-author -->
 

@@ -1,26 +1,26 @@
 {% load base_tags %}
 {% load static %}
-<footer class="footer bg-dark">
+<footer class="footer bg-dark ">
     <div class="footer-middle">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="widget">
-                        <h4 class="widget-title">تماس با ما</h4>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="widget" >
+                        <h4 class="widget-title myfont " style="text-align: right;">تماس با ما</h4>
                         <ul class="contact-info">
                             <li>
-                                <span class="contact-info-label">آدرس:</span>قزوین, الوند
+                                <span class="contact-info-label myfont"style="text-align: right;">آدرس:</span>قزوین, الوند
                             </li>
                             <li>
-                                <span class="contact-info-label">تلفن تماس:</span><a href="tel:">+98 (937)
+                                <span class="contact-info-label myfont"style="text-align: right;">تلفن تماس:</span><a href="tel:">+98 (937)
                                     159-5811</a>
                             </li>
                             <li>
                                 
-                                <span class="contact-info-label">ایمیل وبسایت:</span> <a href="ali.esmaeili.2000.8@gmail.com">ali.esmaeili.2000.8@gmail.com</a>
+                                <span class="contact-info-label"style="text-align: right;">ایمیل وبسایت:</span> <a href="ali.esmaeili.2000.8@gmail.com">ali.esmaeili.2000.8@gmail.com</a>
                             </li>
                             <li>
-                                <span class="contact-info-label">ساعت کاری</span> شنبه تا جمعه
+                                <span class="contact-info-label"style="text-align: right;">ساعت کاری</span> شنبه تا جمعه
                             </li>
                         </ul>
                         <div class="social-icons">
@@ -34,42 +34,32 @@
                 </div>
                 <!-- End .col-lg-3 -->
 
-                <div class="col-lg-3 col-sm-6">
+                <div class="col-lg-4 col-sm-6">
                     <div class="widget">
-                        <h4 class="widget-title">سرویس های رایگان فروشگاه</h4>
+                        <h4 class="widget-title myfont"style="text-align: right;">صفحات فروشگاه</h4>
 
-                        <ul class="links">
-                            <li><a href="">blog</a></li>
-                            <li><a href="{% url 'home:contact' %}">contact Us</a></li>
-                            <li><a href="">about Us</a></li>
+                        <ul class="links myfont "style="text-align: right;">
+                        <ul class="links myfont ">
+                            <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
+                            <li><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
+                            <li><a href="">درباره ما</a></li>
+                            <li><a href="{% url 'accounts:register' %}">ثبت نام</a></li>
                         </ul>
                     </div>
                     <!-- End .widget -->
                 </div>
                 <!-- End .col-lg-3 -->
 
-                <div class="col-lg-3 col-sm-6">
-                    <div class="widget">
-                        <h4 class="widget-title">دسته بندی های محبوب</h4>
+                <div class="col-lg-4 col-sm-6 ">
+                    <div class="widget" style="text-align: right;">
+                        <h4 class="widget-title myfont">دسته بندی های محبوب</h4>
                         {% tags %}
                     </div>
                     <!-- End .widget -->
                 </div>
                 <!-- End .col-lg-3 -->
 
-                <div class="col-lg-3 col-sm-6">
-                    <div class="widget widget-newsletter">
-                        <h4 class="widget-title">Subscribe newsletter</h4>
-                        <p>Get all the latest information on events, sales and offers. Sign up for newsletter:
-                        </p>
-                        <form action="#" class="mb-0">
-                            <input type="email" class="form-control m-b-3" placeholder="Email address" required="">
-
-                            <input type="submit" class="btn btn-primary shadow-none" value="Subscribe">
-                        </form>
-                    </div>
-                    <!-- End .widget -->
-                </div>
+    
                 <!-- End .col-lg-3 -->
             </div>
             <!-- End .row -->

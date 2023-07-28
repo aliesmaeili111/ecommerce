@@ -18,11 +18,11 @@
                             <img class="slide-bg" src="{{i.image.url}}" width="1903" height="499" alt="slider image">
                             <div class="container d-flex align-items-center">
                                 <div class="banner-layer appear-animate" data-animation-name="fadeInUpShorter">
-                                    <h4 class="text-transform-none m-b-3">{{i.name}}</h4>
-                                    <h2 class="text-transform-none mb-0"> فروش {{i.sale_session}}</h2>
-                                    <h3 class="m-b-3">{{i.sale_off}}% Off</h3>
+                                    <h4 class="text-transform-none m-b-3 myfont">{{i.name}}</h4>
+                                    <h2 class="text-transform-none mb-0 myfont"> فروش {{i.sale_session}}</h2>
+                                    <h3 class="m-b-3 myfont">{{i.sale_off}}% تخفیف</h3>
                               
-                                    <a href="{% url 'home:products' %}" class="btn btn-dark btn-lg">Shop Now!</a>
+                                    <a href="{% url 'home:products' %}" class="btn btn-dark btn-lg myfont">همین الان از ما خرید کنید تا شامل کد تخفیف بشوید</a>
                                 </div>
                                 <!-- End .banner-layer -->
                             </div>
@@ -51,8 +51,8 @@
                             <i class="icon-shipping"></i>
 
                             <div class="info-box-content">
-                                <h4>FREE SHIPPING &amp; RETURN</h4>
-                                <p class="text-body">Free shipping on all orders over $99.</p>
+                                <h4 class="myfont text-right">ارسال محصول</h4>
+                                <p class="text-body">ارسال رایگان برای کالا های بالای 500 هزار تومان</p>
                             </div>
                             <!-- End .info-box-content -->
                         </div>
@@ -62,8 +62,8 @@
                             <i class="icon-money"></i>
 
                             <div class="info-box-content">
-                                <h4>MONEY BACK GUARANTEE</h4>
-                                <p class="text-body">100% money back guarantee</p>
+                                <h4 class="myfont text-right">برگشت وجه</h4>
+                                <p class="text-body">100% پول خود را از ما پس بگیرید</p>
                             </div>
                             <!-- End .info-box-content -->
                         </div>
@@ -73,8 +73,8 @@
                             <i class="icon-support"></i>
 
                             <div class="info-box-content">
-                                <h4>ONLINE SUPPORT 24/7</h4>
-                                <p class="text-body">Lorem ipsum dolor sit amet.</p>
+                                <h4 class="myfont text-right">پشتیبانی آنلاین</h4>
+                                <p class="text-body">شبانه روزی در خدمت شما هستیم</p>
                             </div>
                             <!-- End .info-box-content -->
                         </div>
@@ -90,7 +90,7 @@
                 
                 <section class="featured-products-section">
                     <div class="container">
-                        <h2 class="section-title heading-border ls-20 border-0">All Products</h2>
+                        <h2 class="section-title heading-border ls-20 border-0 myfont">تمام محصولات</h2>
 
                         <div class="products-slider custom-products owl-carousel owl-theme nav-outer show-nav-hover nav-image-center" data-owl-options="{
                             'dots': false,
@@ -119,7 +119,7 @@
 
                 <section class="feature-boxes-container">
                     <div class="container appear-animate" data-animation-name="fadeInUpShorter">
-                        <div class="row">
+                        <div class="row ">
                             <div class="col-md-4">
                                 <div class="feature-box px-sm-5 feature-box-simple text-center">
                                     <div class="feature-box-icon">
@@ -127,10 +127,10 @@
                                     </div>
 
                                     <div class="feature-box-content p-0">
-                                        <h3>Customer Support</h3>
-                                        <h5>You Won't Be Alone</h5>
+                                        <h3 class="myfont">پشتیبان مشتریان</h3>
+                                        <h5 class="myfont">اینجا تنها نیستی</h5>
 
-                                        <p>We really care about you and your website as much as you do. Purchasing Porto or any other theme from us you get 100% free support.</p>
+                                        <p>با خرید محصول از ما، 100٪ پشتیبانی رایگان دریافت می کنید.</p>
                                     </div>
                                     <!-- End .feature-box-content -->
                                 </div>
@@ -145,10 +145,10 @@
                                     </div>
 
                                     <div class="feature-box-content p-0">
-                                        <h3>Fully Customizable</h3>
-                                        <h5>Tons Of Options</h5>
+                                        <h3 class="myfont">کاملا قابل تنظیم</h3>
+                                        <h5 class="myfont">پر از گزینه ها</h5>
 
-                                        <p>With Porto you can customize the layout, colors and styles within only a few minutes. Start creating an amazing website right now!</p>
+                                        <p>با ما می‌توانید طرح، رنگ‌ها و سبک‌های محصولات را تنها در چند دقیقه سفارش بدهید!</p>
                                     </div>
                                     <!-- End .feature-box-content -->
                                 </div>
@@ -162,10 +162,10 @@
                                         <i class="icon-action-undo"></i>
                                     </div>
                                     <div class="feature-box-content p-0">
-                                        <h3>Powerful Admin</h3>
-                                        <h5>Made To Help You</h5>
+                                        <h3 class="myfont">ادمین قدرتمند</h3>
+                                        <h5 class="myfont">ساخته شده برای کمک به شما</h5>
 
-                                        <p>Porto has very powerful admin features to help customer to build their own shop in minutes without any special skills in web development.</p>
+                                        <p>این فروشگاه دارای ویژگی‌های مدیریتی بسیار قدرتمندی است که به مشتری کمک می‌کند تا در عرض چند دقیقه محصول خود را بدون هیچ گونه مهارت خاصی در این وبسایت سفارش دهد.</p>
                                     </div>
                                     <!-- End .feature-box-content -->
                                 </div>
@@ -183,16 +183,15 @@
                     <div class="promo-banner banner container text-uppercase">
                         <div class="banner-content row align-items-center text-center">
                             <div class="col-md-4 ml-xl-auto text-md-right appear-animate" data-animation-name="fadeInRightShorter" data-animation-delay="600">
-                                <h2 class="mb-md-0 text-white">Top Fashion<br>Deals</h2>
+                                <h2 class="mb-md-0 text-white myfont">بهترین برند ها</h2>
                             </div>
                             <div class="col-md-4 col-xl-3 pb-4 pb-md-0 appear-animate" data-animation-name="fadeIn" data-animation-delay="300">
-                                <a href="{% url 'home:products' %}" class="btn btn-dark btn-black ls-10">View Sale</a>
+                                <a href="{% url 'home:products' %}" class="btn btn-dark btn-black ls-10 myfont">دیدن تمام محصولات</a>
                             </div>
                             <div class="col-md-4 mr-xl-auto text-md-left appear-animate" data-animation-name="fadeInLeftShorter" data-animation-delay="600">
-                                <h4 class="mb-1 mt-1 font1 coupon-sale-text p-0 d-block ls-n-10 text-transform-none">
-                                    <b>Exclusive
-                                        COUPON</b></h4>
-                                <h5 class="mb-1 coupon-sale-text text-white ls-10 p-0"><i class="ls-0">UP TO</i><b class="text-white bg-secondary ls-n-10">$100</b> OFF</h5>
+                                <h4 class="mb-1 mt-1 font1 coupon-sale-text p-0 d-block ls-n-10 text-transform-none ">
+                                    <b class="myfont">کوپن اختصاصی</b></h4>
+                                <h5 class="mb-1 coupon-sale-text text-white ls-10 p-0 myfont"><i class="ls-0"></i><b class="text-white bg-secondary ls-n-10 ">%100</b> تخفیف</h5>
                             </div>
                         </div>
                     </div>
@@ -200,8 +199,8 @@
 
                 <section class="blog-section pb-0">
                     <div class="container">
-                        <h2 class="section-title heading-border border-0 appear-animate" data-animation-name="fadeInUp">
-                            Latest News</h2>
+                        <h2 class="section-title heading-border border-0 appear-animate myfont" data-animation-name="fadeInUp">
+                            آخرین خبرها</h2>
 
                         <div class="owl-carousel owl-theme appear-animate" data-animation-name="fadeIn" data-owl-options="{
                             'loop': false,
@@ -232,23 +231,23 @@
                                         <img src="{{article.thumbnail.url}}" alt="{{article.title}}" width="225" height="280">
                                     </a>
                                     <div class="post-date">
-                                        <span class="day text-align-center">{{article.jpublish}}</span>
+                                        <span class="day text-align-center myfont" style="font-size: 15px;">{{article.jpublish}}</span>
                                     </div>
                                 </div>
                                 <!-- End .post-media -->
 
                                 <div class="post-body">
-                                    <h2 class="post-title">
+                                    <h2 class="post-title myfont">
                                         <a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
                                     </h2>
-                                    <div class="post-content">
+                                    <div class="post-content myfont">
                                         <p>{{article.description|safe|truncatewords:15}}</p>
                                     </div>
                                     <!-- End .post-content -->
-                                    <a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 Comments</a>
-                                    {% for cat in article.category_published.all %}
+                                    <a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 نظر</a>
+                                    {% for cat in article.category.active %}
                                         {% if cat.children.active %}
-                                            <a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
+                                            <a href="{% url 'blog:category' cat.slug %}" class="float-right myfont">{{cat.title}} #</a>
                                         {% endif %}
                                     {% endfor %}
                                 </div>

@@ -17,7 +17,7 @@
             <a href="#" title="Close (Esc)" class="btn-close">×</a>
             {% if request.user.is_authenticated %}
                 <div class="dropdownmenu-wrapper custom-scrollbar">
-                    <div class="dropdown-cart-header">سبد خرید</div>
+                    <div class="dropdown-cart-header myfont">سبد خرید</div>
                     <!-- End .dropdown-cart-header -->
 
                     <div class="dropdown-cart-products">
@@ -50,7 +50,7 @@
                     <!-- End .cart-product -->
 
                     <div class="dropdown-cart-total">
-                        <span>جمع:</span>
+                        <span class="myfont">جمع:</span>
 
                         <span id="total_select" class="cart-total-price float-right">
                             
@@ -60,13 +60,13 @@
                     <!-- End .dropdown-cart-total -->
 
                     <div class="dropdown-cart-action">
-                        <a href="{% url 'cart:cart_detail' %}" class="btn btn-gray btn-block view-cart">سبد خرید</a>
+                        <a href="{% url 'cart:cart_detail' %}" class="btn btn-gray btn-block view-cart myfont">سبد خرید</a>
                     </div>
                     <!-- End .dropdown-cart-total -->
                 </div>
             {% else %}
                 <div class="dropdownmenu-wrapper custom-scrollbar">
-                    <div class="dropdown-cart-header">
+                    <div class="dropdown-cart-header myfont">
                         <a href="{% url 'accounts:login' %}">ابتدا باید وارد سایت شوید</a>
                     </div>
                 </div>

@@ -7,7 +7,7 @@
     <div class="header-top">
         <div class="container">
             <div class="header-left d-none d-sm-block">
-                <p class="top-message text-uppercase">FREE Returns. Standard Shipping Orders $99+</p>
+                <p class="top-message text-uppercase">ارسال رایگان برای محصولات بالای 500 هزار تومان</p>
             </div>
             <!-- End .header-left -->
 
@@ -18,17 +18,17 @@
                         <ul>
                                
                             {% if request.user.is_authenticated %}
-                                <li><a href="{% url 'accounts:profile' %}">My Account</a></li>
-                                <li><a href="about.html">About Us</a></li>
-                                <li><a href="{% url 'blog:home' %}">Blog</a></li>
-                                <li><a href="{% url 'accounts:favourite' %}">My Wishlist</a></li>
-                                <li><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
-                                <li><a href="{% url 'accounts:logout' %}">Log Out</a></li>
+                                <li><a href="{% url 'accounts:profile' %}">حساب من</a></li>
+                                <li><a href="about.html">درباره ما</a></li>
+                                <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
+                                <li><a href="{% url 'accounts:favourite' %}">علاقه مندی ها</a></li>
+                                <li><a href="{% url 'cart:cart_detail' %}">سبد خرید</a></li>
+                                <li><a href="{% url 'accounts:logout' %}">خروج</a></li>
                             {% else %}
-                                <li><a href="about.html">About Us</a></li>
-                                <li><a href="{% url 'blog:home' %}">Blog</a></li>
-                                <li><a href="{% url 'accounts:login' %}">Log In</a></li>
-                                <li><a href="{% url 'accounts:register' %}">Register</a></li>
+                                <li><a href="about.html">درباره ما</a></li>
+                                <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
+                                <li><a href="{% url 'accounts:login' %}">ورود</a></li>
+                                <li><a href="{% url 'accounts:register' %}">ثبت نام</a></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -72,15 +72,15 @@
        
                         <form action="{% url 'home:product_search' %}" method="post">{% csrf_token %}
                             <div class="header-search-wrapper">
-                                <input type="search"oninvalid="setCustomValidity('pleaze complete search')"class="form-control" name="search" id="q" placeholder="Search..." required="">
+                                <input type="search" style="text-align: right;" oninvalid="setCustomValidity('pleaze complete search')"class="form-control myfont " name="search" id="q" placeholder="جستجو" required="">
                                 <button class="btn icon-magnifier p-0" title="search" type="submit"></button>
                             </div>
                             <!-- End .header-search-wrapper -->
                         </form>
                     {% else %}
                         <form action="{% url 'home:products' %}">{% csrf_token %}
-                            <div class="header-search-wrapper">
-                                <input type="search"oninvalid="setCustomValidity('pleaze complete search')"class="form-control" name="search" id="q" placeholder="Search..." required="">
+                            <div class="header-search-wrapper text-align-right">
+                                <input type="search" style="text-align: right;" oninvalid="setCustomValidity('pleaze complete search')"class="form-control myfont " name="search" id="q" placeholder="جستجو " required="">
                                 <button class="btn icon-magnifier p-0" title="search" type="submit"></button>
                             </div>
                             <!-- End .header-search-wrapper -->
@@ -92,7 +92,7 @@
 
                 <div class="header-contact d-none d-lg-flex pl-4 pr-4">
                     <img alt="phone" src="{% static 'assets/images/phone.png' %}" width="30" height="30" class="pb-1">
-                    <h6><span>Call us now</span><a href="tel:+989371595811" class="text-dark font1">+98 937 159 5811</a></h6>
+                    <h6><span class="myfont">ارتباط با ما</span><a href="tel:+989371595811" class="text-dark font1">+98 937 159 5811</a></h6>
                 </div>
 
                 <a href="{% url 'accounts:login' %}" class="header-icon" title="login"><i class="icon-user-2"></i></a>
@@ -119,14 +119,14 @@
                     {% if request.resolver_match.url_name == 'home' %}
                         class="active" 
                     {% endif %}>
-                        <a href="{% url 'home:home' %}">Home</a>
+                        <a href="{% url 'home:home' %}">خانه</a>
                     </li>
 
                     <li
                     {% if request.resolver_match.url_name == 'category' %}
                         class="active" 
                     {% endif %}>
-                        <a href="#">Categories</a>
+                        <a href="#">دسته بندی ها</a>
                             {% category_navbar %}
                         <!-- End .megamenu -->
                     </li>
@@ -134,48 +134,48 @@
                     {% if request.resolver_match.url_name == 'products' %}
                         class="active" 
                     {% endif %}>
-                        <a href="{% url 'home:products' %}">Products</a>
+                        <a href="{% url 'home:products' %}">محصولات</a>
                     </li>
                     <li>
-                        <a href="#">Pages</a>
-                        <ul>
+                        <a href="#">صفحات  فروشگاه</a>
+                        <ul class="float-right">
                            
                             {% if request.user.is_authenticated %}
                                 <li {% if request.resolver_match.url_name == 'favourite' %}class="active" 
-                                {% endif %}><a href="{% url 'accounts:favourite' %}">Wishlist</a></li>
+                                {% endif %}><a href="{% url 'accounts:favourite' %}">علاقه مندی ها</a></li>
                                 <li {% if request.resolver_match.url_name == 'product_view' %}class="active" 
-                                {% endif %}><a href="{% url 'accounts:product_view' %}">resent visits</a></li>
+                                {% endif %}><a href="{% url 'accounts:product_view' %}">بازدید های اخیر</a></li>
                                 <li 
                                 {% if request.resolver_match.url_name == 'cart_detail' %}
                                     class="active" 
                                 {% endif %}>
-                                <a href="{% url 'cart:cart_detail' %}">Shopping Cart</a></li>
+                                <a href="{% url 'cart:cart_detail' %}">سبد خرید</a></li>
                                 <li 
                                 {% if request.resolver_match.url_name == 'profile' %}
                                     class="active" 
                                 {% endif %}>
                         
-                                    <a href="{% url 'accounts:profile' %}">Dashboard</a></li>
+                                    <a href="{% url 'accounts:profile' %}">حساب کاربری</a></li>
                             {% endif %}
-                            <li><a href="about.html">About Us</a></li>
-                            <li><a href="{% url 'blog:home' %}">Blog</a></li>
-                            <li><a href="{% url 'home:contact' %}">Contact Us</a></li>
+                            <li><a href="about.html">درباره ما</a></li>
+                            <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
+                            <li><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
                             {% if request.user.is_authenticated %}
-                                <li><a href="{% url 'accounts:logout' %}">Log out</a></li>
+                                <li><a href="{% url 'accounts:logout' %}">خروج</a></li>
                             {% else %}
                                 <li
                                     {% if request.resolver_match.url_name == 'login' %}
                                         class="active" 
                                     {% endif %}>
-                                    <a href="{% url 'accounts:login' %}">Login</a>
+                                    <a href="{% url 'accounts:login' %}">ورود</a>
                                 </li>
                             {% endif %}
-                            <li><a href="{% url 'accounts:reset' %}">Forgot Password</a></li>
+                            <li><a href="{% url 'accounts:reset' %}">فراموشی گذرواژه</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'blog:home' %}">Blog</a></li>
+                    <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
 
-                    <li><a href="{% url 'home:contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
                 </ul>
             </nav>
         </div>

@@ -46,10 +46,10 @@ class Article(models.Model):
    
     )
     
+    author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL,related_name="articles",verbose_name="نویسنده",help_text="یک نویسنده کارمندی را انتخاب کنید")
     title = models.CharField(max_length = 250,verbose_name='عنوان مقاله',help_text = 'لطفا بیشتر از 250 حرف ننویسید',validators=[MaxLengthValidator(250,"لطفا بین 1 تا 250 حرف بنویسید")])
     slug = models.SlugField(max_length = 35,allow_unicode=True,unique = True,verbose_name='آدرس مقاله',help_text = 'لطفا بیشتر از 35 حرف ننویسید',validators=[MaxLengthValidator(35,"لطفا بین 1 تا 35 حرف بنویسید")])
     category = models.ManyToManyField(Category,verbose_name="دسته بندی",related_name="articles",help_text="کنترل یا فرمان را در مک نگه دارید تا بیش از یک مورد انتخاب شود|")
-    # author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL,related_name="articles",verbose_name="نویسنده",help_text="یک نویسنده کارمندی را انتخاب کنید")
     description = RichTextField(verbose_name="محتوای مقاله",help_text="محتوایی برای مقاله خود بنویسید")
     thumbnail = models.ImageField(upload_to='images_blog',verbose_name="تصویر مقاله",help_text='برای مقاله تصویری انتخاب کنید')
     publish = models.DateTimeField(default = timezone.now,verbose_name='زمان انتشار',help_text = 'فرمت صحیح تاریخ YYYY-MM-DD')
@@ -66,9 +66,6 @@ class Article(models.Model):
     def jpublish(self):
         return jalali_conveter(self.publish)
     jpublish.short_description = 'تاریخ انتشار'
-
-    def category_published(self):
-        return self.category.filter(status=True)
     
     def thumbnail_tag(self):
         return format_html("<img src='{}' width=70px hieght=30px style='border-radius:8px'; >".format(self.thumbnail.url))

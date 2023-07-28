@@ -51,9 +51,9 @@ make_not_active.short_description =" لغو نمایش دسته بندی انت�
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title','slug','thumbnail_tag','category_to_str','jpublish','status')
+    list_display = ('title','slug','thumbnail_tag','author_name','category_to_str','jpublish','status')
     list_display_links = ('title','slug')
-    list_filter = ('publish','status')
+    list_filter = ('publish','status','author')
     list_editable = ('status',)
     search_fields =  ['title','slug']
     prepopulated_fields = {'slug':('title',)} 
@@ -64,10 +64,12 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
     def category_to_str(self,obj):
-        return ", ".join([category.title for category in obj.category_published()])
+        return ", ".join([category.title for category in obj.category.active()])
     category_to_str.short_description = "دسته بندی"
 
-
+    def author_name(self,obj):
+        return obj.author.profile.first_name +' '+ obj.author.profile.last_name
+    author_name.short_description = "نویسنده"
 
 
 @admin.register(Category)  
