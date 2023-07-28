@@ -1,0 +1,93 @@
+﻿{% extends '_base.html' %}
+{% block title %} Order {% endblock %} 
+{% block body%}
+
+    <main class="main main-test">
+    <div class="container checkout-container">
+        <ul class="checkout-progress-bar d-flex justify-content-center flex-wrap">
+        <li>
+            <a href="{% url 'cart:cart_detail' %}">Shopping Cart</a>
+        </li>
+        <li class="active">
+            <a href="{% url 'order:order_information'  %}">Checkout</a>
+        </li>
+        <li class="disabled">
+            <a href="#">Order Complete</a>
+        </li>
+        </ul>
+
+        <div class="checkout-discount">
+        <h4>
+            Have a coupon?
+            <button
+            data-toggle="collapse"
+            data-target="#collapseTwo"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+            class="btn btn-link btn-toggle"
+            >
+            ENTER YOUR CODE
+            </button>
+        </h4>
+
+        <div id="collapseTwo" class="collapse">
+            <div class="feature-box">
+            <div class="feature-box-content">
+                <p>If you have a coupon code, please apply it below.</p>
+
+                <form action="{% url 'order:coupon' order.id %}" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input
+                    name="code"
+                    type="text"
+                    class="form-control form-control-sm w-auto"
+                    placeholder="Coupon code"
+                    required
+                    />
+                    <div class="input-group-append">
+                    <button class="btn btn-sm mt-0" type="submit">
+                        Apply Coupon
+                    </button>
+                    </div>
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="row">
+        <div class="col-lg-10">
+            <div class="order-summary">
+            <h3>YOUR ORDER</h3>
+
+            <table class="table table-mini-cart">
+                
+                <tfoot>
+                <tr class="order-total">
+                    <td>
+                    <h4>Total</h4>
+                    </td>
+                    <td>
+                    <b class="total-price">
+                        <span> {{order.get_price}} </span>
+                    </b>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+            <a class="btn mb-2 btn-dark btn-place-order" href="{% url 'order:request' order.id order.get_price %}"
+                >paid</a
+            >
+
+            </div>
+            <!-- End .cart-summary -->
+        </div>
+        </div>
+    </div>
+    <!-- End .container -->
+    </main>
+    <!-- End .main -->
+
+{% endblock %}

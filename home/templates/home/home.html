@@ -3,7 +3,7 @@
 {% load base_tags %}
 {% load humanize %}
 {% block title %}
-    Home
+    صفحه اصلی
 {% endblock %}
 
 {% block body %}
@@ -225,109 +225,38 @@
                                 }
                             }
                         }">
+                        {% for article in articles %}
                             <article class="post">
                                 <div class="post-media">
-                                    <a href="single.html">
-                                        <img src="assets/images/blog/home/post-1.jpg" alt="Post" width="225" height="280">
+                                    <a href="{% url 'blog:detail' article.slug %}">
+                                        <img src="{{article.thumbnail.url}}" alt="{{article.title}}" width="225" height="280">
                                     </a>
                                     <div class="post-date">
-                                        <span class="day">26</span>
-                                        <span class="month">Feb</span>
+                                        <span class="day text-align-center">{{article.jpublish}}</span>
                                     </div>
                                 </div>
                                 <!-- End .post-media -->
 
                                 <div class="post-body">
                                     <h2 class="post-title">
-                                        <a href="single.html">Top New Collection</a>
+                                        <a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
                                     </h2>
                                     <div class="post-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras non placerat mi. Etiam non tellus sem. Aenean...</p>
+                                        <p>{{article.description|safe|truncatewords:15}}</p>
                                     </div>
                                     <!-- End .post-content -->
-                                    <a href="single.html" class="post-comment">0 Comments</a>
+                                    <a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 Comments</a>
+                                    {% for cat in article.category_published.all %}
+                                        {% if cat.children.active %}
+                                            <a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                                 <!-- End .post-body -->
                             </article>
                             <!-- End .post -->
-
-                            <article class="post">
-                                <div class="post-media">
-                                    <a href="single.html">
-                                        <img src="assets/images/blog/home/post-2.jpg" alt="Post" width="225" height="280">
-                                    </a>
-                                    <div class="post-date">
-                                        <span class="day">26</span>
-                                        <span class="month">Feb</span>
-                                    </div>
-                                </div>
-                                <!-- End .post-media -->
-
-                                <div class="post-body">
-                                    <h2 class="post-title">
-                                        <a href="single.html">Fashion Trends</a>
-                                    </h2>
-                                    <div class="post-content">
-                                        <p>Leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of...</p>
-                                    </div>
-                                    <!-- End .post-content -->
-                                    <a href="single.html" class="post-comment">0 Comments</a>
-                                </div>
-                                <!-- End .post-body -->
-                            </article>
-                            <!-- End .post -->
-
-                            <article class="post">
-                                <div class="post-media">
-                                    <a href="single.html">
-                                        <img src="assets/images/blog/home/post-3.jpg" alt="Post" width="225" height="280">
-                                    </a>
-                                    <div class="post-date">
-                                        <span class="day">26</span>
-                                        <span class="month">Feb</span>
-                                    </div>
-                                </div>
-                                <!-- End .post-media -->
-
-                                <div class="post-body">
-                                    <h2 class="post-title">
-                                        <a href="single.html">Right Choices</a>
-                                    </h2>
-                                    <div class="post-content">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...</p>
-                                    </div>
-                                    <!-- End .post-content -->
-                                    <a href="single.html" class="post-comment">0 Comments</a>
-                                </div>
-                                <!-- End .post-body -->
-                            </article>
-                            <!-- End .post -->
-
-                            <article class="post">
-                                <div class="post-media">
-                                    <a href="single.html">
-                                        <img src="assets/images/blog/home/post-4.jpg" alt="Post" width="225" height="280">
-                                    </a>
-                                    <div class="post-date">
-                                        <span class="day">26</span>
-                                        <span class="month">Feb</span>
-                                    </div>
-                                </div>
-                                <!-- End .post-media -->
-
-                                <div class="post-body">
-                                    <h2 class="post-title">
-                                        <a href="single.html">Perfect Accessories</a>
-                                    </h2>
-                                    <div class="post-content">
-                                        <p>Leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of...</p>
-                                    </div>
-                                    <!-- End .post-content -->
-                                    <a href="single.html" class="post-comment">0 Comments</a>
-                                </div>
-                                <!-- End .post-body -->
-                            </article>
-                            <!-- End .post -->
+                        {% endfor %}
+                        
                         </div>
 
                         <hr class="mt-0 m-b-5">

@@ -39,7 +39,6 @@
                                 <th class="product-col">Product</th>
                                 <th class="price-col">Price</th>
                                 <th class="price-col">Remove</th>
-                                <th class="action-col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,20 +65,6 @@
                                     <td class="price-box">
                                         <a href="{% url 'accounts:remove_favourite' i.id %}" class=" icon-cancel" title="Remove Product"></a>
                                     </td>
-
-                                    <td class="action">
-                                        <form action="{% url 'cart:add_cart' i.id %}" method="post">
-                                            {% csrf_token %}
-                                            <div class="product-single-qty">
-                                                <input type="number" name="quantity"
-                                                min="1"
-                                                value="1"
-                                                max="{{ i.amount }}" required
-                                                oninvalid="setCustomValidity('pleaze between 1 to {{i.amount}}')">
-                                            </div>
-                                            <button type="submit" class="btn btn-dark mr-2" title="Add to Cart">Add to Cart</button>
-                                        </form>
-                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -92,5 +77,6 @@
             {% endif %}
         </div><!-- End .container -->
     </main>
+   
     <!-- End .main -->
 {% endblock %}

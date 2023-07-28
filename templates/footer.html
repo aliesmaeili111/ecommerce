@@ -1,5 +1,5 @@
 {% load base_tags %}
-
+{% load static %}
 <footer class="footer bg-dark">
     <div class="footer-middle">
         <div class="container">
@@ -16,6 +16,7 @@
                                     159-5811</a>
                             </li>
                             <li>
+                                
                                 <span class="contact-info-label">ایمیل وبسایت:</span> <a href="ali.esmaeili.2000.8@gmail.com">ali.esmaeili.2000.8@gmail.com</a>
                             </li>
                             <li>
@@ -86,10 +87,10 @@
 
                 <div class="footer-right ml-auto mt-1 mt-sm-0">
                     <div class="payment-icons">
-                        <span class="payment-icon visa" style="background-image: url(assets/images/payments/payment-visa.svg)"></span>
-                        <span class="payment-icon paypal" style="background-image: url(assets/images/payments/payment-paypal.svg)"></span>
-                        <span class="payment-icon stripe" style="background-image: url(assets/images/payments/payment-stripe.png)"></span>
-                        <span class="payment-icon verisign" style="background-image:  url(assets/images/payments/payment-verisign.svg)"></span>
+                        <span class="payment-icon visa" style="background-image: url({% static 'assets/images/payments/payment-visa.svg' %})"></span>
+                        <span class="payment-icon paypal" style="background-image: url({% static 'assets/images/payments/payment-paypal.svg' %})"></span>
+                        <span class="payment-icon stripe" style="background-image: url({% static 'assets/images/payments/payment-stripe.png' %})"></span>
+                        <span class="payment-icon verisign" style="background-image:  url({% static 'assets/images/payments/payment-verisign.svg' %})"></span>
                     </div>
                 </div>
             </div>

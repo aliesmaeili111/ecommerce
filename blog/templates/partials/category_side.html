@@ -1,0 +1,8 @@
+{% for cat in category %}
+        {% if cat.parent == None %}
+                <a href="{% url 'blog:category' cat.slug %}" >{{cat.title}} #</a>    
+                {% if cat.children.active %}
+                        {% include 'partials/category_loop.html' %}
+                {% endif %}
+        {% endif %}
+{% endfor %}

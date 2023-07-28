@@ -50,13 +50,9 @@ def jalali_conveter(time):
             break       
     
     
-    output =" ساعت {}:{} , {}/{}/{}   ".format(
-        time.hour,
-        time.minute,
+    output ="{} {}".format(
         time_to_list[2],
         time_to_list[1],
-        time_to_list[0],
-        
     )
  
     return persion_numbers_converter(output)

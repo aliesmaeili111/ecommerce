@@ -255,19 +255,12 @@
                                             <!-- End .price-box -->
 
                                             {% if request.user.is_authenticated %}
-                                                {% if is_favourite %}
+                                                
                                                     <div class="product-action">
                                                         <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
-                                                        <a href="{% url 'cart:compare' product.id %}" ></a>
+                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><span>جزئیات کالا</span></a>
                                                     </div>
-                                                {% else %}
-                                                    <div class="product-action">
-                                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right text-danger"></i><span>جزئیات کالا</span></a>
-                                                        <a style="font-size:15px;" href="{% url 'cart:compare' product.id %}">&rarr;</a>
-                                                    </div>
-                                                {% endif %}
+                                                
                                             {% endif %}
                                            
                                         </div>

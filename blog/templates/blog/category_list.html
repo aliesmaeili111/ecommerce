@@ -1,0 +1,132 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load base_blog %}
+
+{% block title %}
+    صفحه اصلی وبلاگ
+{% endblock %}
+
+{% block body %}
+		<main class="main">
+			<nav aria-label="breadcrumb" class="breadcrumb-nav">
+				<div class="container">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="{% url 'home:home' %}"><i class="icon-home"></i></a></li>
+						<li class="breadcrumb-item active" aria-current="page">وبلاگ فروشگاه</li>
+					</ol>
+				</div><!-- End .container -->
+			</nav>
+
+			<div class="container">
+				<h2 class="section-title heading-border border-0 appear-animate" data-animation-name="fadeInUp">
+					دسته بندی :   {{category_blog.title}} </h2>
+				<div class="row">
+					<div class="col-lg-9">
+						<div class="blog-section row">
+							{% for article in object_list %}
+							<div class="col-md-6 col-lg-4">
+								<article class="post">
+									<div class="post-media">
+										<a href="{% url 'blog:detail' article.slug %}">
+											<img src="{{article.thumbnail.url}}" alt="{{article.title}}" width="225" height="280">
+										</a>
+										<div class="post-date">
+											<span class="day text-align-center">{{article.jpublish}}</span>
+										</div>
+									</div><!-- End .post-media -->
+
+									<div class="post-body">
+										<h2 class="post-title">
+											<a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
+										</h2>
+										<div class="post-content">
+											<p>{{article.description|truncatewords:15|safe}}</p>
+										</div><!-- End .post-content -->
+										<a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 Comments</a>
+										{% for cat in article.category_published.all %}
+											{% if cat.children.active %}
+												<a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
+											{% endif %}
+										{% endfor %}
+									</div><!-- End .post-body -->
+								</article><!-- End .post -->
+							</div>
+							{% endfor %}					
+						</div>
+						<nav class="toolbox toolbox-pagination">
+							<ul class="pagination toolbox-item">							
+								{% if is_paginated %}
+									{% if page_obj.has_previous %}						
+										<li class="page-item">
+											<a class="page-link page-link-btn" title="First page" href="{% url 'blog:category' category_blog.slug page_obj.previous_page_number %}">مقالات جدید</a>
+										</li>
+									{% endif %}							   
+									{% if page_obj.has_next %}						
+										<li class="page-item">
+											<a class="page-link page-link-btn" title="First page" href="{% url 'blog:category' category_blog.slug page_obj.next_page_number %}">مقالات قدیمی</a>
+										</li>
+									{% endif %}	
+								{% endif %}							   
+							</ul>
+						</nav>
+					</div><!-- End .col-lg-9 -->
+
+					<div class="sidebar-toggle custom-sidebar-toggle">
+						<i class="fas fa-sliders-h"></i>
+					</div>
+					<div class="sidebar-overlay"></div>
+					<aside class="sidebar mobile-sidebar col-lg-3">
+						<div class="sidebar-wrapper" data-sticky-sidebar-options='{"offsetTop": 72}'>
+							<div class="widget widget-categories">
+								<h4 class="widget-title">دسته بندی های وبلاگ</h4>
+								<ul class="list">
+									<li>{% category_side %}</li>
+								</ul>
+
+							</div><!-- End .widget -->
+
+							<div class="widget widget-post">
+								<h4 class="widget-title">Recent Posts</h4>
+
+								<ul class="simple-post-list">
+									<li>
+										<div class="post-media">
+											<a href="single.html">
+												<img src="assets/images/blog/widget/post-1.jpg" alt="Post">
+											</a>
+										</div><!-- End .post-media -->
+										<div class="post-info">
+											<a href="single.html">Top New Collection</a>
+											<div class="post-meta">February 26, 2018</div>
+											<!-- End .post-meta -->
+										</div><!-- End .post-info -->
+									</li>
+
+									<li>
+										<div class="post-media">
+											<a href="single.html">
+												<img src="assets/images/blog/widget/post-2.jpg" alt="Post">
+											</a>
+										</div><!-- End .post-media -->
+										<div class="post-info">
+											<a href="single.html">Fashion Trends</a>
+											<div class="post-meta">February 26, 2018</div><!-- End .post-meta -->
+										</div><!-- End .post-info -->
+									</li>
+								</ul>
+							</div><!-- End .widget -->
+
+							<div class="widget">
+								<h4 class="widget-title">Tags</h4>
+
+								<div class="tagcloud">
+									<a href="#">ARTICLES</a>
+									<a href="#">CHAT</a>
+								</div><!-- End .tagcloud -->
+							</div><!-- End .widget -->
+						</div><!-- End .sidebar-wrapper -->
+					</aside><!-- End .col-lg-3 -->
+				</div><!-- End .row -->
+			</div><!-- End .container -->
+		</main><!-- End .main -->
+{% endblock %}

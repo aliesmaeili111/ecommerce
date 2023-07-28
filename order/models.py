@@ -21,7 +21,7 @@ class Order(models.Model):
         return self.user.username
     
     def get_price(self):
-        total = sum(i.price() for i in self.order_item.all())
+        total = sum(i.get_price() for i in self.order_item.all())
         if self.discount:
             discount_price = (self.discount / 100) * total
             return int(total - discount_price)
@@ -55,7 +55,7 @@ class Coupon(models.Model):
 class ItemOrder(models.Model):
     order = models.ForeignKey(Order,related_name='order_item',on_delete=models.CASCADE,verbose_name='سفارش')
     user = models.ForeignKey(User, on_delete=models.CASCADE,verbose_name='کاربر')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,verbose_name='محصول')
+    price = models.PositiveIntegerField(default=0,null=True,blank=True,verbose_name='قیمت')
     variant = models.ForeignKey(Variants,on_delete=models.CASCADE,blank=True, null=True,verbose_name='گونه')
     quantity = models.PositiveIntegerField(default=0,verbose_name='تعداد')
    
@@ -70,13 +70,17 @@ class ItemOrder(models.Model):
     def color(self):
         return self.variant.color_variant.name
     color.short_description = 'رنگ'
+
+    def get_price(self):
+        return self.price * self.quantity
+    get_price.short_descriptions = 'قیمت نهایی'
     
-    def price(self):
-        if self.product.status != 'None':
-            return self.variant.total_price * self.quantity
-        else:
-            return self.product.total_price * self.quantity
-    price.short_description = 'قیمت'
+    # def price(self):
+    #     if self.product.status != 'None':
+    #         return self.variant.total_price * self.quantity
+    #     else:
+    #         return self.product.total_price * self.quantity
+    # price.short_description = 'قیمت'
 
     
     class Meta:

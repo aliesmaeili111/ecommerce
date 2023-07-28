@@ -97,7 +97,7 @@
               <a href="category.html">Categories</a>
               <ul>
                 {% for cat in category %}
-                <li><a href="{{cat.get_absolute_url}}">{{cat.name}}</a></li>
+                  <li><a href="{{cat.get_absolute_url}}">{{cat.name}}</a></li>
                 {% for info in cat.sub.all %}
                 <ul>
                   <li>

@@ -1,0 +1,82 @@
+{% extends '_base.html' %}
+
+{% block title %}
+مقایسه محصول
+{% endblock %}
+{% block body %}
+
+    <main class="main">
+        <div class="page-header">
+            <div class="container d-flex flex-column align-items-center">
+                <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                    <div class="container">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                مقایسه
+                            </li>
+                        </ol>
+                    </div>
+                </nav>
+
+                <h1>مقایسه</h1>
+            </div>
+        </div>
+
+        <div class="container">
+          
+                <div class="wishlist-title">
+                    <h2 class="p-2">My Compare on Porto Shop 4</h2>
+                </div>
+                <div class="wishlist-table-container">
+                    <table class="table table-wishlist mb-0">
+                        <thead>
+                            <tr>
+                                <th class="thumbnail-col">#</th>
+                                
+                                <th class="product-col"> تصویر محصول</th>
+                                <th class="product-col">نام محصول</th>
+                                <th class="price-col">قیمت</th>
+                                <th class="price-col">حذف محصول</th>
+                                <th class="action-col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in data %}
+                                <tr class="product-row">
+                                    <td>{{forloop.counter}}</td>
+                                    <td>
+                                        <figure class="product-image-container">
+                                            <a href="{{i.product.get_absolute_url}}" class="product-image">
+                                                <img src="{{i.product.image.url}}" style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px" alt="{{i.prodcut.name}}">
+                                            </a>
+                                        </figure>
+                                    </td> 
+                                    <td>
+                                        <h5 class="product-title">
+                                            <a href="{{i.product.get_absolute_url}}">{{i.product.name}}</a>
+                                        </h5>
+                                    </td>
+
+                                    <td class="price-box">
+                                        {{i.product.unit_price}}
+                                    </td>
+
+                                    <td class="price-box">
+                                    </td>
+
+                                    <td class="action">
+                                        <button class="btn btn-dark btn-add-cart product-type-simple btn-shop">
+                                            اضافه کردن به سبد خرید
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- End .cart-table-container -->
+    
+        </div><!-- End .container -->
+    </main>
+    <!-- End .main -->
+{% endblock %}

@@ -40,10 +40,10 @@
                 <div class="row">
                     <div class="col-lg-5 col-md-6 product-single-gallery">
                         <div class="product-slider-container">
-                            {% if product.discount %}
+                            {% if variant.discount %}
                                 <div class="label-group">
                                     <div class="product-label label-sale">
-                                        %{{product.discount}}
+                                        %{{variant.discount}}
                                     </div>
                                 </div>
 
@@ -211,31 +211,16 @@
 
                         <div class="product-action">
 
-                            {% if product.status != 'None' %}
-                                <form action="{% url 'cart:add_cart' product.id %}" method="post">
+                                <form action="{% url 'cart:newadd'  %}" method="post">
                                     {% csrf_token %}
                                     <div class="product-single-qty"> 
-                                        <input type="hidden" name="select"
-                                        value="{{variants.id}}">
-                                        <input type="number" name="quantity"
-                                            min="1" value="1" max="{{ variants.amount }}" required
+                                        <input type="text" name='test' value='{{variants.id}}'>
+                                        <input type="hidden" name="select" value="{{variants.id}}"> 
+                                        <input type="number" name="quantity" min="1" value="1" max="{{ variants.amount }}" required
                                         oninvalid="setCustomValidity('pleaze between 1 to {{variants.amount}}')"> 
                                     </div>
                                         <button type="submit" class="btn btn-dark mr-2" title="Add to Cart">Add to Cart</button>
                                 </form>
-                            {% else %}
-                                <form action="{% url 'cart:add_cart' product.id %}" method="post">
-                                    {% csrf_token %}
-                                    <div class="product-single-qty">
-                                        <input type="number" name="quantity"
-                                        min="1"
-                                        value="1"
-                                        max="{{ product.amount }}" required
-                                        oninvalid="setCustomValidity('pleaze between 1 to {{product.amount}}')">
-                                    </div>
-                                    <button type="submit" class="btn btn-dark mr-2" title="Add to Cart">Add to Cart</button>
-                                </form>
-                            {% endif %}
                             <!-- End .product-single-qty -->
                             
 
@@ -287,8 +272,9 @@
                                         </a>
                                     {% endif %}
                                 {% endif %}
-                                </div>
+                            </div>
                         <!-- end share social btn -->
+
 
                         <!-- End .product single-share -->
                     </div>

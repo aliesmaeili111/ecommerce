@@ -10,12 +10,12 @@
         var ctx = document.getElementById('myChart').getContext('2d');
         {% regroup cl.queryset|dictsort:'rate' by rate as rate_list %}
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'bar', 
             data: {
-                labels: [{% for i in rate_list %}'{{i.grouper}}',{% endfor %}],
+                labels: [{% for i in rate_list %}'{{i.list|length}}',{% endfor %}],
                 datasets: [{
                 label: '# نمودار بیشترین لایک محصول',
-                data: [{% for i in rate_list %}'{{i.list|length}}',{% endfor %}],
+                data: [{% for i in rate_list %}'{{i.grouper}}',{% endfor %}],
                 backgroundColor: [
                     'rgba(255,99,132,0.8)',
                     'rgba(54,162,235,0.8)',

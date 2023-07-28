@@ -31,6 +31,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls',namespace='accounts')),
     path('order/', include('order.urls',namespace='order')),
     path('cart/', include('cart.urls',namespace='cart')),
+    path('blog/', include('blog.urls',namespace='blog')),
     path('ckedirot',include('ckeditor_uploader.urls')),
     path('sitemap.xml',sitemap,{'sitemaps':sitemaps}),
 ]+ static(settings.STATIC_URL,document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

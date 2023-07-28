@@ -141,6 +141,8 @@ def user_profile(request):
         }
     return render(request,'accounts/profile.html',context)
 
+
+
 # Change password view
 @login_required(login_url='accounts:login')
 def change_password(request):

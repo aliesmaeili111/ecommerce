@@ -25,22 +25,22 @@ class CartForm(ModelForm):
         
         
 
-class Compare(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='انتخاب کاربر',blank=True, null=True)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,verbose_name='انتخاب محصول')
-    session_key = models.CharField(max_length=300,blank=True, null=True,verbose_name='کلید مقایسه')
+# class Compare(models.Model):
+#     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='انتخاب کاربر',blank=True, null=True)
+#     product = models.ForeignKey(Product,on_delete=models.CASCADE,verbose_name='انتخاب محصول')
+#     session_key = models.CharField(max_length=300,blank=True, null=True,verbose_name='کلید مقایسه')
 
 
-    def __str__(self):
-        return self.product.name
+#     def __str__(self):
+#         return self.product.name
 
-    class Meta:
-        verbose_name = 'مقایسه'
-        verbose_name_plural = 'مقایسه محصولات'
+#     class Meta:
+#         verbose_name = 'مقایسه'
+#         verbose_name_plural = 'مقایسه محصولات'
         
 
-class CompareForm(ModelForm):
-    class Meta:
-        model = Compare
-        fields = ['product']
+# class CompareForm(ModelForm):
+#     class Meta:
+#         model = Compare
+#         fields = ['product']
         

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'cart.apps.CartConfig',
     'order.apps.OrderConfig',
+    'blog.apps.BlogConfig',
     'widget_tweaks',
     'colorfield',
     'ckeditor',
@@ -137,7 +138,7 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / '/static/'
+# STATIC_ROOT = BASE_DIR / '/static/'
 STATICFILES_DIRS = (
     BASE_DIR / 'static',
 )

@@ -4,7 +4,7 @@ from django_jalali.admin.filters import JDateFieldListFilter
 
 class ItemInline(admin.TabularInline):
     model = ItemOrder
-    readonly_fields = ('user','product','variant','size','color','quantity','price')
+    readonly_fields = ('user','variant','size','color','quantity')
 
 
 class OrderAdmin(admin.ModelAdmin):

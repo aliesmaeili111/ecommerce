@@ -1,12 +1,13 @@
-
+{% load base_cart %}
+{% load humanize %}
 
     <div class="dropdown cart-dropdown">
         <a href="#" title="Cart" class="dropdown-toggle dropdown-arrow cart-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
             <i class="minicart-icon"></i>
             <span class="cart-count badge-circle">
-                {% if request.user.is_authenticated %}
-                    {{cart.count}}
-                {% endif %}
+                
+                    {{cart.quantity}}
+         
             </span>
         </a>
 
@@ -16,7 +17,7 @@
             <a href="#" title="Close (Esc)" class="btn-close">×</a>
             {% if request.user.is_authenticated %}
                 <div class="dropdownmenu-wrapper custom-scrollbar">
-                    <div class="dropdown-cart-header">Shopping Cart</div>
+                    <div class="dropdown-cart-header">سبد خرید</div>
                     <!-- End .dropdown-cart-header -->
 
                     <div class="dropdown-cart-products">
@@ -25,27 +26,22 @@
                             <div class="product">
                                 <div class="product-details">
                                     <h4 class="product-title">
-                                        <a href="{% url 'home:detail' c.product.slug c.product.id %}">{{c.product.name}}</a>
+                                        <a href="{% url 'home:detail' c.variant.product_variant.slug c.variant.product_variant.id %}">{{c.product.name}}</a>
                                     </h4>
 
                                     <span class="cart-product-info">
                                         <span class="cart-product-qty">{{c.quantity}}</span> ×
-                                        {% if c.product.status != "None" %}
-                                            {{c.variant.total_price}}
-                                        {% else %}
-                                            {{c.product.total_price}}
-                                        {% endif %}
+                                        {{c.variant.total_price}}
                                     </span>
                                 </div>
                                 <!-- End .product-details -->
 
                                 <figure class="product-image-container">
-                                    <a href="{% url 'home:detail' c.product.slug c.product.id %}" class="product-image">
-                                        <img src="{{c.product.image.url}}" alt="{{c.product.name}}" 
+                                    <a href="{% url 'home:detail' c.variant.product_variant.slug c.variant.product_variant.id %}" class="product-image">
+                                        <img src="{{c.variant.product_variant.image.url}}" alt="{{c.variant.product_variant.name}}" 
                                         style="max-width:80px;min-width:80px;max-height: 80px;min-height:80px;">
                                     </a>
 
-                                    <a href="{% url 'cart:remove_cart' c.id %}" class="btn-remove" title="Remove Product"><span>×</span></a>
                                 </figure>
                             </div>
                         {% endfor %}
@@ -54,22 +50,24 @@
                     <!-- End .cart-product -->
 
                     <div class="dropdown-cart-total">
-                        <span>TOTAL:</span>
+                        <span>جمع:</span>
 
-                        <span class="cart-total-price float-right">{{ total }}</span>
+                        <span id="total_select" class="cart-total-price float-right">
+                            
+                            {{ total|floatformat:1|intcomma }}
+                        </span>
                     </div>
                     <!-- End .dropdown-cart-total -->
 
                     <div class="dropdown-cart-action">
-                        <a href="{% url 'cart:cart_detail' %}" class="btn btn-gray btn-block view-cart">View
-                            Cart</a>
+                        <a href="{% url 'cart:cart_detail' %}" class="btn btn-gray btn-block view-cart">سبد خرید</a>
                     </div>
                     <!-- End .dropdown-cart-total -->
                 </div>
             {% else %}
                 <div class="dropdownmenu-wrapper custom-scrollbar">
                     <div class="dropdown-cart-header">
-                        <a href="{% url 'accounts:login' %}">for see cart first login</a>
+                        <a href="{% url 'accounts:login' %}">ابتدا باید وارد سایت شوید</a>
                     </div>
                 </div>
             {% endif %}
@@ -78,3 +76,17 @@
         <!-- End .dropdown-menu -->
     </div>
     <!-- End .dropdown -->
+
+    <script>
+		function show(){
+			$.ajax({
+				url: "{% url 'cart:cart_show' %}",
+				type: 'GET',
+				success:function(response_select){
+						$('#total_select').html(response_select.total_select);
+				},
+			});
+		};
+		show();
+		
+	</script>

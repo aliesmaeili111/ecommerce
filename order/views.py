@@ -1,18 +1,22 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from order.models import OrderForm,Order,ItemOrder,Coupon
 from cart.models import Cart
 from django.contrib.auth.decorators import login_required
 from order.forms import CouponForm
 from django.views.decorators.http import require_POST
-from django.utils import timezone
 from django.contrib import messages
 from suds import Client
 from django.http import HttpResponse
-from home.models import Variants,Product
+from home.models import Variants
 import jdatetime
 from django.utils.crypto import get_random_string
 from kavenegar import *
+from cart.cart import NewCart
+from cart.views import cart_remove
 
+def order_information(request):
+    form = OrderForm() 
+    return render(request,'order/order.html',{'form':form})
 
 
 def order_detail(request,order_id):
@@ -22,7 +26,7 @@ def order_detail(request,order_id):
         'order':order,
         'form':form,
     }
-    return render(request,'order/order.html',context)
+    return render(request,'order/orders.html',context)
 
 
 @login_required(login_url='acounts:login')
@@ -38,14 +42,13 @@ def order_create(request):
             address=data['address'],
             code = code)
             
-            messages.success(request,'Your Order Successfuly.Thanks','success')
-            
-            cart = Cart.objects.filter(user_id=request.user.id)
+            cart = NewCart(request)
             for c in cart:
-                ItemOrder.objects.create(order_id=order.id,
-                                        user_id=request.user.id,product_id=c.product_id,
-                                        variant_id=c.variant_id,
-                                        quantity=c.quantity)
+                ItemOrder.objects.create(order_id=order.id,user_id=request.user.id,
+                                        variant=c['variant'],
+                                        price=c['price'],
+                                        quantity = c['quantity'])
+        messages.success(request,'Your Order Successfuly.Thanks','success')
         return redirect('order:order_detail',order.id)
 
 
@@ -66,37 +69,25 @@ def coupon_order(request,order_id):
         order.save()
         messages.success(request,'This code ok','success')
     return redirect('order:order_detail',order_id) 
-    
-           
+
+
 
 # MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
 # client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 # description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
-# phone = '09371595811'  # Optional
+# mobile = '09371595811'  # Optional
 # # Important: need to edit for realy server.
 # CallbackURL = 'http://127.0.0.1:8000/order/verify/'
  
 
-# def send_request(request,order_id,price):
-#     global amount
+# def send_request(request,price,order_id):
+#     global amount , o_id
 #     amount = price
-#     result = client.service.PaymentRequest(MERCHANT,amount,description,request.user.email,'09371595811',CallbackURL)
+#     o_id = order_id
+#     result = client.service.PaymentRequest(MERCHANT,amount,description,request.user.email,mobile,CallbackURL)
 #     if result.Status == 100:
 #         return redirect('https://www.zarinpal.com/pg/StartPay/') + str(result.Authority)
 #     else:
-#         order = Order.objects.get(id=order_id)
-#         order.paid = True
-#         order.save()
-#         cart = ItemOrder.objects.filter(order_id=order_id)
-#         for c in cart :
-#             product = Product.objects.get(id=c.product.id)
-#             product.sell += c.quantity
-#             product.save()        
-#             phone = f"0{request.user.profile.phone}"
-#             code = order.code
-#             api = KavenegarAPI('546E4F51563753746455367265306D4B5672486B494C467077456B5A6C4932503231675935496B483563673D')
-#             params = { 'sender' : '', 'receptor': phone, 'message' : f'کد سفارش شما { code }'}
-#             response = api.sms_send( params)     
 #         return HttpResponse('Error code :' + str(result.Status))
 
 
@@ -105,31 +96,20 @@ def coupon_order(request,order_id):
 #         result = client.service.PaymentVerification(MERCHANT,request.GET['Authority'],amount)
 #         if result.Status == 100:
 
-            # start in remover one as session cart
-            # cart = Cart(request)
-            # for c in cart :
-            #     variants = Variants.objects.filter(id=c['varinat'].id)
-            #     for data in variants :
-            #         data.amount-= c['quantity']
-            #         data.save()
-            # return redirect('home:home')
-            # end in remover one as session cart
+#             # start in remover one as session cart
+#             cart = Cart(request)
+#             for c in cart :
+#                 variants = Variants.objects.filter(id=c['varinat'].id)
+#                 for data in variants :
+#                     data.amount -= c['quantity']
+#                     data.save()
+#             messages.success(request,'Paid success','success')
+#             return redirect('home:home')
+#             # end in remover one as session cart
             
-#             return HttpResponse('transaction success')
 #         elif result.Status == 101:
 #             return HttpResponse('transaction submitted :' + str(result.Status))
 #         else:
 #             return HttpResponse('transaction failed' + str(result.Status))
 #     else:
 #         return HttpResponse('transaction failed or canceled by user ')
-    
-    
-    
-# if c.product.status == "None":
-#                 product = Product.objects.get(id=c.product.id)
-#                 product.amount -= c.quantity
-#                 product.save()
-#             else:
-#                 variant = Variants.objects.get(id=c.variant.id)
-#                 variant.amount -= c.quantity
-#                 variant.save()

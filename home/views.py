@@ -13,15 +13,18 @@ from django.core.paginator import Paginator
 from home.filters import ProductFilter
 from urllib.parse import urlencode
 from django.http import JsonResponse
+from blog.models import Article
 
 def home(request):
     category = Category.objects.filter(sub_cat=False)
     gallery = Gallery.objects.all()
     brand = Brand.objects.all()
+    articles = Article.objects.filter(status='p').order_by('-publish')[:4]
     context = {
         'category':category,
         'gallery':gallery,
         'brand':brand,
+        'articles':articles,
     }
     return render(request,'home/home.html',context)
     
@@ -122,26 +125,25 @@ def product_detail(request,slug,id):
             # 'is_favourite':is_favourite,
             'change':change,
             'form':form,
+            'update':update,
         }
     
-    if product.status != 'None':
-        if request.method == "POST":
-            variant = Variants.objects.filter(product_variant_id=id)
-            var_id = request.POST.get('select')
-            variants = Variants.objects.get(id=var_id)
-            colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.size_variant_id)
-            size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
-        else:
-            variant = Variants.objects.filter(product_variant_id=id)
-            variants = Variants.objects.get(id=variant[0].id)
-            colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.color_variant_id)
-            size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
-        context.update({'variant':variant,'variants':variants,'colors':colors,'size':size})
-    
-        return render(request,'home/product_detail.html',context)
+
+    if request.method == "POST":
+        variant = Variants.objects.filter(product_variant_id=id)
+        var_id = request.POST.get('select')
+        variants = Variants.objects.get(id=var_id)
+        colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.size_variant_id)
+        size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
     else:
-        context.update({'update':update,'colors':colors,'size':size,'form':form})
-        return render(request,'home/product_detail.html',context)
+        variant = Variants.objects.filter(product_variant_id=id)
+        variants = Variants.objects.get(id=variant[0].id)
+        colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.color_variant_id)
+        size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
+        
+    context.update({'variant':variant,'variants':variants,'colors':colors,'size':size})
+    return render(request,'home/product_detail.html',context)
+
 
 
 # like product

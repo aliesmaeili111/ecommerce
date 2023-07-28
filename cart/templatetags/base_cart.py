@@ -1,22 +1,21 @@
 from django import template
-from ..models import Cart
+from cart.cart import NewCart
+from django.http import JsonResponse
+
 
 register = template.Library()
-
+    
 
 @register.inclusion_tag('partials/cart_select.html',takes_context=True)
 def cart(context):
     request = context['request']
-    cart = Cart.objects.filter(user_id=request.user.id)
     total = 0
-    for p in cart :
-        if p.product.status == 'Color' or p.product.status == 'Size':
-            total += p.variant.total_price * p.quantity
-        else:
-            total += p.product.total_price * p.quantity
+    cart = NewCart(request)
+    for c in cart:
+        total += int(c['variant'].total_price * c['quantity'] )
     context = {
         'cart':cart,
         'total':total,
-        'request':request
+        'request':request,
     }
     return context

@@ -29,12 +29,15 @@ admin.site.register(Category,CategoryAdmin)
 # Product admin
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name','category_to_str','jpublish_create','amount','brand','available','unit_price','discount','sell','total_price')
+    list_display_links = ('name','category_to_str')
     prepopulated_fields = {'slug':('name',)}
     list_filter = ('name','available')
-    list_editable = ('amount',)
+    list_editable = ('amount','discount')
     change_list_template = 'home/change.html'
     inlines = [ProductVariantInlines,ImagesInlines]
-
+    search_fields =  ['name','category__name','brand__name','discount'] 
+    list_per_page = 15
+    date_hierarchy = 'create'
 
 admin.site.register(Product,ProductAdmin)
 
