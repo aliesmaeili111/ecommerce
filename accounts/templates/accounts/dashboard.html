@@ -1,6 +1,6 @@
 ﻿{% extends '_base.html' %}
 {% block title %}
-	Dashboard
+	حساب من
 {% endblock %}
 
 
@@ -13,40 +13,40 @@
 						<div class="container">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
-								<li class="breadcrumb-item active" aria-current="page">
+								<li class="breadcrumb-item active " aria-current="page">
 									حساب من
 								</li>
 							</ol>
 						</div>
 					</nav>
 
-					<h1>حساب من</h1>
+					<h1 class="myfont">حساب من</h1>
 				</div>
 			</div>
 
 			<div class="container account-container custom-account-container">
 				<div class="row">
 					<div class="sidebar widget widget-dashboard mb-lg-0 mb-3 col-lg-3 order-0">
-						<ul class="nav nav-tabs list flex-column mb-0" role="tablist">
-							<li class="nav-item">
-								<a class="nav-link active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">صفحه مدیریت</a>
+						<ul class="nav nav-tabs list flex-column mb-0 text-right " role="tablist">
+							<li class="nav-item ">
+								<a class="nav-link active myfont" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">صفحه مدیریت</a>
 							</li>
 
-							<li class="nav-item">
-								<a class="nav-link" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">حساب کاربری</a>
+							<li class="nav-item ">
+								<a class="nav-link myfont" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="false">حساب کاربری</a>
 							</li>
 
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'accounts:favourite' %}">لیست محصولات محبوب</a>
+							<li class="nav-item ">
+								<a class="nav-link myfont" href="{% url 'accounts:favourite' %}">لیست محصولات محبوب</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'accounts:history' %}">تاریخچه سفارشات</a>
+							<li class="nav-item ">
+								<a class="nav-link myfont" href="{% url 'accounts:history' %}">تاریخچه سفارشات</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'accounts:change' %}">تغییر گذرواژه</a>
+							<li class="nav-item ">
+								<a class="nav-link myfont" href="{% url 'accounts:change' %}">تغییر گذرواژه</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'accounts:logout' %}">خارج شدن</a>
+							<li class="nav-item ">
+								<a class="nav-link myfont" href="{% url 'accounts:logout' %}">خارج شدن</a>
 							</li>
 						</ul>
 					</div>
@@ -56,13 +56,13 @@
 						
 								<div class="mb-4"></div>
 
-								<div class="row row-lg">
+								<div class="row row-lg ">
 
 									<div class="col-6 col-md-4">
 										<div class="feature-box text-center pb-4">
 											<a href="#edit" class="link-to-tab"><i class="icon-user-2"></i></a>
-											<div class="feature-box-content p-0">
-												<h3>حساب کاربری</h3>
+											<div class="feature-box-content p-0 ">
+												<h3 class="myfont">حساب کاربری</h3>
 											</div>
 										</div>
 									</div>
@@ -71,7 +71,7 @@
 										<div class="feature-box text-center pb-4">
 											<a href="{% url 'accounts:favourite' %}"><i class="icon-wishlist-2"></i></a>
 											<div class="feature-box-content">
-												<h3>محصولات محبوب</h3>
+												<h3 class="myfont">محصولات محبوب</h3>
 											</div>
 										</div>
 									</div>
@@ -80,7 +80,7 @@
 										<div class="feature-box text-center pb-4">
 											<a href="{% url 'accounts:logout' %}"><i class="fa fa-sign-out-alt"></i></a>
 											<div class="feature-box-content">
-												<h3>خارج شدن</h3>
+												<h3 class="myfont">خارج شدن</h3>
 											</div>
 										</div>
 									</div>
@@ -90,7 +90,7 @@
 
 
 						<div class="tab-pane fade" id="edit" role="tabpanel">
-							<h3 class="account-sub-title d-none d-md-block mt-0 pt-1 ml-1"><i class="icon-user-2 align-middle mr-3 pr-1"></i>جزئیات حساب کاربری</h3>
+							<h3 class="account-sub-title d-none d-md-block mt-0 pt-1 ml-1 myfont text-right"><i class="icon-user-2 align-middle mr-3 pr-1"></i>جزئیات حساب کاربری</h3>
 							<div class="account-content">
 								<!-- profile Form -->
 								<form action="#" method="post" enctype="multipart/form-data">
@@ -101,7 +101,7 @@
 									{% endblock %}
 
 									<div class="form-footer mt-3 mb-0">
-										<button type="submit" class="btn btn-dark mr-0">
+										<button type="submit" class="btn btn-dark mr-0 myfont">
 											تغییر اطلاعات
 										</button>
 									</div>

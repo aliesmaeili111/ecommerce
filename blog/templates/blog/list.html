@@ -33,7 +33,7 @@
 											<img src="{{article.thumbnail.url}}" alt="{{article.title}}" width="225" height="280">
 										</a>
 										<div class="post-date">
-											<span class="day text-align-center">{{article.jpublish}}</span>
+											<span class="day myfont text-center">{{article.jpublish}}</span>
 										</div>
 									</div><!-- End .post-media -->
 
@@ -44,7 +44,7 @@
 										<div class="post-content">
 											<p>{{article.description|truncatewords:15|safe}}</p>
 										</div><!-- End .post-content -->
-										<a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 Comments</a>
+										<a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 نظر</a>
 										{% for cat in article.category.active %}
 											{% if cat.children.active %}
 												<a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
@@ -56,7 +56,7 @@
 							{% endfor %}					
 						</div>
 						<nav class="toolbox toolbox-pagination">
-							<ul class="pagination toolbox-item">							
+							<ul class="pagination toolbox-item myfont">							
 								{% if is_paginated %}
 									{% if page_obj.has_previous %}						
 										<li class="page-item">
@@ -80,15 +80,15 @@
 					<aside class="sidebar mobile-sidebar col-lg-3">
 						<div class="sidebar-wrapper" data-sticky-sidebar-options='{"offsetTop": 72}'>
 							<div class="widget widget-categories">
-								<h4 class="widget-title">دسته بندی های وبلاگ</h4>
-								<ul class="list">
+								<h4 class="widget-title myfont text-center">دسته بندی های وبلاگ</h4>
+								<ul class="list myfont">
 									<li>{% category_side %}</li>
 								</ul>
 
 							</div><!-- End .widget -->
 
 							<div class="widget widget-post">
-								<h4 class="widget-title">Recent Posts</h4>
+								<h4 class="widget-title myfont text-center">مقالات مرتبط</h4>
 
 								<ul class="simple-post-list">
 									<li>
@@ -119,7 +119,7 @@
 							</div><!-- End .widget -->
 
 							<div class="widget">
-								<h4 class="widget-title">Tags</h4>
+								<h4 class="widget-title myfont text-center">برچسب ها</h4>
 
 								<div class="tagcloud">
 									<a href="#">ARTICLES</a>

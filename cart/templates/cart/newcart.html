@@ -1,6 +1,6 @@
 {% extends '_base.html' %}
 {% block title %}
-    Cart
+    سبد خرید
 {% endblock %}
 {% load humanize %}
 {% block body %}
@@ -10,9 +10,7 @@
 					<li class="active">
 						<a href="{% url 'cart:cart_detail' %}">سبد خرید</a>
 					</li>
-					<li>
-						<a href="checkout.html">Checkout</a>
-					</li>
+			
 				</ul>
 
 				{% if request.user.is_authenticated %}
@@ -100,7 +98,7 @@
 									</table>
 
 									<div class="checkout-methods">
-										<button type="submit" class="btn btn-block btn-dark">سفارش
+										<button type="submit" class="btn btn-block btn-dark myfont">سفارش
 											<i class="fa fa-arrow-right"></i>
 										</button>
 									</div>

@@ -1,42 +1,48 @@
 {% extends 'accounts/base_register.html' %}
 {% block title %}
-   Login
+   ورود
 {% endblock %}
 
 {% block login %}
 
-    <div class="col-md-6">
+    <div class="col-md-6 ">
         <div class="heading mb-1">
-            <h2 class="title">Login</h2>
+            <h2 class="title myfont text-center">ورود به فروشگاه</h2>
         </div>
         <form action="" method="post" novalidate>
                 {% csrf_token %}
-                <label for="login-email">
-                    Username or email address
+                <label for="login-email" class="myfont float-right">
+                    نام کاربری یا ایمیل
                     <span class="required">*</span>
                 </label>
-                <input type="text" class="form-input form-wide" id="login-email" name="user" required placeholder="plz username or email">
-
-                <label for="login-password">
-                    Password
+                <input type="text" class="form-input form-wide text-right" id="login-email" name="user" required placeholder="نام کاربری">
+                {% if login_form.user.errors %}
+                    {% for error in login_form.user.errors %}
+                        <p class="text-right text-danger">{{error}}</p>
+                    {% endfor %}
+                {% endif %}
+                <label for="login-password" class="myfont float-right">
+                    گذرواژه
                     <span class="required">*</span>
                 </label>
-                <input name="password" type="password" class="form-input form-wide" id="login-password" required placeholder ='plz password'>
-
+                <input name="password" type="password" class="form-input text-right form-wide" id="login-password" required placeholder ='رمز عبور'>
+                {% if login_form.password.errors %}
+                    {% for error in login_form.password.errors %}
+                        <p class="text-right text-danger">{{error}}</p>
+                    {% endfor %}
+                {% endif %}
                 <div class="form-footer d-flex">
                     <div class="custom-control custom-checkbox ">
                         <input type="checkbox"  name="remember" class="custom-control-input" id="lost-password">
-                        <label class="custom-control-label " for="lost-password">Remember
-                            me</label>
+                        <label class="custom-control-label myfont" for="lost-password">مرا بخاطر بسپار</label>
                     </div>
 
-                    <a href="{% url 'accounts:reset' %}" class="forget-password text-dark form-footer-right">Forgot
-                        Password?</a>
+                    <a href="{% url 'accounts:reset' %}" class="forget-password text-dark form-footer-right">فراموشی رمز عبور</a>
 
-                    <a href="{% url 'accounts:phone' %}" class="forget-password text-dark form-footer-right">Login with phone</a>
+                    <a href="{% url 'accounts:phone' %}" class="forget-password text-dark form-footer-right">ورود با شماره تلفن</a>
                 </div>
-                <button type="submit" class="btn btn-dark btn-md w-100">
-                    LOGIN
+                <button type="submit" class="btn btn-dark btn-md w-100 myfont">
+                    ورود به سایت
                 </button>
         </form>
     </div>

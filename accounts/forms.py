@@ -49,34 +49,34 @@ error = {
 
 # Register form
 class UserRegisterForm(forms.Form):
-    user_name = forms.CharField(max_length=50,error_messages=error,widget=forms.TextInput(attrs={'placeholder':'plz username'}))
-    email =  forms.EmailField(error_messages=error,widget=forms.TextInput(attrs={'placeholder':'plz email'}))
-    first_name = forms.CharField(max_length=50,error_messages=error,min_length=3,widget=forms.TextInput(attrs={'placeholder':'plz first name'}))
-    last_name = forms.CharField(max_length=50,error_messages=error,min_length=5,widget=forms.TextInput(attrs={'placeholder':'plz last name'}))
-    password_1 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'plz password'}))
-    password_2 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'plz Confirm password'}))
+    user_name = forms.CharField(max_length=50,error_messages=error,widget=forms.TextInput(attrs={'placeholder':'نام کاربری'}))
+    email =  forms.EmailField(error_messages=error,widget=forms.TextInput(attrs={'placeholder':'ایمیل'}))
+    first_name = forms.CharField(max_length=50,error_messages=error,min_length=3,widget=forms.TextInput(attrs={'placeholder':'نام'}))
+    last_name = forms.CharField(max_length=50,error_messages=error,min_length=5,widget=forms.TextInput(attrs={'placeholder':'نام خانوادگی'}))
+    password_1 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'رمز عبور'}))
+    password_2 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'تایید رمز عبور'}))
     
     
     def clean_user_name(self):
         user = self.cleaned_data["user_name"]
         if User.objects.filter(username=user).exists():
-            raise forms.ValidationError('User exists')
+            raise forms.ValidationError('این نام کاربری از قبل وجود دارد')
         return user
     
     def clean_email(self):
         email = self.cleaned_data["email"]
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('Email exists')
+            raise forms.ValidationError('این ایمیل از قبل وجود دارد')
         return email
     
     def clean_password_2(self):
         password_1 = self.cleaned_data["password_1"]
         password_2 = self.cleaned_data["password_2"]
         if password_1 != password_2:
-            raise forms.ValidationError('password not match')
+            raise forms.ValidationError('رمز عبور با تایید آن مطابقت ندارد')
         
         elif len(password_2) <= 8 :
-            raise forms.ValidationError('password to short')
+            raise forms.ValidationError('رمز عبور شما خیلی ضعیف است')
             
         elif not any(x.isupper() for x in password_2):
             raise forms.ValidationError('باید پسورد شما حداقل یک حروف بزرگ داشته باشد')
@@ -96,9 +96,16 @@ class UserRegisterForm(forms.Form):
     
 # Login form    
 class UserLoginForm(forms.Form):
-    user = forms.CharField(max_length=50)
+    user = forms.CharField(max_length=50,min_length=3)
     password = forms.CharField(max_length=50)
     remember = forms.BooleanField(required=False,widget=forms.CheckboxInput())
+
+
+    def clean_user(self):
+        user = self.cleaned_data["user"]
+        if not User.objects.filter(username=user).exists() :
+            raise forms.ValidationError('این کاربر در فروشگاه ما وجود ندارد')
+        return user
     
 # User Update form
 class UserUpdateForm(forms.ModelForm):

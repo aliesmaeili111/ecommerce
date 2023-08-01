@@ -1,49 +1,30 @@
 {% extends 'accounts/base_register.html' %}
+{% load widget_tweaks %}
 {% block title %}
-   Reset password
+   فراموشی گذرواژه
 {% endblock %}
 
 {% block login %}
 	<main class="main">
-			<div class="page-header">
-				<div class="container d-flex flex-column align-items-center">
-					<nav aria-label="breadcrumb" class="breadcrumb-nav">
-						<div class="container">
-							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
-								<li class="breadcrumb-item"><a href="{% url 'home:products' %}">Shop</a></li>
-								<li class="breadcrumb-item active" aria-current="page">
-									My Account
-								</li>
-							</ol>
-						</div>
-					</nav>
-
-					<h1>My Account</h1>
-				</div>
-			</div>
-
+		
 			<div class="container reset-password-container">
 				<div class="row">
 					<div class="col-lg-6 offset-lg-3">
 						<div class="feature-box border-top-primary">
 							<div class="feature-box-content">
-								<form class="mb-0" action="#" method="post">{% csrf_token %}
-									<p>
-										Lost your password? Please enter your
-										username or email address. You will receive
-										a link to create a new password via email.
+								<form class="mb-0" method="post">{% csrf_token %}
+									<p class="myfont text-right">
+										رمز عبور خود را فراموش کرده اید؟ لطفا نام کاربری خود را وارد کنید لینکی برای ایجاد رمز عبور جدید از طریق ایمیل دریافت خواهید کرد
 									</p>
-									<div class="form-group mb-0">
-										<label for="reset-email" class="font-weight-normal">{{form}}</label>
-										
+									<div class="form-group mb-0 text-right mt-2">
+										{{form.email|add_class:'form-control myfont text-right'|append_attr:'placeholder:ایمیل'}}
 									</div>
 
 									<div class="form-footer mb-0">
-										<a href="{% url 'accounts:login' %}">Click here to login</a>
+										<a class="myfont" href="{% url 'accounts:login' %}">برای ورود به فروشگاه کلیک کنید</a>
 
-										<button type="submit" class="btn btn-md btn-primary form-footer-right font-weight-normal text-transform-none mr-0">
-											Reset Password
+										<button type="submit" class="btn btn-md myfont btn-primary form-footer-right font-weight-normal text-transform-none mr-0">
+											بازیابی گذرواژه
 										</button>
 									</div>
 								</form>

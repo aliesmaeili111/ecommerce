@@ -1,47 +1,44 @@
 {% extends 'accounts/dashboard.html' %}
+{% load widget_tweaks %}
 {% block profile %}		
-        {{user_form.as_p}}		
-        {{profile_form.as_p}}		
-        <img src="{{profile.profile_image.url}}" width="100px" height="100px" alt="" class="">
-    <!-- <div class="row">
+
+    <img src="{{profile.profile_image.url}}" width="100px" height="100px" alt="{{profile.first_name}}" class="">
+    <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="acc-name">First name <span class="required">*</span></label>
-                <input type="text" class="form-control" placeholder="Editor" id="acc-name" name="first_name" value="{{profile.user.first_name}}" required="">
+                <label for="acc-name" class="float-right myfont">نام خانوادگی<span class="required">*</span></label>
+                {{user_form.last_name|add_class:'form-control myfont text-right'}}	
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
-                <label for="acc-lastname">Last name <span class="required">*</span></label>
-                <input type="text" class="form-control" value="{{profile.user.last_name}}" id="acc-lastname" name="last_name" required="">
+                <label for="acc-lastname" class="float-right myfont">نام  <span class="required">*</span></label>
+                {{user_form.first_name|add_class:'form-control myfont text-right'}}	
             </div>
         </div>
-    </div>
-
-    <div class="form-group mb-2">
-        <label for="acc-text">Address <span class="required">*</span></label>
-        <input type="text" class="form-control" value="{{profile.address}}" id="acc-text" name="acc-text" placeholder="Editor" required="">
-        <p>This will be Address in the account section and
-            in
-            reviews</p>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group mb-4">
-                <label for="acc-email">Email address <span class="required">*</span></label>
-                <input type="email" value="{{profile.user.email}}" class="form-control" id="acc-email" name="email" placeholder="editor@gmail.com" required="">
+            <div class="form-group">
+                <label for="acc-lastname" class="float-right myfont">شماره تلفن <span class="required">*</span></label>
+                {{profile_form.phone|add_class:'form-control myfont text-right'}}	
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label for="acc-lastname">Phone <span class="required">*</span></label>
-                <input type="number" class="form-control" value="{{profile.phone}}" id="acc-lastname" name="phone" required="">
+                <label for="acc-lastname" class="float-right myfont">ایمیل<span class="required">*</span></label>
+                {{user_form.email|add_class:'form-control myfont text-right'}}	
             </div>
         </div>
-    </div> -->
+    </div>
 
 
-    
+    <div class="form-group mb-2">
+        <label for="acc-text" class="float-right myfont">آدرس <span class="required">*</span></label>
+        {{profile_form.address|add_class:'form-control myfont text-right'}}	
+    </div>
+
+
 {% endblock %}

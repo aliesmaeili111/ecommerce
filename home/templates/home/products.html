@@ -175,12 +175,12 @@
                 <div class="category-banner banner text-uppercase" style="background: no-repeat 60%/cover url('{% static "assets/images/banners/banner-top.jpg" %}');">
                     <div class="container position-relative">
                         <div class="row">
-                            <div class="pl-lg-5 pb-5 pb-md-0 col-md-5 col-xl-4 col-lg-4 offset-1">
-                                <h3>وسایل برقی را<br>از ما خرید کنید</h3>
+                            <div class="pl-lg-5 pb-5 pb-md-0 col-md-5 col-xl-4 col-lg-4 offset-1 ">
+                                <h3 class="myfont">وسایل برقی را<br>از ما خرید کنید</h3>
                             </div>
                             <div class="pl-lg-3 col-md-4 offset-md-0 offset-1 pt-3">
                                 <div class="coupon-sale-content">
-                                    <h4 class="m-b-1 coupon-sale-text bg-white text-transform-none">دارای کد تخفیف 
+                                    <h4 class="m-b-1 coupon-sale-text bg-white text-transform-none myfont">دارای کد تخفیف 
                                     </h4>
                                     <h5 class="mb-2 coupon-sale-text d-block ls-10 p-0"><i class="ls-0"></i><b class="text-dark">%50</b></h5>
                                 </div>
@@ -194,7 +194,7 @@
                 <nav aria-label="breadcrumb" class="breadcrumb-nav">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'home:home' %}"><i class="icon-home"></i></a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
+                        <li class="breadcrumb-item myfont"><a href="{% url 'home:home' %}">خانه</a></li>
                     </ol>
                 </nav>
 
@@ -207,7 +207,7 @@
                                     <div class="product-default">
                                         <figure>
                                             <a href="{{product.get_absolute_url}}">
-                                                <img src="{{product.image.url}}" style="max-width:280px;max-height:280px;min-hieght:280px;  min-width:280px;" alt="{{product.name}}">
+                                                <img src="{{product.image.url}}" style = "max-width:280px;max-height:280px;min-hieght:280px;  min-width:280px;" alt="{{product.name}}">
                                             </a>
 
                                             {% if product.discount %}
@@ -223,7 +223,7 @@
                                             <div class="category-wrap">   
                                                 {% for cat in product.category.active %} 
                                      
-                                                    <div class="category-list">
+                                                    <div class="category-list myfont">
                                                         دسته بندی 
                                                         <a href="{{category.get_absolute_url}}" >
                                                             {{cat.name}},
@@ -232,7 +232,7 @@
                                                 {% endfor %}
                                             </div>
 
-                                            <h3 class="product-title"> <a href="{{product.get_absolute_url}}">{{product.name}}</a> </h3>
+                                            <h3 class="product-title myfont"> <a href="{{product.get_absolute_url}}">{{product.name}}</a> </h3>
 
                                             <div class="ratings-container comment-rating" style='color:gold;'>
                                                 {% if product.average >= 5 %}
@@ -258,7 +258,7 @@
                                                 
                                                     <div class="product-action">
                                                         <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><span>جزئیات کالا</span></a>
+                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><span>جزئیات کالا</span></a>
                                                     </div>
                                                 
                                             {% endif %}
@@ -272,8 +272,8 @@
                         </div>
                         <!-- End .row -->
                         {% if products.has_other_pages %}
-                            <nav class="toolbox toolbox-pagination">
-                                <ul class="pagination toolbox-item">
+                            <nav class="toolbox toolbox-pagination ">
+                                <ul class="pagination toolbox-item myfont">
                                                   
                                     <li class="page-item">
                                         <a class="page-link page-link-btn" title="First page" href="?page=1">اولین صفحه</a>
@@ -320,7 +320,7 @@
 
                     <!-- start filter -->
                     <div class="sidebar-overlay"></div>
-                    <aside class="sidebar-shop col-lg-3 order-lg-first mobile-sidebar">
+                    <aside class="sidebar-shop col-lg-3 order-lg-first mobile-sidebar ">
                         {% include 'home/aside.html' %}
                     </aside>
                 </div>

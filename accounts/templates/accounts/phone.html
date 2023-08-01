@@ -1,24 +1,24 @@
 {% extends 'accounts/base_register.html' %}
 
 {% block title %}
-   Login with phone 
+   ورود از طریق شماره همراه
 {% endblock %}
 
 {% block login %}
     <div class="col-md-6">
         <div class="heading mb-1">
-            <h2 class="title">Login</h2>
+            <h2 class="title myfont text-center">ورود به فروشگاه</h2>
         </div>
         <form action="" method="post" novalidate>
                 {% csrf_token %}
-                <label for="login-email">
-                    phone
+                <label for="login-email" class="float-right myfont">
+                    شماره تلفن
                     <span class="required">*</span>
                 </label>
-                <input type="number" class="form-input form-wide" id="login-email" name="phone" required placeholder="plz Phone">
+                <input type="number" class="form-input form-wide text-right" id="login-email" name="phone" required placeholder="شماره همراه خود رار وارد نمایید">
 
-                <button type="submit" class="btn btn-dark btn-md mt-3 w-100">
-                    Send code
+                <button type="submit" class="btn btn-dark btn-md mt-3 w-100 myfont">
+                    ارسال کد
                 </button>
         </form>
     </div>

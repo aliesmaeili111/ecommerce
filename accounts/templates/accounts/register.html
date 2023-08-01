@@ -1,34 +1,89 @@
 {% extends 'accounts/base_register.html' %}
 {% load widget_tweaks %}
 {% block title %}
-   Register
+   ثبت نام در فروشگاه
 {% endblock %}
 {% block register %}
 
     <div class="col-md-6">
         <div class="heading mb-1">
-            <h2 class="title">Register</h2>
+            <h2 class="title text-center myfont">ثبت نام</h2>
         </div>
         
         <!-- Register form -->
         <form action="" method="post" novalidate>
             {% csrf_token %}
-            <!-- <label for="register-email">
-                User name 
+            <label for="register-email" class="float-right myfont">
+                نام کاربری
                 <span class="required">*</span>
             </label>
-            {{form.user_name|add_class:'form-input form-wide'}} -->
+            {{form.user_name|add_class:'form-input form-wide text-right'}}
+            {% if form.user_name.errors %}
+                    {% for error in form.user_name.errors %}
+                        <p class="text-right text-danger">{{error}}</p>
+                    {% endfor %}
+            {% endif %}
 
-          {{form.as_p}}
+            <label for="register-email" class="float-right myfont">
+                ایمیل
+                <span class="required">*</span>
+            </label>
+            {{form.email|add_class:'form-input form-wide text-right'}}
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+            <label for="register-email" class="float-right myfont">
+                نام
+                <span class="required">*</span>
+            </label>
+            {{form.first_name|add_class:'form-input form-wide text-right'}}
+            {% if form.first_name.errors %}
+                {% for error in form.first_name.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
 
+            <label for="register-email" class="float-right myfont">
+                نام خانوادگی
+                <span class="required">*</span>
+            </label>
+            {{form.last_name|add_class:'form-input form-wide text-right'}}
+            {% if form.last_name.errors %}
+                {% for error in form.last_name.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+
+            <label for="register-email" class="float-right myfont">
+                رمز عبور
+                <span class="required">*</span>
+            </label>
+            {{form.password_1|add_class:'form-input form-wide text-right'}}
+            {% if form.password_1.errors %}
+                {% for error in form.password_1.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+            <label for="register-email" class="float-right myfont">
+                    تایید رمز عبور
+                <span class="required">*</span>
+            </label>
+            {{form.password_2|add_class:'form-input form-wide text-right'}}
+            {% if form.password_2.errors %}
+                {% for error in form.password_2.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
             <div class="form-footer mb-2">
-                <button type="submit" class="btn btn-dark btn-md w-100 mr-0">
-                    Register
+                <button type="submit" class="btn btn-dark myfont btn-md w-100 mr-0">
+                    ثبت نام
                 </button>
             </div>
         </form>
         <!-- end Register form -->
-
     </div>
+
 
 {% endblock %}

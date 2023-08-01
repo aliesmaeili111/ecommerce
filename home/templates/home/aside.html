@@ -2,7 +2,7 @@
     <div class="sidebar-wrapper">
         <form action="">
             <div class="widget">
-                <h3 class="widget-title">
+                <h3 class="widget-title myfont">
                     <a data-toggle="collapse" href="#widget-body-2" role="button" aria-expanded="true" aria-controls="widget-body-2">برند</a>
                 </h3>
 
@@ -10,7 +10,7 @@
                     <div class="widget-body">
                         <ul class="cat-list" style="text-align: right;">
                             {% for i in filter.form.brand %}  
-                                <li class="active"><a href="#">{{i}}</a></li>
+                                <li class="active myfont"><a href="#">{{i}}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -21,7 +21,7 @@
             <!-- End .widget -->
 
             <div class="widget">
-                <h3 class="widget-title">
+                <h3 class="widget-title myfont">
                     <a data-toggle="collapse" href="#widget-body-3" role="button" aria-expanded="true" aria-controls="widget-body-3">محدوده قیمت</a>
                 </h3>
 
@@ -46,23 +46,23 @@
 
 
             <!-- Filter Color -->
-            <div class="widget widget-color">
-                <h3 class="widget-title">
+            <div class="widget widget-color ">
+                <h3 class="widget-title myfont">
                     <a data-toggle="collapse" href="#widget-body-4" role="button" aria-expanded="true" aria-controls="widget-body-4">رنگ</a>
                 </h3>
 
                 <div class="collapse show" id="widget-body-4">
-                    <div class="widget-body pb-0">
-                        <ul class="config-swatch-list" style="text-align: right;">
+                    <div class="widget-body pb-0 ">
+                        <ul class="config-swatch-list" style="float: right;">
                             {% for i in filter.form.color %}                        
-                                <li class="active">
-                                    <a href="#" >{{i}}</a>
+                                <li class="active myfont">
+                                    <a href="#">{{i}}</a>
                                 </li>
                             {% endfor %}
                         </ul>
                         {% if 'search' in request.GET %}
-                        <input type="hidden" name="search">
-                    {% endif %}
+                            <input type="hidden" name="search">
+                        {% endif %}
                     </div>
                     <!-- End .widget-body -->
                 </div>
@@ -71,7 +71,7 @@
             <!-- End .widget -->
 
             <div class="widget widget-size">
-                <h3 class="widget-title">
+                <h3 class="widget-title myfont">
                     <a data-toggle="collapse" href="#widget-body-5" role="button" aria-expanded="true" aria-controls="widget-body-5">سایز</a>
                 </h3>
 
@@ -79,7 +79,7 @@
                     <div class="widget-body pb-0">
                         <ul class="config-size-list" style="text-align: right;">
                             {% for i in filter.form.size %}  
-                                <li class="active"><a href="#">{{i}}</a></li>
+                                <li class="active myfont"><a href="#">{{i}}</a></li>
                             {% endfor %}
                         </ul>
                         {% if 'search' in request.GET %}
@@ -93,7 +93,7 @@
             <!-- End .widget -->
 
             <div class="widget widget-size">
-                <h3 class="widget-title">
+                <h3 class="widget-title myfont">
                     <a data-toggle="collapse" href="#widget-body-5" role="button" aria-expanded="true" aria-controls="widget-body-5">مرتب سازی</a>
                 </h3>
                 <div class="collapse show" id="widget-body-5">
@@ -114,7 +114,7 @@
                     <!-- End .widget-body -->
                 </div>
                 <!-- End .collapse -->
-                <button type="submit" class="btn btn-primary mt-1">Filter</button>
+                <button type="submit" class="btn btn-primary mt-1 myfont float-right">اعمال فیلتر</button>
             </div>
         </form>
      </div>

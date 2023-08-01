@@ -99,16 +99,14 @@ def user_login(request):
                 messages.success(request,f'خوش آمدید {request.user.profile.first_name}','primary')
                 return redirect('home:home')
             else:
-                messages.error(request,f'رمز عبور شما اشتباه است! {request.user.profile.first_name}','danger')
-                
-            
+                messages.error(request,'رمز عبور شما اشتباه است','danger')
     else:
         login_form = UserLoginForm()
-        
     context = {
         'login_form':login_form,
     }
     return render(request,'accounts/login.html',context)
+
 
 # Logout view
 def user_logout(request):

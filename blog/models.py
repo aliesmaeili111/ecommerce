@@ -40,10 +40,7 @@ class Article(models.Model):
     
     STATUS_CHOICES = (
         ('d','پیش نویس'),
-        ('p','منتشر شده'),
-        ('i','در حال بررسی'),
-        ('b',' برگشت داده شده'),
-   
+        ('p','منتشر شده')
     )
     
     author = models.ForeignKey(User,null=True,on_delete=models.SET_NULL,related_name="articles",verbose_name="نویسنده",help_text="یک نویسنده کارمندی را انتخاب کنید")
@@ -56,7 +53,6 @@ class Article(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
     status = models.CharField(max_length = 1,choices = STATUS_CHOICES,verbose_name='وضعیت',help_text="وضعیت مقاله را انتخاب کنید")
-    # hits = models.ManyToManyField(IPAddress,blank=True,related_name='hits',verbose_name='آدرس آی پی')
    
     class Meta:
         verbose_name = 'مقاله'
