@@ -1,6 +1,8 @@
 from django.contrib import admin
 from blog.models import Article,Category
-
+from django.contrib.auth.models import User
+from django.utils.html import format_html
+from django_jalali.admin.filters import JDateFieldListFilter
 
 
 def make_published(modeladmin,request,queryset):
@@ -51,8 +53,14 @@ make_not_active.short_description =" لغو نمایش دسته بندی انت�
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title','slug','thumbnail_tag','author_name','category_to_str','jpublish','status')
-    list_display_links = ('title','slug')
+
+    def formfield_for_foreignkey(self,db_field,request,**kwargs):
+        if db_field.name == 'author':
+            kwargs['queryset'] = User.objects.filter(is_staff=True)
+        return super(ArticleAdmin,self).formfield_for_foreignkey(db_field,request,**kwargs)
+    
+    list_display = ('name_colored','slug','thumbnail_tag','author_name','category_to_str','publish','status')
+    list_display_links = ('name_colored','slug')
     list_filter = ('publish','status','author')
     list_editable = ('status',)
     search_fields =  ['title','slug']
@@ -62,6 +70,14 @@ class ArticleAdmin(admin.ModelAdmin):
     ordering = ['-status','-publish']
     actions = [make_published,make_draft]
 
+    def name_colored(self,obj):
+        if obj.status == 'p':
+            color_code = '0109FF'
+        else:
+            color_code = 'FF0000'
+        html ="<span style='color:#{}'>{}</span>".format(color_code,obj.title[:30])
+        return format_html(html)
+    name_colored.short_description = 'عنوان مقاله'
 
     def category_to_str(self,obj):
         return ", ".join([category.title for category in obj.category.active()])

@@ -15,14 +15,14 @@
                                 <div class="container">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">
+                                        <li class="breadcrumb-item active myfont" aria-current="page">
                                             تاریخچه
                                         </li>
                                     </ol>
                                 </div>
                             </nav>
             
-                            <h1>تاریخچه سفارشات</h1>
+                            <h1 class="myfont">تاریخچه سفارشات</h1>
                         </div>
                     </div>
             
@@ -31,7 +31,7 @@
 
                         {% if data %}
                             <div class="wishlist-title">
-                                <h2 class="p-2">لیست تاریخچه سفارشات</h2>
+                                <h2 class="p-2 myfont text-right">لیست تاریخچه سفارشات</h2>
                             </div>
                             <div class="wishlist-table-container">
                                 <table class="table table-order text-left">
@@ -49,12 +49,12 @@
                                     <tbody>
                                         {% for i in data %}
                                             <tr>
-                                                <td>{{forloop.counter}}</td>
+                                                <td>{{ data.start_index|add:forloop.counter0 }}</td>
                                                 <td>
-                                                    {{i.product.name}}
+                                                    {{i.variant.name}}
                                                 </td>
                                                 <td>
-                                                    <img src="{{i.product.image.url}}" alt="{{i.product.name}}"
+                                                    <img src="{{i.variant.product_variant.image.url}}" alt="{{i.variant.name}}"
                                                     style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px">
                                                 </td>
                                                 <td>{{i.quantity}}</td>
@@ -71,9 +71,42 @@
                                         {% endfor %}
                                 </table>
                             </div><!-- End .cart-table-container -->
+                            {% if data.has_other_pages %}
+                                <nav class="toolbox toolbox-pagination p-4 mx-3 ">
+                                    <ul class="pagination toolbox-item myfont">
+                                        {% if data.has_previous%}
+                                            <li class="page-item mx-4"><a href="{% url 'accounts:history' data.previous_page_number %}">قبلی</a></li>
+                                        {% endif %}     
+
+                                        {% if data.number|add:'-2' > 1 %}
+                                            <li class="page-item"><a class="pgn__num" href="">&hellip;</a></li>
+                                        {% endif %}
+
+                                        {% for i in data.paginator.page_range %}
+                                            {% if data.number == i %}
+                                                <li class="page-item mx-3"><a href="{% url 'accounts:history' data.number %}">{{i}}</a></li>
+                                            {% elif i > data.number|add:'-2' and i < data.number|add:'2' %}
+                                                <li class="page-item mx-3"><a href="{% url 'accounts:history' i %}">{{i}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if data.paginator.num_pages > data.number|add:'2' %}
+                                            <li class="page-item"><a href="{% url 'accounts:history' data.number %}">&hellip;</a></li>
+                                    
+                                            <li class="page-item"><a href="{% url 'accounts:history' data.paginator.num_pages %}">{{ data.paginator.num_pages }}</a></li>
+                                        {% endif %}
+            
+                                            
+    
+                                        {% if data.has_next %}
+                                            <li class="page-item mx-4"><a href="{% url 'accounts:history' data.next_page_number %}">بعدی</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            {% endif %}
                         {% else %}
                             <div class="wishlist-title">
-                                <h2 class="p-2">شما هیچ تاریخچه سفارشی ندارید</h2>
+                                <h2 class="px-3 myfont my-5">شما هیچ تاریخچه سفارشی ندارید</h2>
                             </div>
                         {% endif %}
                   

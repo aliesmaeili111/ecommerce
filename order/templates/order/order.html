@@ -1,5 +1,5 @@
 {% extends '_base.html' %}
-{% block title %} Order {% endblock %} 
+{% block title %} تکمیل سفارش {% endblock %} 
 {% block body%}
 
     <main class="main main-test">
@@ -7,10 +7,10 @@
         <ul class="checkout-progress-bar d-flex justify-content-center flex-wrap">
         <li>
             <a href="{% url 'cart:cart_detail' %}">سبد خرید</a>
-        </li>
+        </li>/
         <li class="active">
-            <a href="{% url 'order:order_information'  %}">Checkout</a>
-        </li>
+            <a href="{% url 'order:order_information'  %}">بررسی سفارش</a>
+        </li>/
         <li class="disabled">
             <a href="#">تکمیل سفارش</a>
         </li>
@@ -20,7 +20,7 @@
         <div class="row">
         <div class="col-lg-10">
             <div class="order-summary">
-            <h3>اطلاعات آدرس</h3>
+            <h3 class="myfont text-right">اطلاعات آدرس</h3>
 
             <table class="table table-mini-cart">
                 <tbody>
@@ -30,23 +30,23 @@
                             <form action="{% url 'order:order_create' %}" method="post">{% csrf_token %}
                 
                                 <div class="form-group form-group-sm">
-                                    <input required type="email"name="email" value='{{user.email}}' class="form-control form-control-sm" placeholder="Emali">
+                                    <input required type="email"name="email" value='{{user.email}}' class="form-control form-control-sm myfont" placeholder="Emali">
                                 </div><!-- End .form-group -->
                 
                                 <div class="form-group form-group-sm">
-                                    <input required type="text"name="f_name" value='{{user.first_name}}' class="form-control form-control-sm" placeholder="First name">
+                                    <input required type="text"name="f_name" value='{{user.first_name}}' class="form-control form-control-sm myfont text-right" placeholder="First name">
                                 </div><!-- End .form-group -->
                 
                                 <div class="form-group form-group-sm">
-                                    <input required type="text"name="l_name" value='{{user.last_name}}' class="form-control form-control-sm" placeholder="Last name">
+                                    <input required type="text"name="l_name" value='{{user.last_name}}' class="form-control form-control-sm myfont text-right" placeholder="Last name">
                                 </div><!-- End .form-group -->
                 
                                 <div class="form-group form-group-sm">
                                     <input required type="text" name="address" {% if user.profile.address %} value='{{user.profile.address}}' {% else %} value=""
-                                        {% endif %} class="form-control form-control-sm" placeholder="Address">
+                                        {% endif %} class="form-control form-control-sm myfont text-right" placeholder="Address">
                                 </div><!-- End .form-group -->
                                                 
-                            <button type="submit" class="btn mb-2 px-5 btn-dark btn-place-order">
+                            <button type="submit" class="btn mb-2 myfont px-5 btn-dark btn-place-order">
                                 ادامه
                             </button>
                             </form>

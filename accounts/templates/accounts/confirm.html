@@ -1,14 +1,39 @@
 {% extends 'accounts/base_register.html' %}
+{% load widget_tweaks %}
 {% block title %}
-   Confirm password
+   تغییر گذرواژه
 {% endblock %}
 
 {% block login %}
-    <form action="" method="post">
+<div class="col-md-6">
+    <div class="heading mb-1">
+        <h2 class="title text-center myfont">تغییر گذرواژه</h2>
+    </div>
+    <form action="" method="post" class="text-right">
         {% if validlink %}
             {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit" class="btn btn-primary">change password</button>
+            <label for="register-email" class="float-right myfont">
+              رمز جدید
+            <span class="required">*</span>
+            </label>
+            {{form.new_password1|add_class:'form-input form-wide text-right'}}
+            {% if form.new_password1.errors %}
+                {% for error in form.new_password1.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+            <label for="register-email" class="float-right myfont">
+                تایید رمز جدید 
+              <span class="required">*</span>
+              </label>
+            {{form.new_password2|add_class:'form-input form-wide text-right'}}
+            {% if form.new_password2.errors %}
+                {% for error in form.new_password2.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+            <button type="submit" class="btn btn-primary myfont mt-3">تغییر گذرواژه</button>
         {% endif %}
     </form>
+</div>
 {% endblock %}

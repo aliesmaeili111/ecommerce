@@ -73,7 +73,7 @@
                         <form action="{% url 'home:product_search' %}" method="post">{% csrf_token %}
                             <div class="header-search-wrapper">
                                 <input type="search" style="text-align: right;" oninvalid="setCustomValidity('pleaze complete search')"class="form-control myfont " name="search" id="q" placeholder="جستجو" required="">
-                                <button class="btn icon-magnifier p-0" title="search" type="submit"></button>
+                                <button class="btn icon-magnifier p-0" title="جستجو" type="submit"></button>
                             </div>
                             <!-- End .header-search-wrapper -->
                         </form>
@@ -81,7 +81,7 @@
                         <form action="{% url 'home:products' %}">{% csrf_token %}
                             <div class="header-search-wrapper text-align-right">
                                 <input type="search" style="text-align: right;" oninvalid="setCustomValidity('pleaze complete search')"class="form-control myfont " name="search" id="q" placeholder="جستجو " required="">
-                                <button class="btn icon-magnifier p-0" title="search" type="submit"></button>
+                                <button class="btn icon-magnifier p-0" title="جستجو" type="submit"></button>
                             </div>
                             <!-- End .header-search-wrapper -->
                         </form>
@@ -95,12 +95,12 @@
                     <h6 class="text-right"><span class="myfont">ارتباط با ما</span><a href="tel:+989371595811" class="text-dark font1">+98 937 159 5811</a></h6>
                 </div>
 
-                <a href="{% url 'accounts:login' %}" class="header-icon" title="login"><i class="icon-user-2"></i></a>
+                <a href="{% if request.user.is_authenticated %}{% url 'accounts:profile' %}{% else %}{% url 'accounts:login' %}{% endif %}" class="header-icon" title="{% if request.user.is_authenticated %}حساب کاربری{% else %}ورود{% endif %}"><i class="icon-user-2"></i></a>
 
-                <a href="{% url 'accounts:favourite' %}" class="header-icon" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                <a href="{% url 'accounts:favourite' %}" class="header-icon" title="لیست علاقه مندی ها"><i class="icon-wishlist-2"></i></a>
 
                 <!-- Start .dropdown -->
-                    {% cart %}
+                
                 <!-- End .dropdown -->
     
             </div>
@@ -158,7 +158,8 @@
                                     <a href="{% url 'accounts:profile' %}">حساب کاربری</a></li>
                             {% endif %}
                             <li><a href="about.html">درباره ما</a></li>
-                            <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
+                            <li 
+                            ><a href="{% url 'blog:home' %}">وبلاگ</a></li>
                             <li><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
                             {% if request.user.is_authenticated %}
                                 <li><a href="{% url 'accounts:logout' %}">خروج</a></li>
@@ -175,7 +176,9 @@
                     </li>
                     <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
 
-                    <li><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
+                    <li {% if request.resolver_match.url_name == 'contact' %}
+                    class="active" 
+templates/navbar.html                    {% endif %}><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
                 </ul>
             </nav>
         </div>

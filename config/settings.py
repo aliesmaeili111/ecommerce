@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'extensions',
     'django_filters',
-    
+    'star_ratings',   
+    'captcha',   
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -183,3 +185,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_HSTS_SECONDS = 86400
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+#  settings for rate in app blog
+STAR_RATINGS_STAR_HEIGHT = 16
+
+RECAPTCHA_PUBLIC_KEY = '6LehQX4nAAAAACajaE2IbMdfP6159RxAYu6PxmFm'
+RECAPTCHA_PRIVATE_KEY = '6LehQX4nAAAAADiq-G_2PTTgSTdh_CxbYod-Y2or'
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

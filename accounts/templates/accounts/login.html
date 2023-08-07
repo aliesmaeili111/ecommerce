@@ -2,6 +2,9 @@
 {% block title %}
    ورود
 {% endblock %}
+{% block name %}
+    <h1 class="myfont">ورود</h1>
+{% endblock %}
 
 {% block login %}
 
@@ -31,7 +34,16 @@
                         <p class="text-right text-danger">{{error}}</p>
                     {% endfor %}
                 {% endif %}
+                <div class="mt-3" >
+                    {{login_form.captcha}}
+                </div>
+                {% if login_form.captcha.errors %}
+                    {% for error in login_form.captcha.errors %}
+                        <p class="text-right text-danger">{{error}}</p>
+                    {% endfor %}
+                {% endif %}
                 <div class="form-footer d-flex">
+     
                     <div class="custom-control custom-checkbox ">
                         <input type="checkbox"  name="remember" class="custom-control-input" id="lost-password">
                         <label class="custom-control-label myfont" for="lost-password">مرا بخاطر بسپار</label>
@@ -41,6 +53,7 @@
 
                     <a href="{% url 'accounts:phone' %}" class="forget-password text-dark form-footer-right">ورود با شماره تلفن</a>
                 </div>
+                
                 <button type="submit" class="btn btn-dark btn-md w-100 myfont">
                     ورود به سایت
                 </button>

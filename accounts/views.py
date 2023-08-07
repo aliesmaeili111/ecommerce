@@ -24,7 +24,8 @@ from django.contrib.auth import views as auth_view
 from django.urls import reverse_lazy
 from order.models import ItemOrder
 from home.models import Product,Views
-
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.paginator import Paginator
 
 
 class EmailToken(PasswordResetTokenGenerator):
@@ -209,8 +210,10 @@ def verify(request):
     return render(request,'accounts/code.html',context)
 
 
-def favourite(request):
-    product = request.user.fa_user.all()
+def favourite(request,page=1):
+    data = request.user.fa_user.all()
+    paginator = Paginator(data,10)
+    product = paginator.get_page(page)
     context = {
         'product':product
     }
@@ -227,39 +230,40 @@ def remove_favourite(request,id):
     
 
 
-def history(request):
-    data = ItemOrder.objects.filter(user_id=request.user.id)
+def history(request,page=1):
+    itemOrder = ItemOrder.objects.filter(user_id=request.user.id)
+    paginator = Paginator(itemOrder,10)
+    data = paginator.get_page(page)
+    
     context = {
         'data':data,
     }
     return render(request,'accounts/history.html',context)
 
 
-def product_view(request):
-    product = Views.objects.filter(ip=request.META.get('REMOTE_ADDR')).order_by('-create')[:20]
+def product_view(request,page=1):
+    data = Views.objects.filter(ip=request.META.get('REMOTE_ADDR')).order_by('-create')[:20]
+    paginator = Paginator(data,10)
+    product = paginator.get_page(page)
     context = {
         'product':product,
     }
     return render(request,'accounts/view.html',context)
 
 
-
 class ResetPassword(auth_view.PasswordResetView):
     template_name = 'accounts/reset.html'
-    success_url = reverse_lazy('accounts:reset_done')
     email_template_name = 'accounts/link.html'
+    html_email_template_name = 'accounts/link_template.html'
+    success_url = reverse_lazy('accounts:reset_done')
     
-    
-class DonePassword(auth_view.PasswordResetDoneView):
+class DonePassword(SuccessMessageMixin,auth_view.PasswordResetDoneView):
     template_name='accounts/done.html'
-    
     
 class ConfirmPassword(auth_view.PasswordResetConfirmView):
     template_name = 'accounts/confirm.html'
     success_url = reverse_lazy('accounts:complete')
     
-    
 class Complete(auth_view.PasswordResetCompleteView):
     template_name = 'accounts/complete.html'
-    
     

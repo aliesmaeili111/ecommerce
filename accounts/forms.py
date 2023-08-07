@@ -1,7 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
 from accounts.models import Profile
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
+
 # from django.contrib.auth.forms import ReadOnlyPasswordHashField
+
 
 
 # class UserCreateForm(forms.ModelForm):
@@ -53,9 +57,9 @@ class UserRegisterForm(forms.Form):
     email =  forms.EmailField(error_messages=error,widget=forms.TextInput(attrs={'placeholder':'ایمیل'}))
     first_name = forms.CharField(max_length=50,error_messages=error,min_length=3,widget=forms.TextInput(attrs={'placeholder':'نام'}))
     last_name = forms.CharField(max_length=50,error_messages=error,min_length=5,widget=forms.TextInput(attrs={'placeholder':'نام خانوادگی'}))
-    password_1 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'رمز عبور'}))
+    password_1 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'رمز عبور','id':'password'}))
     password_2 = forms.CharField(max_length=50,error_messages=error,min_length=8,widget=forms.PasswordInput(attrs={'placeholder':'تایید رمز عبور'}))
-    
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
     
     def clean_user_name(self):
         user = self.cleaned_data["user_name"]
@@ -99,7 +103,7 @@ class UserLoginForm(forms.Form):
     user = forms.CharField(max_length=50,min_length=3)
     password = forms.CharField(max_length=50)
     remember = forms.BooleanField(required=False,widget=forms.CheckboxInput())
-
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
     def clean_user(self):
         user = self.cleaned_data["user"]
@@ -123,6 +127,7 @@ class ProfileUpdateForm(forms.ModelForm):
 # Login with mobile 
 class PhoneForm(forms.Form):
     phone = forms.IntegerField()
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
     
     
 # Verify code with mobile 

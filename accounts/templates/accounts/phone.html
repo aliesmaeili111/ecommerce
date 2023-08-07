@@ -3,7 +3,16 @@
 {% block title %}
    ورود از طریق شماره همراه
 {% endblock %}
-
+{% block style %}
+    <style>
+        .input::-webkit-outer-spin-button,::-webkit-inner-spin-button{ 
+            opacity: 0;
+        }
+    </style>
+{% endblock %}
+{% block name %}
+    <h1 class="myfont"> ورود از طریق موبایل</h1>
+{% endblock %}
 {% block login %}
     <div class="col-md-6">
         <div class="heading mb-1">
@@ -15,8 +24,21 @@
                     شماره تلفن
                     <span class="required">*</span>
                 </label>
-                <input type="number" class="form-input form-wide text-right" id="login-email" name="phone" required placeholder="شماره همراه خود رار وارد نمایید">
-
+                
+                <input type="number" class="form-input form-wide text-right input " id="login-email" name="phone" required placeholder="شماره همراه خود رار وارد نمایید">
+                {% if form.phone.errors %}
+                    {% for error in form.phone.errors %}
+                        <p class="text-right text-danger">{{error}}</p>
+                    {% endfor %}
+                {% endif %}
+                <div class="my-4">
+                    {{form.captcha}}
+                </div>
+                {% if form.captcha.errors %}
+                {% for error in form.captcha.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
                 <button type="submit" class="btn btn-dark btn-md mt-3 w-100 myfont">
                     ارسال کد
                 </button>

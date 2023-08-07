@@ -1,0 +1,68 @@
+{% for product in data %}
+                                <div class="col-6 col-sm-4 col-md-3 product-box">
+                                    <div class="product-default">
+                                        <figure>
+                                            <a href="{{product.get_absolute_url}}">
+                                                <img src="{{product.image.url}}" style = "max-width:280px;max-height:280px;min-hieght:280px;  min-width:280px;" alt="{{product.name}}">
+                                            </a>
+
+                                            {% if product.discount %}
+                                                <div class="label-group">
+                                                    <div class="product-label label-sale">
+                                                            %{{product.discount}}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </figure>
+
+                                        <div class="product-details">
+                                            <div class="category-wrap">   
+                                                {% for cat in product.category.active %} 
+                                     
+                                                    <div class="category-list myfont">
+                                                        دسته بندی 
+                                                        <a href="{{category.get_absolute_url}}" >
+                                                            {{cat.name}},
+                                                        </a>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                            <h3 class="product-title myfont"> <a href="{{product.get_absolute_url}}">{{product.name}}</a> </h3>
+
+                                            <div class="ratings-container comment-rating" style='color:gold;'>
+                                                {% if product.average >= 5 %}
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                {% elif 0 <= product.average <= 4 %}
+                                                    <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}"></i>
+                                                {% endif %}
+                                            </div>
+                                            <!-- End .product-container -->
+
+
+                                            {% include 'home/price_box.html' %}
+                                            <!-- End .price-box -->
+
+                                            
+                                        
+                                                
+                                                    <div class="product-action">
+                                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
+                                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><span>جزئیات کالا</span></a>
+                                                    </div>
+                                                
+                                         
+                                           
+                                        </div>
+                                        <!-- End .product-details -->
+                                    </div>
+                                </div>
+                                <!-- End .col-sm-4 -->    
+                            {% endfor %}

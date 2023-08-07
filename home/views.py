@@ -14,6 +14,9 @@ from home.filters import ProductFilter
 from urllib.parse import urlencode
 from django.http import JsonResponse
 from blog.models import Article
+from django.template.loader import render_to_string
+from time import sleep
+
 
 def home(request):
     category = Category.objects.filter(sub_cat=False)
@@ -30,18 +33,20 @@ def home(request):
     
     
 def all_product(request,slug=None,id=None):
-    products = Product.objects.all()
-    Filter = ProductFilter(request.GET,queryset=products)
+    total_product = Product.objects.count()
+    data_product = Product.objects.all().order_by('-id')[:12]
+
+    Filter = ProductFilter(request.GET,queryset=data_product)
     products = Filter.qs
     min_ = Product.objects.aggregate(unit_price=Min('unit_price'))
     min_price = int(min_['unit_price'])
     max_ = Product.objects.aggregate(unit_price=Max('unit_price'))
     max_price = int(max_['unit_price'])
-    paginator = Paginator(products,1)
-    page_num = request.GET.get('page')
-  
     
-    page_obj = paginator.get_page(page_num)
+    # paginator = Paginator(products,2)
+    # page_num = request.GET.get('page')
+    # page_obj = paginator.get_page(page_num)
+    
     form = SearchForm()
     category = Category.objects.filter(sub_cat=False)
     
@@ -61,16 +66,17 @@ def all_product(request,slug=None,id=None):
             
     if slug and id :
         data = get_object_or_404(Category,slug=slug,id=id)
-        page_obj = products.filter(category=data)
-        paginator = Paginator(page_obj,1)
-        page_num = request.GET.get('page')
-        page_obj = paginator.get_page(page_num)    
+        # page_obj = products.filter(category=data)
+        # paginator = Paginator(page_obj,1)
+        # page_num = request.GET.get('page')
+        # page_obj = paginator.get_page(page_num)    
     
     context = {
-        'products':page_obj,
+        'total_product':total_product,
+        'products':data_product,
         'category':category,
         'form':form,
-        'page_num':page_num,
+        # 'page_num':page_num,
         'filter':Filter,
         'min_price':min_price,
         'max_price':max_price,
@@ -79,7 +85,16 @@ def all_product(request,slug=None,id=None):
     return render(request,'home/products.html',context)
     
 
-def product_detail(request,slug,id):
+def load_more_data(request):
+    offset = int(request.GET['offset'])
+    limit = int(request.GET['limit'])
+    data_product = Product.objects.all().order_by('-id')[offset:offset+limit]
+    t = render_to_string('home/ajax/products.html',{'data':data_product})
+    sleep(1)
+    return JsonResponse({'data':t})
+
+
+def product_detail(request,slug,id,page=1):
     product = get_object_or_404(Product,slug=slug,id=id)
     form = CartAddForm()
     ip = request.META.get('REMOTE_ADDR')
@@ -98,8 +113,10 @@ def product_detail(request,slug,id):
     comment_form = CommentForm()
     reply_form = ReplyForm()
     cart_form = CartForm()
-    comment = Comment.objects.filter(product_id=id,is_reply=False)
-    
+    data_comment = Comment.objects.filter(product_id=id,is_reply=False)
+    paginator_comment = Paginator(data_comment,3)
+    comment = paginator_comment.get_page(page)
+
     is_like = False
     if product.like.filter(id=request.user.id).exists():
         is_like = True
@@ -117,6 +134,7 @@ def product_detail(request,slug,id):
             'similar':similar,
             'is_like':is_like,
             'is_unlike':is_unlike,
+            'data_comment':data_comment,
             'comment_form':comment_form,
             'comment':comment,
             'reply_form':reply_form,
@@ -183,7 +201,7 @@ def product_comment(request,id):
                                    rate=data['rate'],
                                    user_id=request.user.id,
                                    product_id=id)
-            messages.success(request,'add comment','success')
+            messages.success(request,'نظر شما با موفقیت ثبت شد','success')
             return redirect(url)
 
         
@@ -201,7 +219,7 @@ def product_reply(request,id,comment_id):
                                    is_reply=True,
                                    )
             
-            messages.success(request,'thanks for reply Comment','success')
+            messages.success(request,'ممنونیم از پاسخ شما','success')
             return redirect(url)
         
         

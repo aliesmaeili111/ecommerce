@@ -2,13 +2,8 @@
 {% load humanize %}
 
     <div class="dropdown cart-dropdown">
-        <a href="#" title="Cart" class="dropdown-toggle dropdown-arrow cart-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+        <a href="{% url 'cart:cart_detail' %}" title="سبد خرید">
             <i class="minicart-icon"></i>
-            <span class="cart-count badge-circle">
-                
-                    {{cart.quantity}}
-         
-            </span>
         </a>
 
         <div class="cart-overlay"></div>

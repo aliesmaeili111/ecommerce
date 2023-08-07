@@ -1,8 +1,10 @@
 {% extends 'accounts/base_register.html' %}
 {% block title %}
-   Complete change password 
+   تغییر گذرواژه با موفقیت انجام شد
 {% endblock %}
 
 {% block login %}
-    now <a href="{% url 'accounts:login' %}">Login</a>
+    <div class="col-md-6 my-5 text-center">
+    الان میتوانید <a class="px-3" href="{% url 'accounts:login' %}">ورود</a> کنید
+    </div>
 {% endblock %}

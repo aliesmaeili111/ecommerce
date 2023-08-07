@@ -12,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
-
 {% block boot %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{% static 'home/css/test.css' %}" rel="stylesheet">
@@ -23,19 +22,11 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'home:home' %}"><i class="icon-home"></i></a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'home:products' %}">Detail product</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'home:products' %}">جزئیات محصول</a></li>
                 </ol>
             </nav>
 
             <div class="product-single-container product-single-default">
-
-                <!-- start add to cart tick -->
-                    <div class="cart-message d-none">
-                        <strong class="single-cart-notice">“Men Black Sports Shoes”</strong>
-                        <span>has been added to your cart.</span>
-                    </div>
-                <!-- end add to cart tick -->
-
 
                 <div class="row">
                     <div class="col-lg-5 col-md-6 product-single-gallery">
@@ -93,7 +84,7 @@
                     <!-- End .product-single-gallery -->
 
                     <div class="col-lg-7 col-md-6 product-single-details">
-                        <h1 class="product-title">{{product.name}}</h1>
+                        <h1 class="product-title myfont text-right">{{product.name}}</h1>
 
                         <div class="ratings-container comment-rating">
                             {% if product.average >= 5 %}
@@ -108,7 +99,7 @@
                                 <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}" style='color:gold'></i>
                                 <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}" style='color:gold'></i>
                             {% endif %}
-                            <a href="#" class="rating-link">( {{comment.count}} نظر )</a>
+                            <a href="#" class="rating-link text-right">( {{comment.count }} نظر )</a>
                         </div>
                         <!-- End .ratings-container -->
 
@@ -116,20 +107,20 @@
 
                        {% include 'home/price_box.html' %}
 
-                        <div class="product-desc">
+                        <div class="product-desc text-right">
                             <p>
                                 {{product.information|safe}}
                             </p>
                         </div>
                         <!-- End .product-desc -->
 
-                        <ul class="single-info-list">
+                        <ul class="single-info-list text-right">
 
                             {% if product.status == 'Both' %}
                             
                                 <form action="" method="post"> {% csrf_token %}   
                                     {% for data in size %}    
-                                        <li class="d-flex align-items-center ">
+                                        <li class="d-flex align-items-center">
                                                 <input onchange="this.form.submit();" class="form-control-sm" type="radio" name="select" value="{{data.id}}"
                                                 {% if variants.id == data.id %}
                                                 checked
@@ -155,18 +146,18 @@
                                 </form>
 
                             {% elif product.status == 'Size' %}   
-                            سایز:
+                           : سایز
                                 <form action="" method="post"> {% csrf_token %}   
    
                                     {% for data in variant %}    
-                                        <li class="d-flex align-items-center ">
+                                        <li class="d-flex align-items-center float-right">
+                                                <strong class="text-center pl-3">
+                                                    <a href="#" class="product-category">{{data.size_variant}}</a>
+                                                </strong>
                                                 <input onchange="this.form.submit();" class="form-control-sm" type="radio" name="select" value="{{data.id}}"
                                                 {% if variants.id == data.id %}
                                                 checked
                                                 {% endif %}>
-                                                <strong class="text-center pl-3">
-                                                    <a href="#" class="product-category">{{data.size_variant}}</a>
-                                                </strong>
                                         </li>
                                     {% endfor %}
                                 </form>
@@ -175,7 +166,7 @@
                                 <form action="" method="post"> {% csrf_token %}   
                                     
                                     {% for data in variant %}    
-                                        <li class="d-flex align-items-center ">
+                                        <li class="d-flex align-items-center float-right ">
                                                 <input onchange="this.form.submit();" class="form-control-sm" type="radio" name="select" value="{{data.id}}"
                                                 {% if variants.id == data.id %} checked {% endif %}
                                                 >
@@ -186,7 +177,7 @@
                                     {% endfor %}
                                 </form>
                             {% endif %}
-                            <li>
+                            <li >
                                 دسته بندی: 
                                 <strong>
                                     <a href="#" class="product-category">
@@ -198,15 +189,6 @@
                                     </a>
                                 </strong>
                             </li>
-
-                            <li>
-                                تگ: 
-                                <strong>
-                                    {% for tag in product.tags.all %}
-                                        <a href="#" class="product-category">{{tag}}</a>
-                                    {% endfor %}
-                                </strong>
-                            </li>
                         </ul>
 
                         <div class="product-action">
@@ -214,22 +196,16 @@
                                 <form action="{% url 'cart:newadd'  %}" method="post">
                                     {% csrf_token %}
                                     <div class="product-single-qty"> 
-                                        <input type="text" name='test' value='{{variants.id}}'>
+                                        <!-- <input type="hidden" name='test' value='{{variants.id}}'> -->
                                         <input type="hidden" name="select" value="{{variants.id}}"> 
-                                        <input type="number" name="quantity" min="1" value="1" max="{{ variants.amount }}" required
-                                        oninvalid="setCustomValidity('pleaze between 1 to {{variants.amount}}')"> 
+                                     
+                                        <input type="number" class="w-100 px-5" name="quantity" min="1" value="1" max="{{ variants.amount }}" required
+                                        oninvalid="setCustomValidity('شما میتوانید تا {{ variants.amount }} انتخاب کنید')"> 
                                     </div>
-                                        <button type="submit" class="btn btn-dark mr-2" title="Add to Cart">Add to Cart</button>
+                                        <button type="submit" class="btn btn-dark mr-2 myfont" title="Add to Cart">اضافه به سبد خرید</button>
                                 </form>
                             <!-- End .product-single-qty -->
                             
-
-                            
-
-                            <!-- if click add to cart display view cart show -->
-                            <a href="{% url 'cart:cart_detail' %}" class="btn btn-gray view-cart d-none">View cart</a>
-                            <!-- end -->
-
                         </div>
                         <!-- End .product-action -->
 
@@ -242,12 +218,12 @@
                                     {% if request.user.is_authenticated %}
                        
                                         
-                                        Like: {{product.total_like}}
+                                    لایک: {{product.total_like}}
                 
                                             <a href="{% url 'home:product_like' product.id %}" class="social-icon social-like fa fa-thumbs-up {% if is_unlike %} d-none {% endif %}" title="Dislike"></a>
                               
 
-                                        Dislike: {{product.total_unlike}}
+                                        دیس لایک: {{product.total_unlike}}
                                  
                                             <a href="{% url 'home:product_unlike' product.id %}" class="social-icon social-like fa fa-thumbs-down {% if is_like %} d-none {% endif %}" title="like "></a>
                                   
@@ -260,14 +236,14 @@
                                         <a href="{% url 'home:favourite' product.slug product.id %}" class="text-danger test " title="Remove to Wishlist">
                                             <i class="icon-wishlist-2"></i>
                                             <span>
-                                                Remove to Wishlist
+                                                حذف از علاقه مندی ها
                                             </span>
                                         </a>
                                     {% else %}
                                         <a href="{% url 'home:favourite' product.slug product.id %}" class="text-primary test" title="Add to Wishlist">
                                             <i class="icon-wishlist-2"></i>
                                             <span>
-                                                Add to Wishlist
+                                                اضافه به لیست علاقه مندی
                                             </span>
                                         </a>
                                     {% endif %}
@@ -287,14 +263,13 @@
             <div class="product-single-tabs">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link mb-3" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false">Reviews {{comment.count}}</a>
+                        <a class="nav-link mb-3 myfont" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false"> نظر {{comment.count}}</a>
                     </li>
                 </ul>
 
                 <div class="tab-content">
                     <div class="tab-pane fade" id="product-reviews-content" role="tabpanel" aria-labelledby="product-tab-reviews">
                         <div class="product-reviews-content">
-                            <h3 class="reviews-title">1 review for Men Black Sports Shoes</h3>
 
                             <div class="comment-list">
                                 {% for com in comment %}
@@ -319,16 +294,16 @@
 
                                                 <span class="comment-by">
                                                     <strong>{{com.user.username}}</strong> – {{com.jpublish}}
-                                                    {% if request.user.is_authenticated %} 
-                                                        <a class="pl-3" href="{% url 'home:comment_like' com.id %}">
-                                                            <i class="fa fa-thumbs-up"></i> Like:
-                                                        </a>{{com.total_comment_like}}
-                                                    {% endif %}
                                                 </span>
                                             </div>
+                                            {% if request.user.is_authenticated %} 
+                                                <a class="pl-3" href="{% url 'home:comment_like' com.id %}">
+                                                    <i class="fa fa-thumbs-up"></i> لایک:
+                                                </a>{{com.total_comment_like}}
+                                            {% endif %}
  
                                             <div class="comment-content">
-                                                <p>{{com.comment}}</p>
+                                                <p class="text-right">{{com.comment}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -337,11 +312,11 @@
                                         <form action="{% url 'home:product_reply' product.id com.id %}" method="post">
                                             {% csrf_token %}
                                             <div class="form-group mt-1">
-                                                <label>Your review to Reply</label>
-                                                <textarea  required oninvalid="setCustomValidity('please reply for comment')" placeholder="Reply ..." id="comment" cols="1" rows="1" name="comment" class="form-control form-control-sm"></textarea>
+                                                <label class="myfont float-right">پاسخ به نظر</label>
+                                                <textarea  required oninvalid="setCustomValidity('لطفا پاسخی بنویسید')" placeholder="پاسخ به نظر" id="comment" cols="1" rows="1" name="comment" class="form-control text-right myfont form-control-sm myfont text-right"></textarea>
                                             </div> 
 
-                                            <input type="submit" class="mt-2 btn btn-sm btn--outline-primary" value="Send reply">
+                                            <input type="submit" class="mt-2 btn btn-sm btn--outline-primary myfont" value="ارسال پاسخ">
                                     
                                         </form>
                                         {% for data in com.comment_reply.all %}
@@ -373,13 +348,13 @@
                             <div class="add-product-review">
                                 
                                 {% if request.user.is_authenticated %} 
-                                    <h3 class="review-title">Add a review</h3>
+                                    <h3 class="review-title myfont text-right">نظری در مورد این محصول بنویسید</h3>
                                 
                                     <form action="{% url 'home:product_comment' product.id %}" method='post' class="comment-form m-0">
                                         {% csrf_token %}
 
                                             <div class="rating-form">
-                                                <label for="rating">Your rating <span class="required">*</span></label>
+                                                <label for="rating" class="myfont">امتیاز شما <span class="required">*</span></label>
                                                 <div class="rating">
                                                     <input type="radio" name="rate" id="5" value="5"><label for="5">&star;</label>
                                                     <input type="radio" name="rate" id="4" value="4"><label for="4">&star;</label>
@@ -390,14 +365,14 @@
                                             </div><br>
                                             
                                             <div class="form-group mt-1">
-                                                <label>Your review <span class="required">*</span></label>
-                                                <textarea required oninvalid="setCustomValidity('please comment')" cols="5" rows="6" name="comment" class="form-control form-control-sm"></textarea>
+                                                <label class="myfont float-right">نظر شما<span class="required">*</span></label>
+                                                <textarea required oninvalid="setCustomValidity('ارسال نظر')" cols="5" rows="6" name="comment" class="form-control text-right myfont form-control-sm"></textarea>
                                             </div> 
 
-                                        <input type="submit" class="btn btn-primary" value="Send comment">
+                                        <input type="submit" class="btn btn-primary myfont" value="ارسال نظر">
                                     </form>
                                 {% else %}
-                                    <h3 class="review-title">for share comment first <a href="{% url 'accounts:login' %}">Login</a> pleaze </h3>
+                                    <h3 class="review-title myfont"> برای نظر دادن ابتدا  <a href="{% url 'accounts:login' %}">وارد </a> شوید</h3>
                                 {% endif %}
                             </div>
                             <!-- End .add-product-review -->
@@ -409,9 +384,9 @@
                 <!-- End .tab-content -->
             </div>
             <!-- End .product-single-tabs -->
-
+            {% if similar %}
             <div class="products-section pt-0">
-                <h2 class="section-title">محصولات مرتبط</h2>
+                <h2 class="section-title myfont text-right">محصولات مرتبط</h2>
 
                 <div class="products-slider owl-carousel owl-theme dots-top dots-small">
                     {% for tag in similar %}  
@@ -430,17 +405,17 @@
                             </figure>
                             <div class="product-details">
                                 <div class="category-list">
-                                    <a href="{{tag.get_absolute_url}}" class="product-category">
-                                        دسته بندی :
+                                    <a href="{{tag.get_absolute_url}}" class="product-category ">
+
                                         {% for cat in tag.category.active %} 
-                                            <a href="{% url 'home:category' cat.slug cat.id %}" class="product-category">
+                                            <a href="{% url 'home:category' cat.slug cat.id %}" class="product-category myfont ">
                                                 {{cat.name}}
                                             </a>
                                         {% endfor %}
                                     </a>
                                 </div>
                                 <h3 class="product-title">
-                                    <a href="{% url 'home:detail' tag.slug tag.id %}">{{tag.name}}</a>
+                                    <a class="myfont" href="{% url 'home:detail' tag.slug tag.id %}">{{tag.name}}</a>
                                 </h3>
                                 <div class="ratings-container comment-rating" style='color:gold;'>
                                     {% if tag.average >= 5 %}
@@ -457,31 +432,20 @@
                                     {% endif %}
                                 </div>
                                 <!-- End .product-container -->
-                                <div class="price-box">
-                                    {% if tag.discount %}    
-                                        <span class="old-price">{{tag.unit_price|floatformat:1|intcomma}}</span>
-                                        <span class="new-price">{{tag.total_price|floatformat:1|intcomma}}</span>
-                                    {% else %}    
-                                        <span class="new-price">{{tag.total_price|floatformat:1|intcomma}}</span>
-                                    {% endif %}
-                                </div>
+                                {% include 'home/price_box.html' %}
                                 <!-- End .price-box -->
-
-
 
                                 {% if request.user.is_authenticated %}
                                 
                                 {% if request.user in product.favourite.all %}
                                     <div class="product-action">
-                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
-                                        <a href="{% url 'cart:compare' product.id %}"></a>
+                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="لبست علاقه مندی"><i class="icon-wishlist-2"></i></a>
+                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
                                     </div>
                                 {% else %}
                                     <div class="product-action">
-                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="wishlist"><i class="icon-wishlist-2"></i></a>
-                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
-                                        <a style="font-size: 15px;" href="{% url 'cart:compare' product.id %}">&rarr;</a>
+                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="لیست علاقه مندی"><i class="icon-wishlist-2"></i></a>
+                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
                                     </div>
                                 {% endif %}
                                 {% endif %}
@@ -494,6 +458,8 @@
                 <!-- End .products-slider -->
             </div>
             <!-- End .products-section -->
+            {% endif %}
+        
 
             {% block script %}
                 {% if product.status != 'None' %}
@@ -614,4 +580,5 @@
             });
         });
     </script>
+
 {% endblock %}

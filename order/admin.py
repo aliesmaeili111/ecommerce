@@ -2,6 +2,7 @@ from django.contrib import admin
 from order.models import Order,ItemOrder,Coupon
 from django_jalali.admin.filters import JDateFieldListFilter
 
+
 class ItemInline(admin.TabularInline):
     model = ItemOrder
     readonly_fields = ('user','variant','size','color','quantity')

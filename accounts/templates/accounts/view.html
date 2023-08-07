@@ -4,7 +4,7 @@
             {% extends '_base.html' %}
 
             {% block title %}
-                Resent view
+                بازدید های اخیر
             {% endblock %}
             {% block body %}
             
@@ -14,21 +14,21 @@
                             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                                 <div class="container">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">خانه</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">
-                                            Resent
+                                            بازدید
                                         </li>
                                     </ol>
                                 </div>
                             </nav>
             
-                            <h1>Resent</h1>
+                            <h1 class="myfont">بازدید</h1>
                         </div>
                     </div>
             
                     <div class="container">
                         <div class="wishlist-title">
-                            <h2 class="p-2">My Resent on Porto Shop 4</h2>
+                            <h2 class="p-2 text-right myfont">بازدید های اخیر در فروشگاه</h2>
                         </div>
                         {% if product %}
                             <div class="wishlist-table-container">
@@ -36,17 +36,17 @@
                                     <thead>
                                         <tr>
                                             <th class="order-id">#</th>
-                                            <th class="order-date">Name</th>
-                                            <th class="order-price">Image</th>
-                                            <th class="order-price">Price</th>
-                                            <th class="order-price">Discount</th>
-                                            <th class="order-status">Brand</th>
+                                            <th class="order-date">نام محصول</th>
+                                            <th class="order-price">تصویر محصول</th>
+                                            <th class="order-price">قیمت محصول</th>
+                                            <th class="order-price">تخفیف محصول</th>
+                                            <th class="order-status">برند</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for i in product %}
                                             <tr>
-                                                <td>{{forloop.counter}}</td>
+                                                <td>{{ product.start_index|add:forloop.counter0 }}</td>
                                                 <td>
                                                     <a href="{{i.product.get_absolute_url}}">
                                                         {{i.product.name}}
@@ -66,10 +66,41 @@
                                         {% endfor %}
                                 </table>
                             </div><!-- End .cart-table-container -->
-                        {% else %}
-                            <div class="wishlist-title">
-                                <h2 class="p-2">No Resent on Porto Shop 4</h2>
-                            </div>
+
+                                {% if product.has_other_pages %}
+                                <nav class="toolbox toolbox-pagination p-4 mx-3 ">
+                                    <ul class="pagination toolbox-item myfont">
+                                        {% if product.has_previous%}
+                                            <li class="page-item mx-4"><a href="{% url 'accounts:product_view' product.previous_page_number %}">قبلی</a></li>
+                                        {% endif %}     
+
+                                        {% if product.number|add:'-2' > 1 %}
+                                            <li class="page-item"><a class="pgn__num" href="">&hellip;</a></li>
+                                        {% endif %}
+
+                                        {% for i in product.paginator.page_range %}
+                                            {% if product.number == i %}
+                                                <li class="page-item mx-3"><a href="{% url 'accounts:product_view' product.number %}">{{i}}</a></li>
+                                            {% elif i > product.number|add:'-2' and i < product.number|add:'2' %}
+                                                <li class="page-item mx-3"><a href="{% url 'accounts:product_view' i %}">{{i}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if product.paginator.num_pages > product.number|add:'2' %}
+                                            <li class="page-item"><a href="{% url 'accounts:product_view' product.number %}">&hellip;</a></li>
+                                    
+                                            <li class="page-item"><a href="{% url 'accounts:product_view' product.paginator.num_pages %}">{{ product.paginator.num_pages }}</a></li>
+                                        {% endif %}
+            
+                                            
+
+                                        {% if product.has_next %}
+                                            <li class="page-item mx-4"><a href="{% url 'accounts:product_view' product.next_page_number %}">بعدی</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            {% endif %}
+
                         {% endif %}
                       
                     </div><!-- End .container -->

@@ -1,19 +1,41 @@
-from django.shortcuts import get_object_or_404
+
+from django.shortcuts import get_object_or_404,render
 from blog.models import Article,Category
 from django.views.generic import ListView,DetailView
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from time import sleep
 
 class ArticleList(ListView):
     queryset = Article.objects.published()
     paginate_by = 1
-    
 
-class ArticleDetail(DetailView):
-    def get_object(self):
-        slug = self.kwargs.get('slug')
-        return get_object_or_404(Article.objects.published(),slug=slug)
+def load_more_data_blog(request):
+    offset = int(request.GET['offset'])
+    limit = int(request.GET['limit'])
+    data_product = Article.objects.all().order_by('-id')[offset:offset+limit]
+    t = render_to_string('home/ajax/list.html',{'data':data_product})
+    sleep(1)
+    return JsonResponse({'data':t})
 
 
+
+def article_detail(request,slug):
+    article = get_object_or_404(Article.objects.published(),slug=slug)
+    similar = article.tag.similar_objects()[:3]
+    context = {
+        'article':article,
+        'similar':similar,
+        "tag": article.tag.all(),
+    }
+    return render(request,'blog/article_detail.html',context)
+
+# class ArticleDetail(DetailView):
+#     def get_object(self):
+#         slug = self.kwargs.get('slug')
+#         return get_object_or_404(Article.objects.published(),slug=slug)
+        
 class CategoryList(ListView):
     paginate_by = 1
     template_name = 'blog/category_list.html'

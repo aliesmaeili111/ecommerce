@@ -1,24 +1,27 @@
 {% extends 'accounts/base_register.html' %}
 {% block title %}
-   Verify code 
+  تایید کد 
+{% endblock %}
+{% block name %}
+    <h1 class="myfont">تایید</h1>
 {% endblock %}
 
 {% block login %}
-<div class="col-md-6">
-    <div class="heading mb-1">
-        <h2 class="title">Verify</h2>
-    </div>
-    <form action="" method="post" novalidate>
-            {% csrf_token %}
-            <label for="login-email">
-                Code
-                <span class="required">*</span>
-            </label>
-            <input type="number" class="form-input form-wide" id="login-email" name="code" required placeholder="plz code">
+    <div class="col-md-6">
+        <div class="heading mb-1">
+            <h2 class="title">تایید</h2>
+        </div>
+        <form action="" method="post" novalidate>
+                {% csrf_token %}
+                <label for="login-email">
+                    کد
+                    <span class="required">*</span>
+                </label>
+                <input type="number" class="form-input form-wide" id="login-email" name="code" required placeholder="کد">
 
-            <button type="submit" class="btn btn-dark btn-md mt-3 w-100">
-                Verify code
-            </button>
-    </form>
-</div>
+                <button type="submit" class="btn btn-dark btn-md mt-3 w-100">
+                    تایید کد
+                </button>
+        </form>
+    </div>
 {% endblock %}

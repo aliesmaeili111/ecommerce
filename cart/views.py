@@ -8,6 +8,8 @@ from cart.cart import NewCart
 from cart.forms import CartAddForm
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.template.loader import render_to_string
+
 
 # Cart detail views
 # @login_required(login_url='accounts:login')
@@ -32,6 +34,7 @@ def cart_add(request):
     
     return redirect('cart:cart_detail')
     
+
 
 
 def cart_remove(request,id):

@@ -34,4 +34,5 @@ urlpatterns = [
     path('blog/', include('blog.urls',namespace='blog')),
     path('ckedirot',include('ckeditor_uploader.urls')),
     path('sitemap.xml',sitemap,{'sitemaps':sitemaps}),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ]+ static(settings.STATIC_URL,document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

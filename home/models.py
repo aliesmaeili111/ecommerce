@@ -10,6 +10,7 @@ from extensions.utils import jalali_conveter
 from django_jalali.db import models as jmodels
 from django.db.models.signals import post_save 
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 
 
 # Manager for active category
@@ -168,7 +169,15 @@ class Color(models.Model):
         verbose_name = 'رنگ'
         verbose_name_plural = 'رنگ ها'
 
+
+
+    # def color_bg(self):
+    #     return mark_safe('<div style="background-color:{}"></div>'.format(self.name))
+    # color_bg.short_description = 'رنگ'
+    # color_bg.allow_tags = True
     
+
+
 # Variants model
 class Variants(models.Model):
     name = models.CharField(max_length=100,verbose_name='نام گونه محصول')

@@ -1,4 +1,5 @@
 {% extends '_base.html' %}
+
 {% block title %}
     سبد خرید
 {% endblock %}
@@ -10,12 +11,11 @@
 					<li class="active">
 						<a href="{% url 'cart:cart_detail' %}">سبد خرید</a>
 					</li>
-			
 				</ul>
 
 				{% if request.user.is_authenticated %}
 				<div class="row">
-					<div class="col-lg-8">
+					<div class="col-lg-8 ">
 						<div class="cart-table-container table-responsive">
 								<table class="table table-cart">
 									<thead>
@@ -27,7 +27,7 @@
 											<th class="price-col">سایز</th>
 											<th class="price-col">رنگ</th>
 											<th class="price-col">تعداد</th>
-											<th class="text-right">خذف</th>
+											<th class="text-right">حذف</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -43,7 +43,7 @@
 												</td>
 												<td class="product-col">
 													<h5 class="product-title">
-														<a href="{% url 'home:detail' c.variant.product_variant.slug c.variant.product_variant.id %}">{{c.variant.name}}</a>
+														<a class="myfont" href="{% url 'home:detail' c.variant.product_variant.slug c.variant.product_variant.id %}">{{c.variant.name}}</a>
 													</h5>
 												</td>
 												<td>										
@@ -61,7 +61,7 @@
 												</td>
 
 												<td>
-												<a href="{% url 'cart:newremove' c.variant.id %}" class="btn btn-sm text-align-center icon-cancel"
+												<a href="{% url 'cart:newremove' c.variant.id %}" class="btn btn-sm text-align-center delete-item icon-cancel"
 													style="display:flex;align-items:center;justify-content:center;font-size:15px"
 													title="Remove Product"></a>
 												</td>
@@ -75,7 +75,7 @@
 					{% if cart %}
 						<div class="col-lg-4">
 							<div class="cart-summary">
-								<h3>جمع سبد خرید</h3>
+								<h3  class="myfont text-right">جمع سبد خرید</h3>
 
 								<form action="{% url 'order:order_information' %}">
 									<table class="table table-totals">
@@ -113,39 +113,39 @@
 
 			<div class="mb-6"></div><!-- margin -->
 		</main><!-- End .main -->
-
-	<script>
-		function show(){
-			$.ajax({
-				url: "{% url 'cart:cart_show' %}",
-				type: 'GET',
-				success:function(response){
-						$('#price').html(response.price);
-						$('#quantity').html(response.quantity);
-						$('#discount').html(response.discount);
-						$('#total').html(response.total);
-				},
-			});
-		};
-		show();
-		function add(id){
-			const num = $('#number' + id).val();
-			const num2 = $('#number' + id).attr('max');
 		
-			quantity = 0;
-			quantity += parseInt(num) + 1;
-			if(quantity <= num2){
-				$('#number' + id).val(quantity);
+		<script>
+			function show(){
 				$.ajax({
-					url: "{% url 'cart:new_add_single' %}",
+					url: "{% url 'cart:cart_show' %}",
 					type: 'GET',
-					data : {variant_id:id,quantity:quantity},
-					dataType : 'json',
-					success:function(data){
-						show();
+					success:function(response){
+							$('#price').html(response.price);
+							$('#quantity').html(response.quantity);
+							$('#discount').html(response.discount);
+							$('#total').html(response.total);
 					},
 				});
 			};
-		};
-	</script>
+			show();
+			function add(id){
+				const num = $('#number' + id).val();
+				const num2 = $('#number' + id).attr('max');
+			
+				quantity = 0;
+				quantity += parseInt(num) + 1;
+				if(quantity <= num2){
+					$('#number' + id).val(quantity);
+					$.ajax({
+						url: "{% url 'cart:new_add_single' %}",
+						type: 'GET',
+						data : {variant_id:id,quantity:quantity},
+						dataType : 'json',
+						success:function(data){
+							show();
+						},
+					});
+				};
+			};
+		</script>
 {% endblock %}

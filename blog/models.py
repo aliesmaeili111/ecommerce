@@ -5,17 +5,19 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator,MinValueValidator,MaxLengthValidator
 from extensions.utils import jalali_conveter
 from django.utils.html import format_html
+from taggit.managers import TaggableManager
+from django_jalali.db import models as jmodels
 
 
 class ArticleManager(models.Manager):
     def published(self):
         return self.filter(status='p')
     
+    
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
     
-
 
 class Category(models.Model):
     parent = models.ForeignKey('self',verbose_name='زیر دسته بندی',default=None,related_name='children',on_delete=models.SET_NULL,blank=True,null=True)
@@ -49,11 +51,12 @@ class Article(models.Model):
     category = models.ManyToManyField(Category,verbose_name="دسته بندی",related_name="articles",help_text="کنترل یا فرمان را در مک نگه دارید تا بیش از یک مورد انتخاب شود|")
     description = RichTextField(verbose_name="محتوای مقاله",help_text="محتوایی برای مقاله خود بنویسید")
     thumbnail = models.ImageField(upload_to='images_blog',verbose_name="تصویر مقاله",help_text='برای مقاله تصویری انتخاب کنید')
-    publish = models.DateTimeField(default = timezone.now,verbose_name='زمان انتشار',help_text = 'فرمت صحیح تاریخ YYYY-MM-DD')
+    publish = jmodels.jDateTimeField(default = timezone.now,verbose_name='زمان انتشار',help_text = 'فرمت صحیح تاریخ YYYY-MM-DD')
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
     status = models.CharField(max_length = 1,choices = STATUS_CHOICES,verbose_name='وضعیت',help_text="وضعیت مقاله را انتخاب کنید")
-   
+    tag = TaggableManager(blank=True)
+    
     class Meta:
         verbose_name = 'مقاله'
         verbose_name_plural = 'مقالات'

@@ -11,6 +11,9 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
+    {% block input_type_number %}
+      
+    {% endblock %}
     {% block style %} {% endblock %}
 
     <title>{% block title %} {% endblock %}</title>
@@ -36,7 +39,9 @@
     
     {% endblock %}
     
-
+    <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+    <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+<!-- 
     <script>
       WebFontConfig = {
         google: {
@@ -54,7 +59,7 @@
         wf.async = true;
         s.parentNode.insertBefore(wf, s);
       })(document);
-    </script>
+    </script> -->
 
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
@@ -123,16 +128,17 @@
                 </li>
               </ul>
             </li>
-            <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
           </ul>
 
           <ul class="mobile-menu">
             <li><a href="{% url 'accounts:profile' %}">حساب من</a></li>
-            <li><a href="{% url 'home:contact' %}">ارتیلط با ما</a></li>
+            <li><a href="{% url 'home:contact' %}">ارتباط با ما</a></li>
             <li><a href="{% url 'blog:home' %}">وبلاگ</a></li>
             <li><a href="{% url 'accounts:favourite' %}">علاق مندی ها</a></li>
             <li><a href="{% url 'cart:cart_detail' %}">سبد خرید</a></li>
-            <li><a href="{% url 'accounts:login' %}">ورود</a></li>
+            {% if not request.user.is_authenticated %}
+              <li><a href="{% url 'accounts:login' %}">ورود</a></li>
+            {% endif %}
           </ul>
         </nav>
         <!-- End .mobile-nav -->
@@ -197,7 +203,7 @@
         </a>
       </div>
       <div class="sticky-info">
-        <a href="{% url 'accounts:login' %}" class="Login myfont">
+        <a href="{% if request.user.is_authenticated %}{% url 'accounts:profile' %}{% else %}{% url 'accounts:login' %}{% endif %}" class="Login myfont">
           <i class="icon-user-2"></i>حساب کاربری
         </a>
       </div>
@@ -277,6 +283,7 @@
 
     {% block script %}{% endblock %}
     {% block script_fav %}{% endblock %}
+    {% block pass_strength %}{% endblock %}
   </body>
 
   <!-- Copied from https://portotheme.com/html/porto_ecommerce/demo4.html by Cyotek WebCopy 1.7.0.600, Friday, November 11, 2022, 8:44:32 PM -->

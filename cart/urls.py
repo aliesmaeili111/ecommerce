@@ -5,7 +5,7 @@ from cart.views import (cart_detail,
                         # compare,show,
                         # remove_compare,
                         cart_add,cart_remove,new_add_single,cart_show,
-                        # new_compare,add_new_compare,remove_new_compare
+                        # new_compare,add_new_compare,remove_new_compare,
                         )
 
 

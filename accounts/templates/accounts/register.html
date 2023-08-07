@@ -3,6 +3,9 @@
 {% block title %}
    ثبت نام در فروشگاه
 {% endblock %}
+{% block name %}
+    <h1 class="myfont">ثبت نام</h1>
+{% endblock %}
 {% block register %}
 
     <div class="col-md-6">
@@ -66,6 +69,9 @@
                     <p class="text-right text-danger">{{error}}</p>
                 {% endfor %}
             {% endif %}
+
+            <div class="text-right" id="message">رمز شما <span id="strength"></span></div>
+
             <label for="register-email" class="float-right myfont">
                     تایید رمز عبور
                 <span class="required">*</span>
@@ -73,6 +79,14 @@
             {{form.password_2|add_class:'form-input form-wide text-right'}}
             {% if form.password_2.errors %}
                 {% for error in form.password_2.errors %}
+                    <p class="text-right text-danger">{{error}}</p>
+                {% endfor %}
+            {% endif %}
+            <div class="my-3">
+                {{form.captcha}}
+            </div>
+            {% if form.captcha.errors %}
+                {% for error in form.captcha.errors %}
                     <p class="text-right text-danger">{{error}}</p>
                 {% endfor %}
             {% endif %}
@@ -85,5 +99,41 @@
         <!-- end Register form -->
     </div>
 
+
+{% endblock %}
+
+{% block pass_strength %}
+        
+
+	<script>
+		var password = document.getElementById('password');
+		var msg = document.getElementById('message');
+		var str = document.getElementById('strength');
+
+
+		password.addEventListener('input', () => {
+			if(password.value.length > 0){
+				msg.style.display = 'block';
+			}
+			else{
+				msg.style.display = 'none';
+			}
+			if (password.value.length < 4 ){
+				str.innerHTML = 'ضعیف';
+				password.style.borderColor = '#ff5925';
+				msg.style.color = '#ff5925';
+			}
+			else if(password.value.length >= 6 && password.value.length <= 8){
+				str.innerHTML = 'متوسط';
+				password.style.borderColor = '#d37000';
+				msg.style.color = '#d37000';
+			}
+			else if(password.value.length >= 8){
+				str.innerHTML = 'قوی است';
+				password.style.borderColor = '#26d730';
+				msg.style.color = '#26d730';
+			}
+		})
+	</script>        
 
 {% endblock %}

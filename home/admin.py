@@ -3,7 +3,7 @@ from home.models import (Category,Product,Variants,
                         Size,Color,Comment,Images,
                         Brand,Chart,Views,Gallery)
 import admin_thumbnails
-
+from django.utils.html import format_html
 
 # variant models inline in product model
 class ProductVariantInlines(admin.TabularInline):
@@ -55,7 +55,15 @@ admin.site.register(Size,SizeAdmin)
 
 # Color Admin
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ['name','color']
+    list_display = ['name','color_bg']
+
+    def color_bg(self,obj):
+        html ="<span style='background-color:{};border-radius:50px'>{}</span>".format(obj.color,obj.name)
+        return format_html(html)
+    color_bg.short_description = 'رنگ '
+
+
+
 admin.site.register(Color,ColorAdmin)
 
 # Comment Admin
