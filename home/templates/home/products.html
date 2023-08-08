@@ -202,12 +202,13 @@
                     <div class="col-lg-9 main-content">
                  
                         <div class="row" id="filteredProducts">
-                            {% for product in products %}
+ 
+                        {% for product in products %}
                                 <div class="col-6 col-sm-4 col-md-3 product-box">
                                     <div class="product-default">
                                         <figure>
                                             <a href="{{product.get_absolute_url}}">
-                                                <img src="{{product.image.url}}" style = "max-width:280px;max-height:280px;min-hieght:280px;  min-width:280px;" alt="{{product.name}}">
+                                                <img src="{{product.image.url}}" style="max-width:280px;max-height:280px;min-hieght:280px;  min-width:280px;" alt="{{product.name}}">
                                             </a>
 
                                             {% if product.discount %}
@@ -268,10 +269,57 @@
                                     </div>
                                 </div>
                                 <!-- End .col-sm-4 -->    
-                            {% endfor %}
+
+                       
+                            
+                        {% endfor %}
+
+
                         </div>
                         <!-- End .row -->
-                        <button class="btn btn-sm btn-dark myfont" id="loadMore" data-limit="12" data-total="{{total_product}}">محصولات بیشتر<i class="fa fa-sync load-more-icon px-2"></i></button>
+                         {% if products.has_other_pages %}
+                                <nav class="toolbox toolbox-pagination ">
+                                    <ul class="pagination toolbox-item myfont">
+    
+                                        <li class="page-item">
+                                            <a class="page-link page-link-btn" title="First page" href="?page=1">اولین صفحه</a>
+                                        </li>
+    
+                                        {% if products.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link page-link-btn" title="Previous" href="{% filter_url products.previous_page_number 'page' request.GET.urlencode %}"><i class="icon-angle-left"></i></a>
+                                            </li>
+                                        {% endif %}
+    
+                                        {% if products.number|add:'-2' > 1 %}
+                                            <li class="page-item"><a class="page-link page-link-btn" href="">&hellip;</a></li>
+                                        {% endif %}
+    
+                                        {% for i in products.paginator.page_range %}
+                                            {% if products.number == i %}   
+                                                <li class="page-item {% if page_num == i %} active {% endif %}"><a class="page-link page-link-btn" href="{% filter_url products.number 'page' request.GET.urlencode %}">{{i}}</a></li>
+                                            {% elif i > products.number|add:'-2' and i < products.number|add:'2' %}
+                                                <li class="page-item"><a class="page-link page-link-btn" href="{% filter_url i 'page' request.GET.urlencode %}">{{i}}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+    
+                                        {% if products.paginator.num_pages > products.number|add:'3' %}
+                                            <li class="page-item"><a class="page-link page-link-btn" href="{% filter_url products.number 'page' request.GET.urlencode %}">&hellip;</a></li>
+    
+                                            <li class="page-item"><a class="page-link page-link-btn" href="{% filter_url products.paginator.num_pages 'page' request.GET.urlencode %}">{{ products.paginator.num_pages }}</a></li>
+                                        {% endif %}
+    
+                                        {% if products.has_next %}                                        
+                                            <li class="page-item">
+                                                <a class="page-link page-link-btn" title="Next" href="{% filter_url products.next_page_number 'page' request.GET.urlencode %}"><i class="icon-angle-right"></i></a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-item">
+                                            <a class="page-link page-link-btn" title="Last page" href="{% filter_url products.paginator.num_pages 'page' request.GET.urlencode %}">آخرین صفحه</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            {% endif %}
                     </div>
                     <!-- End .col-lg-9 -->
 
@@ -290,6 +338,3 @@
         <!-- End .main -->
 {% endblock %}
 
-{% block script %}
-    <script type="text/javascript" src="{% static 'assets/js/custom.js' %}"></script>
-{% endblock %}

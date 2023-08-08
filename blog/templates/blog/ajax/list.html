@@ -1,0 +1,30 @@
+
+    {% for article in data %}
+        <div class="col-md-6 col-lg-4 blog-box">
+            <article class="post">
+                <div class="post-media">
+                    <a href="{% url 'blog:detail' article.slug %}">
+                        <img src="{{article.thumbnail.url}}" alt="{{article.title}}" style="max-width:392px;max-height:290px;">
+                    </a>
+                    <div class="post-date" style="padding-right: 80px;">
+                        <span class="day myfont text-center">{{article.jpublish}}</span>
+                    </div>
+                </div><!-- End .post-media -->
+
+                <div class="post-body">
+                    <h2 class="post-title">
+                        <a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
+                    </h2>
+                    <div class="post-content">
+                        <p>{{article.description|truncatewords:15|safe}}</p>
+                    </div><!-- End .post-content -->
+                    <a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 نظر</a>
+                    {% for cat in article.category.active %}
+                        {% if cat.children.active %}
+                            <a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
+                        {% endif %}
+                    {% endfor %}
+                </div><!-- End .post-body -->
+            </article><!-- End .post -->
+        </div>
+    {% endfor %}

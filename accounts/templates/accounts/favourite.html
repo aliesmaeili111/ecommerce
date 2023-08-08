@@ -1,5 +1,5 @@
 {% extends '_base.html' %}
-
+{% load humanize %}
 {% block title %}
     علاقه مندی ها
 {% endblock %}
@@ -59,7 +59,7 @@
                                     </td>
 
                                     <td class="price-box">
-                                        {{i.unit_price}}
+                                        {{i.unit_price|floatformat:1|intcomma}}
                                     </td>
 
                                     <td class="price-box">

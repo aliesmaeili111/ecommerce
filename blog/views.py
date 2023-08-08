@@ -1,24 +1,27 @@
-
 from django.shortcuts import get_object_or_404,render
 from blog.models import Article,Category
-from django.views.generic import ListView,DetailView
+from django.views.generic import ListView
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from time import sleep
 
-class ArticleList(ListView):
-    queryset = Article.objects.published()
-    paginate_by = 1
+
+def home(request):
+    article_list = Article.objects.published().order_by('-id')[:2]
+    total_article = Article.objects.count()
+
+    context = {
+        'object_list':article_list,
+        'total_article':total_article,
+    }
+    return render(request,'blog/article_list.html',context)
 
 def load_more_data_blog(request):
     offset = int(request.GET['offset'])
     limit = int(request.GET['limit'])
-    data_product = Article.objects.all().order_by('-id')[offset:offset+limit]
-    t = render_to_string('home/ajax/list.html',{'data':data_product})
-    sleep(1)
+    article = Article.objects.all().order_by('-id')[offset:offset+limit]
+    t = render_to_string('blog/ajax/list.html',{'data':article})
     return JsonResponse({'data':t})
-
 
 
 def article_detail(request,slug):

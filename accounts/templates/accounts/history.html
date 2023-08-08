@@ -2,6 +2,7 @@
 
             
             {% extends '_base.html' %}
+            {% load humanize %}
 
             {% block title %}
                 تاریخچه سفارشات
@@ -49,22 +50,26 @@
                                     <tbody>
                                         {% for i in data %}
                                             <tr>
-                                                <td>{{ data.start_index|add:forloop.counter0 }}</td>
                                                 <td>
-                                                    {{i.variant.name}}
+                                                    
+                                                    {{ data.start_index|add:forloop.counter0 }}</td>
+                                                <td>
+                                                    <a href="{% url 'home:detail' i.variant.product_variant.slug i.variant.product_variant.id  %}">{{i.variant.name}}</a>
                                                 </td>
                                                 <td>
+                                                <a href="{% url 'home:detail' i.variant.product_variant.slug i.variant.product_variant.id  %}">
                                                     <img src="{{i.variant.product_variant.image.url}}" alt="{{i.variant.name}}"
                                                     style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px">
+                                                </a>
                                                 </td>
                                                 <td>{{i.quantity}}</td>
-                                                <td>{{i.order.get_price}}</td>
+                                                <td>{{i.order.get_price|floatformat:1|intcomma}}</td>
                                                 <td>{{i.order.address}}</td>
                                                 <td>
                                                     {% if i.order.paid %}
-                                                        <p>yes</p>
+                                                        <i class="fa fa-check"></i>
                                                     {% else %}
-                                                        <p>no</p>
+                                                        <i class="fa fa-ban"></i>
                                                     {% endif %}
                                                 </td>
                                             </tr>

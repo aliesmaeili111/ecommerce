@@ -24,55 +24,41 @@
 			
 				<div class="row">
 					<div class="col-lg-9">
-						<div class="blog-section row">
+						<div class="blog-section row "  id="filteredProducts">
 							{% for article in object_list %}
-							<div class="col-md-6 col-lg-4">
-								<article class="post">
-									<div class="post-media">
-										<a href="{% url 'blog:detail' article.slug %}">
-											<img src="{{article.thumbnail.url}}" alt="{{article.title}}" style="max-width:392px;max-height:290px;">
-										</a>
-										<div class="post-date" style="padding-right: 80px;">
-											<span class="day myfont text-center">{{article.jpublish}}</span>
-										</div>
-									</div><!-- End .post-media -->
+								<div class="col-md-6 col-lg-4 blog-box">
+									<article class="post">
+										<div class="post-media">
+											<a href="{% url 'blog:detail' article.slug %}">
+												<img src="{{article.thumbnail.url}}" alt="{{article.title}}" style="max-width:392px;max-height:290px;">
+											</a>
+											<div class="post-date" style="padding-right: 80px;">
+												<span class="day myfont text-center">{{article.jpublish}}</span>
+											</div>
+										</div><!-- End .post-media -->
 
-									<div class="post-body">
-										<h2 class="post-title">
-											<a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
-										</h2>
-										<div class="post-content">
-											<p>{{article.description|truncatewords:15|safe}}</p>
-										</div><!-- End .post-content -->
-										<a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 نظر</a>
-										{% for cat in article.category.active %}
-											{% if cat.children.active %}
-												<a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
-											{% endif %}
-										{% endfor %}
-									</div><!-- End .post-body -->
-								</article><!-- End .post -->
-							</div>
+										<div class="post-body">
+											<h2 class="post-title">
+												<a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
+											</h2>
+											<div class="post-content">
+												<p>{{article.description|truncatewords:15|safe}}</p>
+											</div><!-- End .post-content -->
+											<a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 نظر</a>
+											{% for cat in article.category.active %}
+												{% if cat.children.active %}
+													<a href="{% url 'blog:category' cat.slug %}" class="float-right">{{cat.title}} #</a>
+												{% endif %}
+											{% endfor %}
+										</div><!-- End .post-body -->
+									</article><!-- End .post -->
+								</div>
 							{% endfor %}					
 						</div>
-						<nav class="toolbox toolbox-pagination">
-							<ul class="pagination toolbox-item myfont">							
-								{% if is_paginated %}
-									{% if page_obj.has_previous %}						
-										<li class="page-item">
-											<a class="page-link page-link-btn" title="First page" href="{% block previous_page_number %}{% endblock %}">مقالات جدید</a>
-										</li>
-									{% endif %}							   
-									{% if page_obj.has_next %}						
-										<li class="page-item">
-											<a class="page-link page-link-btn" title="First page" href="{% block next_page_number %}{% endblock %}">مقالات قدیمی</a>
-										</li>
-									{% endif %}	
-								{% endif %}							   
-							</ul>
-						</nav>
+					{% if object_list.count < total_article %}
+						<button class="btn my-4 btn-dark myfont" id="loadMore" data-limit="2" data-total="{{total_article}}">مقالات بیشتر<i class="fa fa-sync load-more-icon px-2"></i></button>
+					{% endif %}
 					</div>
-
 
 					<aside class="sidebar mobile-sidebar col-lg-3 d-lg-block d-none">
 						<div class="sidebar-wrapper" data-sticky-sidebar-options='{"offsetTop": 72}'>
@@ -90,5 +76,5 @@
 {% endblock %}
 
 {% block script %}
-	<script src="{% static 'assets/js/custom.js' %}"></script>
+	<script src="{% static 'assets/js/load-more.js' %}"></script>
 {% endblock %}

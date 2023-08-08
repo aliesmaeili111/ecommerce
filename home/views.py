@@ -1,5 +1,4 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from django.http import HttpResponse
 from home.models import (Category,Product,Variants,
                         Comment,CommentForm,ReplyForm,
                         Images,Chart,Views,Gallery,Brand)
@@ -33,19 +32,19 @@ def home(request):
     
     
 def all_product(request,slug=None,id=None):
-    total_product = Product.objects.count()
-    data_product = Product.objects.all().order_by('-id')[:12]
 
-    Filter = ProductFilter(request.GET,queryset=data_product)
+    products = Product.objects.all().order_by('-id')
+    Filter = ProductFilter(request.GET,queryset=products)
     products = Filter.qs
+
     min_ = Product.objects.aggregate(unit_price=Min('unit_price'))
     min_price = int(min_['unit_price'])
     max_ = Product.objects.aggregate(unit_price=Max('unit_price'))
     max_price = int(max_['unit_price'])
     
-    # paginator = Paginator(products,2)
-    # page_num = request.GET.get('page')
-    # page_obj = paginator.get_page(page_num)
+    paginator = Paginator(products,2)
+    page_num = request.GET.get('page')
+    page_obj = paginator.get_page(page_num)
     
     form = SearchForm()
     category = Category.objects.filter(sub_cat=False)
@@ -66,17 +65,18 @@ def all_product(request,slug=None,id=None):
             
     if slug and id :
         data = get_object_or_404(Category,slug=slug,id=id)
-        # page_obj = products.filter(category=data)
-        # paginator = Paginator(page_obj,1)
-        # page_num = request.GET.get('page')
-        # page_obj = paginator.get_page(page_num)    
-    
+        products = Product.objects.filter(category=data).order_by('-id')
+        Filter = ProductFilter(request.GET, queryset=products)
+        products = Filter.qs
+        paginator = Paginator(products, 2)
+        page_num = request.GET.get('page')
+        page_obj = paginator.get_page(page_num)
+
     context = {
-        'total_product':total_product,
-        'products':data_product,
+        'products':page_obj,
         'category':category,
         'form':form,
-        # 'page_num':page_num,
+        'page_num':page_num,
         'filter':Filter,
         'min_price':min_price,
         'max_price':max_price,
@@ -85,13 +85,6 @@ def all_product(request,slug=None,id=None):
     return render(request,'home/products.html',context)
     
 
-def load_more_data(request):
-    offset = int(request.GET['offset'])
-    limit = int(request.GET['limit'])
-    data_product = Product.objects.all().order_by('-id')[offset:offset+limit]
-    t = render_to_string('home/ajax/products.html',{'data':data_product})
-    sleep(1)
-    return JsonResponse({'data':t})
 
 
 def product_detail(request,slug,id,page=1):

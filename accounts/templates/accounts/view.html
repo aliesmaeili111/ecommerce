@@ -2,7 +2,7 @@
 
             
             {% extends '_base.html' %}
-
+            {% load humanize %}
             {% block title %}
                 بازدید های اخیر
             {% endblock %}
@@ -58,7 +58,7 @@
                                                     style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px">
                                                     </a>
                                                 </td>
-                                                <td>{{i.product.total_price}}</td>
+                                                <td>{{i.product.total_price|floatformat:1|intcomma}}</td>
                                                 <td>%{{i.product.discount}}</td>
                                                 <td>{{i.product.brand}}</td>
                                                 

@@ -1,0 +1,10 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block branding %}
+    <h1 id="head">
+        <a href="{% url 'home:home' %}">
+            <img src="{% static 'assets/images/logo-footer.png' %}" alt="logo" width="200" height="50">
+        </a>
+    </h1>
+{% endblock %}

@@ -167,7 +167,7 @@
                                     
                                     {% for data in variant %}    
                                         <li class="d-flex align-items-center float-right ">
-                                                <input onchange="this.form.submit();" class="form-control-sm" type="radio" name="select" value="{{data.id}}"
+                                                <input  onchange="this.form.submit();" class="form-control-sm" type="radio" name="select" value="{{data.id}}"
                                                 {% if variants.id == data.id %} checked {% endif %}
                                                 >
                                                 <strong class="text-center pl-3">
@@ -198,11 +198,12 @@
                                     <div class="product-single-qty"> 
                                         <!-- <input type="hidden" name='test' value='{{variants.id}}'> -->
                                         <input type="hidden" name="select" value="{{variants.id}}"> 
+                       
                                      
                                         <input type="number" class="w-100 px-5" name="quantity" min="1" value="1" max="{{ variants.amount }}" required
                                         oninvalid="setCustomValidity('شما میتوانید تا {{ variants.amount }} انتخاب کنید')"> 
                                     </div>
-                                        <button type="submit" class="btn btn-dark mr-2 myfont" title="Add to Cart">اضافه به سبد خرید</button>
+                                        <button type="submit" class="btn btn-dark mr-2 myfont" title="اضافه به سبد خرید">اضافه به سبد خرید</button>
                                 </form>
                             <!-- End .product-single-qty -->
                             
