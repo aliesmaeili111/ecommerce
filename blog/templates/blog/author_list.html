@@ -6,9 +6,62 @@
 
 
 {% block previous_page_number %}
-    {% url 'blog:author' author.username page_obj.previous_page_number %}
+    
 {% endblock %}
 
-{% block next_page_number %}
-    {% url 'blog:author' author.username page_obj.next_page_number %}
+
+{% block page %}					
+    <nav class="toolbox toolbox-pagination">
+        <ul class="pagination toolbox-item">							
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}						
+                    <li class="page-item">
+                        <a class="page-link page-link-btn myfont" title="صفحه قبلی" href="{% url 'blog:author' author.username page_obj.previous_page_number %}">مقالات جدید</a>
+                    </li>
+                {% endif %}							   
+                {% if page_obj.has_next %}						
+                    <li class="page-item">
+                        <a class="page-link page-link-btn myfont" title="صفحه بعدی" href=" {% url 'blog:author' author.username page_obj.next_page_number %}">مقالات قدیمی</a>
+                    </li>
+                {% endif %}	
+            {% endif %}							   
+        </ul>
+    </nav>
 {% endblock %}
+
+
+
+		
+												<!-- start reply -->
+												<!-- {% if request.user.is_authenticated %} 
+													<form action="" method="post">
+														{% csrf_token %}
+														<div class="form-group mt-1">
+															<label class="myfont float-right">پاسخ به نظر</label>
+															<textarea required oninvalid="setCustomValidity('لطفا پاسخی بنویسید')" placeholder="پاسخ به نظر" id="comment" cols="1" rows="1" name="comment" class="form-control text-right myfont form-control-sm myfont text-right"></textarea>
+														</div> 
+			
+														<input type="submit" class="mt-2 btn btn-sm btn--outline-primary myfont" value="ارسال پاسخ">
+												
+													</form>
+													{% for data in c.comment_reply.all %}
+														<div class="comments " style="padding:0 0 20px 65px;">
+															<figure class="img-thumbnail">
+																<img src="{{data.user.profile.profile_image.url}}" alt="{{data.user.first_name}}" width="80" height="80">
+															</figure>
+			
+															<div class="comment-block ">
+																<div class="comment-header">
+																	<span class="comment-by">
+																		<strong>{{data.user.username}}</strong> – {{data.create}}
+																	</span>
+																</div>
+			
+																<div class="comment-content">
+																	<p>{{data.comment}}</p>
+																</div>
+															</div>
+														</div>
+													{% endfor %} -->
+													<!-- end reply -->
+												<!-- {% endif %} -->

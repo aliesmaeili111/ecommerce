@@ -1,0 +1,28 @@
+{% for com in data %}
+    <div class="comment-list comment-box">
+        <div class="comments mb-1 ">
+            <figure class="img-thumbnail">
+                <img src="{{com.user.profile.profile_image.url}}" alt="{{com.user.first_name}}" width="80" height="80">
+            </figure>
+            <div class="comment-block">
+                <div class="comment-header">
+                    <div class="comment-arrow"></div>
+                    <div class="comment-rating float-sm-right" style='color:gold;'>
+                        <i class="fa fa-star{% if com.rate < 1 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if com.rate < 2 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if com.rate < 3 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if com.rate < 4 %}-o empty{% endif %}"></i>
+                        <i class="fa fa-star{% if com.rate < 5 %}-o empty{% endif %}"></i>
+                    </div>
+                    <span class="comment-by">
+                        <strong>{{com.user.username}}</strong> – {{com.jpublish}}
+                    </span>
+                </div>
+
+                <div class="comment-content">
+                    <p class="text-right">{{com.comment|safe}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

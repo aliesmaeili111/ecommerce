@@ -15,6 +15,9 @@ from django.http import JsonResponse
 from blog.models import Article
 from django.template.loader import render_to_string
 from time import sleep
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
 
 
 def home(request):
@@ -42,7 +45,7 @@ def all_product(request,slug=None,id=None):
     max_ = Product.objects.aggregate(unit_price=Max('unit_price'))
     max_price = int(max_['unit_price'])
     
-    paginator = Paginator(products,2)
+    paginator = Paginator(products,12)
     page_num = request.GET.get('page')
     page_obj = paginator.get_page(page_num)
     
@@ -87,7 +90,7 @@ def all_product(request,slug=None,id=None):
 
 
 
-def product_detail(request,slug,id,page=1):
+def product_detail(request,slug,id):
     product = get_object_or_404(Product,slug=slug,id=id)
     form = CartAddForm()
     ip = request.META.get('REMOTE_ADDR')
@@ -101,22 +104,24 @@ def product_detail(request,slug,id,page=1):
         product.view.add(request.user)
     update = Chart.objects.filter(product_id=id)
     change = Chart.objects.all()
-    images = Images.objects.filter(product_id=id)
+    images = Images.objects.filter(product_id=id).order_by('-id')
     similar = product.tags.similar_objects()[:5]
     comment_form = CommentForm()
     reply_form = ReplyForm()
     cart_form = CartForm()
-    data_comment = Comment.objects.filter(product_id=id,is_reply=False)
-    paginator_comment = Paginator(data_comment,3)
-    comment = paginator_comment.get_page(page)
 
-    is_like = False
-    if product.like.filter(id=request.user.id).exists():
-        is_like = True
+    data_comment = Comment.objects.filter(product_id=id,is_reply=False).order_by('-id')[:5]
+    total_comment = Comment.objects.filter(product_id=id,is_reply=False).count()
+    # paginator_comment = Paginator(data_comment,1)
+    # comment = paginator_comment.get_page(page)
+
+    # is_like = False
+    # if product.like.filter(id=request.user.id).exists():
+    #     is_like = True
     
-    is_unlike = False
-    if product.unlike.filter(id=request.user.id).exists():
-        is_unlike = True
+    # is_unlike = False
+    # if product.unlike.filter(id=request.user.id).exists():
+    #     is_unlike = True
     
     # is_favourite = False
     # if product.favourite.filter(id=request.user.id).exists():
@@ -125,11 +130,12 @@ def product_detail(request,slug,id,page=1):
     context = {
             'product':product,
             'similar':similar,
-            'is_like':is_like,
-            'is_unlike':is_unlike,
-            'data_comment':data_comment,
+            # 'is_like':is_like,
+            # 'is_unlike':is_unlike,
+            # 'data_comment':data_comment,
             'comment_form':comment_form,
-            'comment':comment,
+            'comment':data_comment,
+            'total_comment':total_comment,
             'reply_form':reply_form,
             'images':images,
             'cart_form':cart_form,
@@ -137,8 +143,7 @@ def product_detail(request,slug,id,page=1):
             'change':change,
             'form':form,
             'update':update,
-        }
-    
+        }    
 
     if request.method == "POST":
         variant = Variants.objects.filter(product_variant_id=id)
@@ -146,42 +151,59 @@ def product_detail(request,slug,id,page=1):
         variants = Variants.objects.get(id=var_id)
         colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.size_variant_id)
         size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
+        context.update({'variant':variant,'variants':variants,'colors':colors,'size':size})
     else:
         variant = Variants.objects.filter(product_variant_id=id)
         variants = Variants.objects.get(id=variant[0].id)
         colors = Variants.objects.filter(product_variant_id=id,size_variant_id=variants.color_variant_id)
         size = Variants.objects.filter(product_variant_id=id).distinct('size_variant_id')
-        
-    context.update({'variant':variant,'variants':variants,'colors':colors,'size':size})
+
+        context.update({'variant':variant,'variants':variants,'colors':colors,'size':size})
+
     return render(request,'home/product_detail.html',context)
 
 
+def load_more_data_comment(request):
+    offset = int(request.GET['offset'])
+    limit = int(request.GET['limit'])
+    data = Comment.objects.filter(is_reply=False).values()
+    f = []
+    for i in data:
+        a = (i['product_id'])
+        f.append(a)
+    av = list(set(f))[0]
+    sleep(1)
+    comment = Comment.objects.filter(product_id=av,is_reply=False).order_by('-id')[offset:offset+limit]
+    t = render_to_string('home/ajax/comment.html',{'data':comment})
+    return JsonResponse({'data':t})
+
 
 # like product
-def product_like(request,id):
-    url = request.META.get("HTTP_REFERER")
-    product = get_object_or_404(Product,id=id)
-    is_like = False
-    if product.like.filter(id=request.user.id).exists():
-        product.like.remove(request.user)
-        is_like = False
-        messages.error(request,'remove ','danger')
-    else:
-        product.like.add(request.user)
-        is_like = True
-        messages.success(request,'add ','success')
+# def product_like(request,id):
+#     url = request.META.get("HTTP_REFERER")
+#     product = get_object_or_404(Product,id=id)
+#     is_like = False
+#     if product.like.filter(id=request.user.id).exists():
+#         product.like.remove(request.user)
+#         is_like = False
+#         messages.error(request,'remove ','danger')
+#     else:
+#         product.like.add(request.user)
+#         is_like = True
+#         messages.success(request,'add ','success')
     
-    return redirect(url)
+#     return redirect(url)
+
 
 # Dislike product
-def product_unlike(request,id):
+# def product_unlike(request,id):
     
-    url = request.META.get("HTTP_REFERER")
-    product = get_object_or_404(Product,id=id)
-    product.unlike.add(request.user)
-    messages.error(request,'you cant change dislike to like','danger')
+#     url = request.META.get("HTTP_REFERER")
+#     product = get_object_or_404(Product,id=id)
+#     product.unlike.add(request.user)
+#     messages.error(request,'you cant change dislike to like','danger')
     
-    return redirect(url)
+#     return redirect(url)
 
 
 def product_comment(request,id):
@@ -196,8 +218,10 @@ def product_comment(request,id):
                                    product_id=id)
             messages.success(request,'نظر شما با موفقیت ثبت شد','success')
             return redirect(url)
+        else:
+            messages.error(request,'لطفا به محصول مورد نظر امتیار بدهید','danger')
+            return redirect(url)
 
-        
 
 def product_reply(request,id,comment_id):
     url = request.META.get("HTTP_REFERER")
@@ -220,12 +244,12 @@ def comment_like(request,id):
     url = request.META.get("HTTP_REFERER")
     comment = get_object_or_404(Comment,id=id)
     if comment.comment_like.filter(id=request.user.id).exists():
-        comment.comment_like.add(request.user)
-        messages.error(request,'like comment give','danger')
+        comment.comment_like.remove(request.user)
+        messages.error(request,'لایک شما پس گرفته شد','danger')
         return redirect(url)
     else:
         comment.comment_like.add(request.user) 
-        messages.success(request,'thanks for like Comment','success')
+        messages.success(request,'ممنونیم بابت لایک نظر','success')
         return redirect(url)  
     
     
@@ -244,25 +268,59 @@ def product_search(request):
                 'products':products,
             }
             return render(request,'home/products.html',context)
-        
-        
-def favourite_product(request,slug,id):
-    # url = request.META.get("HTTP_REFERER")
+     
+
+# add new fav for product
+
+def add_new_fav_product(request,slug,id):
     product = get_object_or_404(Product,slug=slug,id=id)
-    # is_favourite = False
-    if product.favourite.filter(id=request.user.id).exists():
-        product.favourite.remove(request.user)
-        product.total_favourite -= 1
-        # is_favourite = False
-        messages.error(request,'you wishlist remove','danger')
+    print(slug,id)
+    user = request.user    
+    if user in product.favourite.all():
+        product.favourite.remove(user)
+        fav_response_product = "<i class='far fa-heart fa-lg'></i>"
+        return JsonResponse(fav_response_product,safe=False,status=200)
     else:
-        product.favourite.add(request.user)
-        product.total_favourite += 1
-        # is_favourite = True
-        messages.success(request,'you wishlist added','success')
-    product.save()
-    data = {'success':'OK'}
-    return JsonResponse(data)
+        product.favourite.add(user)
+        fav_response_product = "<i class='fa fa-heart text-danger fa-lg'></i>"
+        return JsonResponse(fav_response_product,safe=False,status=200)
+
+
+# load fav for article
+
+def load_product_fav(request,slug,id):
+    product = get_object_or_404(Product,slug=slug,id=id)
+    fav_response_product = list(product.favourite.values())
+    return JsonResponse(fav_response_product,safe=False,status=200)
+
+
+# def favourite_product(request,slug,id):
+#     # url = request.META.get("HTTP_REFERER")
+#     product = get_object_or_404(Product,slug=slug,id=id)
+#     # is_favourite = False
+#     if product.favourite.filter(id=request.user.id).exists():
+#         product.favourite.remove(request.user)
+#         product.total_favourite -= 1
+#         # is_favourite = False
+#         messages.error(request,'you wishlist remove','danger')
+#     else:
+#         product.favourite.add(request.user)
+#         product.total_favourite += 1
+#         # is_favourite = True
+#         messages.success(request,'you wishlist added','success')
+#     product.save()
+#     data = {'success':'OK'}
+#     return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+
 
 
 def contact(request):
@@ -273,7 +331,7 @@ def contact(request):
         msg = request.POST['message']
         body = name + '\n' + subject + '\n' + email + '\n' + msg
         form = EmailMessage(
-            'Contact Form',
+            'در خواست ارتباط یا ما',
             body,
             'test',
             ('aliesmaeili11@gmailcom',),
@@ -281,3 +339,39 @@ def contact(request):
         form.send(fail_silently=False)
 
     return render(request,'home/contact.html')
+
+
+# add new like for product
+def add_new_like_product(request,slug,id):
+    product = get_object_or_404(Product,slug=slug,id=id)
+    user = request.user    
+
+    if user in product.like.all():
+        product.like.remove(user)
+        like_response_product = "<i class='social-icon social-like text-success fa fa-thumbs-up'></i>"
+        return JsonResponse(like_response_product,safe=False,status=200)
+    else:
+        product.like.add(user)
+        like_response_product = "<i class='social-icon social-like text-white bg-success fa fa-thumbs-up'></i>"
+        return JsonResponse(like_response_product,safe=False,status=200)
+
+
+# load like for article
+def load_product_likes(request,slug,id):
+    product = get_object_or_404(Product,slug=slug,id=id)
+    like_response_product = list(product.like.values())
+    return JsonResponse(like_response_product,safe=False,status=200)
+
+
+
+# load delete comment in product detail
+@csrf_exempt
+def delete_comment_product(request):
+    if request.method == "POST":
+        id = request.POST.get('comment_id') 
+        comment = get_object_or_404(Comment,id=id)
+        comment.delete()
+        return JsonResponse({"status_cm":1})
+    else:
+        return JsonResponse({"status_cm":2})
+    

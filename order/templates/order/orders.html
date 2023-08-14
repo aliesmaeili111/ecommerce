@@ -1,39 +1,38 @@
 ﻿{% extends '_base.html' %}
-{% block title %} Order {% endblock %} 
+{% block title %} سفارش شما {% endblock %} 
+{% load humanize %}
 {% block body%}
 
     <main class="main main-test">
     <div class="container checkout-container">
         <ul class="checkout-progress-bar d-flex justify-content-center flex-wrap">
         <li>
-            <a href="{% url 'cart:cart_detail' %}">Shopping Cart</a>
-        </li>
+            <a href="{% url 'cart:cart_detail' %}">سبد خرید</a>
+        </li>/
         <li class="active">
-            <a href="{% url 'order:order_information'  %}">Checkout</a>
-        </li>
+            <a href="{% url 'order:order_information'  %}">بررسی سفارش</a>
+        </li>/
         <li class="disabled">
-            <a href="#">Order Complete</a>
+            <a href="#" >تکمیل سفارش</a>
         </li>
         </ul>
 
         <div class="checkout-discount">
-        <h4>
-            Have a coupon?
             <button
             data-toggle="collapse"
             data-target="#collapseTwo"
             aria-expanded="true"
             aria-controls="collapseOne"
-            class="btn btn-link btn-toggle"
+            class="btn btn-link btn-toggle myfont"
             >
-            ENTER YOUR CODE
+            کد تخفیف خود را وارد کنید
             </button>
-        </h4>
+  
 
         <div id="collapseTwo" class="collapse">
             <div class="feature-box">
             <div class="feature-box-content">
-                <p>If you have a coupon code, please apply it below.</p>
+                <p class="text-right mb-3">اگر کد تخفیف دارید آنرا اعمال کنید</p>
 
                 <form action="{% url 'order:coupon' order.id %}" method="post">
                 {% csrf_token %}
@@ -41,13 +40,13 @@
                     <input
                     name="code"
                     type="text"
-                    class="form-control form-control-sm w-auto"
-                    placeholder="Coupon code"
+                    class="form-control form-control-sm w-auto text-right myfont"
+                    placeholder="کد تخفیف"
                     required
                     />
                     <div class="input-group-append">
-                    <button class="btn btn-sm mt-0" type="submit">
-                        Apply Coupon
+                    <button class="btn btn-sm mt-0 myfont" type="submit">
+                        اعمال کد تخفیف
                     </button>
                     </div>
                 </div>
@@ -60,25 +59,26 @@
         <div class="row">
         <div class="col-lg-10">
             <div class="order-summary">
-            <h3>YOUR ORDER</h3>
+            <h3 class="myfont text-center"> سفارش شما</h3>
 
             <table class="table table-mini-cart">
                 
                 <tfoot>
                 <tr class="order-total">
-                    <td>
-                    <h4>Total</h4>
-                    </td>
+                   
                     <td>
                     <b class="total-price">
-                        <span> {{order.get_price}} </span>
+                        <span> {{order.get_price|floatformat:1|intcomma}} </span>
                     </b>
+                    </td>
+                    <td>
+                        <h4 class="myfont"> : جمع کل</h4>
                     </td>
                 </tr>
                 </tfoot>
             </table>
-            <a class="btn mb-2 btn-dark btn-place-order" href="{% url 'order:request' order.id order.get_price %}"
-                >paid</a
+            <a class="btn mb-2 btn-dark btn-place-order myfont" href="{% url 'order:request' order.id order.get_price %}"
+                >لینک پرداخت</a
             >
 
             </div>

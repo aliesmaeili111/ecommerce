@@ -20,7 +20,7 @@ class CategoryManager(models.Manager):
     
     def sub_true(self):
         return self.filter(sub_cat=True)
-    
+
 
 # Category model
 class Category(models.Model):
@@ -87,6 +87,7 @@ class Product(models.Model):
     sell = models.PositiveIntegerField(default=0,verbose_name='پر فروش')
     view = models.ManyToManyField(User,blank=True,related_name='product_view',verbose_name='بازدید ها')
     num_view = models.PositiveIntegerField(default=0,verbose_name='مجموع بازدید ها')
+
     
     
     def __str__(self):
@@ -218,8 +219,7 @@ class Variants(models.Model):
     class Meta:
         verbose_name = 'گونه محصول'
         verbose_name_plural = 'گونه محصولات ' 
-    
-    
+
 # Model comment 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,verbose_name='کاربر') 
@@ -232,7 +232,6 @@ class Comment(models.Model):
     comment_like = models.ManyToManyField(User,related_name='com_like',blank=True,verbose_name='لایک نظر')
     total_comment_like = models.PositiveIntegerField(default=0,verbose_name='مجموع لایک های کامنت')
     
-
     def total_comment_like(self):
         return self.comment_like.count()
     
@@ -247,6 +246,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'نظرات محصول'
         verbose_name_plural = 'نظرات محصولات ' 
+
 
 # Form comment 
 class CommentForm(ModelForm):
@@ -368,4 +368,6 @@ class Gallery(models.Model):
     class Meta:
         verbose_name = 'عکس اسلایدر'
         verbose_name_plural = 'عکس های اسلایدر'
-        
+
+
+

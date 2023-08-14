@@ -4,11 +4,21 @@
         دسته بندی :   {{category_blog.title}} </h2>
 {% endblock %}
 
-
-{% block previous_page_number %}
-    {% url 'blog:category' category_blog.slug page_obj.previous_page_number %}
-{% endblock %}
-
-{% block next_page_number %}
-    {% url 'blog:category' category_blog.slug page_obj.next_page_number %}
+{% block page %}					
+    <nav class="toolbox toolbox-pagination">
+        <ul class="pagination toolbox-item">							
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}						
+                    <li class="page-item">
+                        <a class="page-link page-link-btn myfont" title="First page" href="{% url 'blog:category' category_blog.slug page_obj.previous_page_number %}">مقالات جدید</a>
+                    </li>
+                {% endif %}							   
+                {% if page_obj.has_next %}						
+                    <li class="page-item">
+                        <a class="page-link page-link-btn myfont" title="First page" href="{% url 'blog:category' category_blog.slug page_obj.next_page_number %}">مقالات قدیمی</a>
+                    </li>
+                {% endif %}	
+            {% endif %}							   
+        </ul>
+    </nav>
 {% endblock %}

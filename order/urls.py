@@ -2,7 +2,7 @@ from django.urls import path
 from order.views import (order_detail,
                         order_create,coupon_order,
                         order_information,
-                        # send_request,verify
+                        send_request,verify
                         )
 app_name = 'order'
 
@@ -12,6 +12,6 @@ urlpatterns = [
     path('coupon/<int:order_id>/',coupon_order,name='coupon'),
     path('order/information/',order_information,name='order_information'),
 
-    # path('request/<int:order_id>/<int:price>/',send_request,name='request'),
-    # path('verify/',verify,name='verify'),
+    path('request/<int:order_id>/<int:price>/',send_request,name='request'),
+    path('verify/',verify,name='verify'),
 ]

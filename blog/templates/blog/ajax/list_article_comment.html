@@ -1,0 +1,28 @@
+{% for c in data %}
+    <div class="comment-tray comment-article-box">
+        <div class="comment-list ">
+            <div class="comments mb-1">
+                <figure class="img-thumbnail">
+                    <img src="{{c.user.profile.profile_image.url}}" alt="{{c.user.first_name}}" width="80" height="80">
+                </figure>
+
+                <div class="comment-block">
+                    <h6 class="text-right">{{c.date|date:"Y / m / d"}}</h6>
+                    {% if request.user.is_authenticated %} 
+                            
+                        {% if request.user.is_superuser or request.user == c.user %} 
+                            <button data-cid="{{c.id}}" class="pl-3 btn btn-sm text-danger btn-del" href="">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        {% endif %}
+
+                    {% endif %}
+
+                    <div class="comment-content text-right">
+                        <p>{{c.comment|safe}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>
+{% endfor %}

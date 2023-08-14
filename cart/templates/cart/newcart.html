@@ -17,7 +17,7 @@
 				<div class="row">
 					<div class="col-lg-8 ">
 						<div class="cart-table-container table-responsive">
-								<table class="table table-cart">
+								<table class="table table-cart"> 
 									<thead>
 										<tr>
 											<th class="price-col">#</th>
@@ -65,8 +65,10 @@
 													style="display:flex;align-items:center;justify-content:center;font-size:15px"
 													title="Remove Product"></a>
 												</td>
+												{% empty %}
+													<h6 class="myfont text-center pl-5 ml-5 my-5 py-5">سبد خرید شما خالی است</h6>
 											</tr>
-										{% endfor %}
+										{%endfor%}
 									</tbody>
 								</table>
 				

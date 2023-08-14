@@ -28,6 +28,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 
 
+
 class EmailToken(PasswordResetTokenGenerator):
     def _make_hash_value(self,user,timestamp):
         return (text_type(user.is_active) + text_type(user.id) + text_type(timestamp))

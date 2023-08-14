@@ -32,4 +32,5 @@ urlpatterns = [
     path('history/page/<int:page>/',history,name='history'),
     path('view/',product_view,name='product_view'),
     path('view/page/<int:page>/',product_view,name='product_view'),
+
 ]

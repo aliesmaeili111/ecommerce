@@ -26,20 +26,7 @@
             </h3>
             <div class="product-ratings">
                 <span class="ratings-container">
-             
-                        {% if product.average >= 5 %}
-                            <i class="fa fa-star" style='color:gold;'></i>
-                            <i class="fa fa-star" style='color:gold;'></i>
-                            <i class="fa fa-star" style='color:gold;'></i>
-                            <i class="fa fa-star" style='color:gold;'></i>
-                            <i class="fa fa-star" style='color:gold;'></i>
-                        {% elif 0 <= product.average <= 4 %}
-                            <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}" style='color:gold;'></i>
-                            <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}" style='color:gold;'></i>
-                            <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}" style='color:gold;'></i>
-                            <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}" style='color:gold;'></i>
-                        {% endif %}
-            
+                    <i class="fa fa-star text-warning"></i><small class="px-2">{{product.average}}</small>
                 </span>
             </div>
             <!-- End .product-container -->
@@ -50,7 +37,6 @@
             {% if request.user.is_authenticated %}
             
                 <div class="product-action">
-                    <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-dark text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
                     <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart"><i class="fa fa-arrow-right"></i><span class="myfont">جزئیات کالا</span></a>
                 </div>
    

@@ -68,7 +68,7 @@ admin.site.register(Color,ColorAdmin)
 
 # Comment Admin
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['user','jpublish','rate']
+    list_display = ['user','product','jpublish','rate']
     change_list_template = 'home/change_comment.html'
 admin.site.register(Comment,CommentAdmin)
 

@@ -48,7 +48,7 @@ def order_create(request):
                                         variant=c['variant'],
                                         price=c['price'],
                                         quantity = c['quantity'])
-        messages.success(request,'Your Order Successfuly.Thanks','success')
+        messages.success(request,'سفارش شما با موفقیت ثبت شد','success')
         return redirect('order:order_detail',order.id)
 
 
@@ -61,55 +61,55 @@ def coupon_order(request,order_id):
         try:
             coupon = Coupon.objects.get(code__iexact=code,start__lte=time,end__gte=time,active=True)
         except Coupon.DoesNotExist:
-            messages.error(request,'This code wrong','danger')
+            messages.error(request,'کد نخفیف اشتباه است','danger')
             return redirect('order:order_detail',order_id) 
         
         order = Order.objects.get(id=order_id)
         order.discount = coupon.discount
         order.save()
-        messages.success(request,'This code ok','success')
+        messages.success(request,'کد تخفیف اعمال شد','success')
     return redirect('order:order_detail',order_id) 
 
 
 
-# MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-# client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-# description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
-# mobile = '09371595811'  # Optional
-# # Important: need to edit for realy server.
-# CallbackURL = 'http://127.0.0.1:8000/order/verify/'
+MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
+mobile = '09371595811'  # Optional
+# Important: need to edit for realy server.
+CallbackURL = 'http://127.0.0.1:8000/order/verify/'
  
 
-# def send_request(request,price,order_id):
-#     global amount , o_id
-#     amount = price
-#     o_id = order_id
-#     result = client.service.PaymentRequest(MERCHANT,amount,description,request.user.email,mobile,CallbackURL)
-#     if result.Status == 100:
-#         return redirect('https://www.zarinpal.com/pg/StartPay/') + str(result.Authority)
-#     else:
-#         return HttpResponse('Error code :' + str(result.Status))
+def send_request(request,price,order_id):
+    global amount , o_id
+    amount = price
+    o_id = order_id
+    result = client.service.PaymentRequest(MERCHANT,amount,description,request.user.email,mobile,CallbackURL)
+    if result.Status == 100:
+        return redirect('https://www.zarinpal.com/pg/StartPay/') + str(result.Authority)
+    else:
+        return HttpResponse('Error code :' + str(result.Status))
 
 
-# def verify(request):
-#     if request.GET.get('Status') == 'Ok':
-#         result = client.service.PaymentVerification(MERCHANT,request.GET['Authority'],amount)
-#         if result.Status == 100:
+def verify(request):
+    if request.GET.get('Status') == 'Ok':
+        result = client.service.PaymentVerification(MERCHANT,request.GET['Authority'],amount)
+        if result.Status == 100:
 
-#             # start in remover one as session cart
-#             cart = Cart(request)
-#             for c in cart :
-#                 variants = Variants.objects.filter(id=c['varinat'].id)
-#                 for data in variants :
-#                     data.amount -= c['quantity']
-#                     data.save()
-#             messages.success(request,'Paid success','success')
-#             return redirect('home:home')
-#             # end in remover one as session cart
+            # start in remover one as session cart
+            cart = Cart(request)
+            for c in cart :
+                variants = Variants.objects.filter(id=c['varinat'].id)
+                for data in variants :
+                    data.amount -= c['quantity']
+                    data.save()
+            messages.success(request,'پرداخت با موفقیت انجام شد','success')
+            return redirect('home:home')
+            # end in remover one as session cart
             
-#         elif result.Status == 101:
-#             return HttpResponse('transaction submitted :' + str(result.Status))
-#         else:
-#             return HttpResponse('transaction failed' + str(result.Status))
-#     else:
-#         return HttpResponse('transaction failed or canceled by user ')
+        elif result.Status == 101:
+            return HttpResponse('transaction submitted :' + str(result.Status))
+        else:
+            return HttpResponse('transaction failed' + str(result.Status))
+    else:
+        return HttpResponse('transaction failed or canceled by user ')

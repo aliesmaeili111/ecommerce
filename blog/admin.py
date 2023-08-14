@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Article,Category
+from blog.models import Article,Category,Comment
 from django.contrib.auth.models import User
 from django.utils.html import format_html
 from django_jalali.admin.filters import JDateFieldListFilter
@@ -99,3 +99,15 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('title',)}
     list_per_page = 10
     actions = [make_active,make_not_active]
+@admin.register(Comment)  
+class CategoryAdmin(admin.ModelAdmin):
+    
+    list_display = ('comment_','user','article','date')
+    list_display_links = ('user','comment_')
+    list_filter = (['user'])
+    # search_fields =  ('title','slug','position')
+    list_per_page = 10
+
+    def comment_(self,obj):
+        return format_html(obj.comment)
+    comment_.short_description = 'نظر' 

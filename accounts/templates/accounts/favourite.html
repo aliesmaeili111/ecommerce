@@ -42,31 +42,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for i in product %}
-                                <tr class="product-row">
-                                    <td>{{ product.start_index|add:forloop.counter0 }}</td>
-                                    <td>
-                                        <figure class="product-image-container">
-                                            <a href="{{i.get_absolute_url}}" class="product-image">
-                                                <img src="{{i.image.url}}" style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px" alt="{{i.name}}">
-                                            </a>
-                                        </figure>
-                                    </td>
-                                    <td>
-                                        <h5 class="product-title">
-                                            <a href="{{i.get_absolute_url}}" class="myfont">{{i.name}}</a>
-                                        </h5>
-                                    </td>
+                            <div id="comment-wrapper" >
+                                {% for i in product %}
+                                        <tr class="product-row">
+                                            <td>{{ product.start_index|add:forloop.counter0 }}</td>
+                                            <td>
+                                                <figure class="product-image-container">
+                                                    <a href="{{i.get_absolute_url}}" class="product-image">
+                                                        <img src="{{i.image.url}}" style="min-height: 80px;min-width: 80px;max-width: 80px;max-height: 80px" alt="{{i.name}}">
+                                                    </a>
+                                                </figure>
+                                            </td>
+                                            <td>
+                                                <h5 class="product-title">
+                                                    <a href="{{i.get_absolute_url}}" class="myfont">{{i.name}}</a>
+                                                </h5>
+                                            </td>
 
-                                    <td class="price-box">
-                                        {{i.unit_price|floatformat:1|intcomma}}
-                                    </td>
+                                            <td class="price-box">
+                                                {{i.unit_price|floatformat:1|intcomma}}
+                                            </td>
 
-                                    <td class="price-box">
-                                        <a href="{% url 'accounts:remove_favourite' i.id %}" class=" icon-cancel" title="Remove Product"></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                                            <td class="price-box">
+                                                {% if request.user.is_superuser or request.user == c.user %} 
+                                                    <a href="{% url 'accounts:remove_favourite' i.id %}" title="Remove Product">
+                                                        <i class="fa fa-trash text-danger"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </tr>
+                                {% endfor %}
+                            </div>
                         </tbody>
                     </table>
                 </div><!-- End .cart-table-container -->
@@ -111,6 +116,6 @@
             {% endif %}
         </div><!-- End .container -->
     </main>
-   
+
     <!-- End .main -->
 {% endblock %}

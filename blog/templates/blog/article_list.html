@@ -7,3 +7,9 @@
 {% block next_page_number %}
 	{% url 'blog:home' page_obj.next_page_number %}
 {% endblock %}
+
+{% block page %}		
+	{% if object_list.count < total_article %}
+		<button class="btn my-4 btn-dark myfont" id="loadMore" data-limit="9" data-total="{{total_article}}">مقالات بیشتر<i class="fa fa-sync load-more-icon px-2"></i></button>
+	{% endif %}
+{% endblock %}

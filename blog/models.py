@@ -56,6 +56,8 @@ class Article(models.Model):
     updated = models.DateTimeField(auto_now = True)
     status = models.CharField(max_length = 1,choices = STATUS_CHOICES,verbose_name='وضعیت',help_text="وضعیت مقاله را انتخاب کنید")
     tag = TaggableManager(blank=True)
+    likes = models.ManyToManyField(User,related_name='likes',verbose_name='لایک')
+   
     
     class Meta:
         verbose_name = 'مقاله'
@@ -74,3 +76,20 @@ class Article(models.Model):
         return self.title
     
     objects = ArticleManager()
+
+class Comment(models.Model):
+    comment = RichTextField(verbose_name='نظر',help_text="نظر خود را بنویسید")
+    user = models.ForeignKey(User,related_name='user_comment',on_delete=models.SET_NULL,null=True,verbose_name='کاربر')
+    active = models.BooleanField(default=False,verbose_name='فعال')
+    article = models.ForeignKey(Article,on_delete=models.CASCADE,verbose_name='مقاله')
+    date = jmodels.jDateTimeField(auto_now_add=True,verbose_name='زمان انتشار',help_text = 'فرمت صحیح تاریخ YYYY-MM-DD')
+    likes = models.ManyToManyField(User,related_name='likes_comment',verbose_name='لایک')
+   
+
+    def __str__(self):
+        return self.comment[:12]
+    
+    class Meta:
+        verbose_name = 'نظر'
+        verbose_name_plural = 'نظرات'
+        ordering = ['-date']

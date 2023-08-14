@@ -225,9 +225,12 @@
                                                 {% for cat in product.category.active %} 
                                      
                                                     <div class="category-list myfont">
-                                                        دسته بندی 
-                                                        <a href="{{category.get_absolute_url}}" >
-                                                            {{cat.name}},
+                                                        <a href="{{category.get_absolute_url}}">
+                                                            {% if forloop.first %}{% else %}
+                                                                {% if forloop.last %} و {% else %}و
+                                                                {% endif %}
+                                                            {% endif %}
+                                                            {{cat.name}}
                                                         </a>
                                                     </div>
                                                 {% endfor %}
@@ -235,19 +238,9 @@
 
                                             <h3 class="product-title myfont"> <a href="{{product.get_absolute_url}}">{{product.name}}</a> </h3>
 
-                                            <div class="ratings-container comment-rating" style='color:gold;'>
-                                                {% if product.average >= 5 %}
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                {% elif 0 <= product.average <= 4 %}
-                                                    <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}"></i>
-                                                    <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}"></i>
-                                                    <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}"></i>
-                                                    <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}"></i>
-                                                {% endif %}
+                                            <div class="ratings-container comment-rating">
+                                                    <i class="fa fa-star text-warning"></i> <small>{{product.average}}</small>
+                                   
                                             </div>
                                             <!-- End .product-container -->
 
@@ -258,7 +251,6 @@
                                             {% if request.user.is_authenticated %}
                                                 
                                                     <div class="product-action">
-                                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="wishlist"><i class="icon-wishlist-2"></i></a>
                                                         <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><span>جزئیات کالا</span></a>
                                                     </div>
                                                 

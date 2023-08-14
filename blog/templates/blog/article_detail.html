@@ -28,8 +28,8 @@
 							</div><!-- End .post-media -->
 
 							<div class="post-body">
-								<div class="post-date" style="padding-right: 80px;">
-									<span class="day text-align-center">{{article.jpublish}}</span>
+								<div class="post-date text-center" style="padding-right: -50px;">
+									<span class="day ">{{article.jpublish}}</span>
 								</div><!-- End .post-date -->
 
 								<h2 class="post-title text-right myfont">{{article.title}}</h2>
@@ -41,17 +41,19 @@
 									{% endfor %}
 								</a>
 
-								
-								<div class="post-meta mb-5 px-5">
+								{% if request.user.is_authenticated %}	
+									<div class="post-meta mb-5 px-5 d-flex gx-3 text-align-center">
+										<button onclick="addlike()" class="btn btn-sm" id="like-button">
+											<i class="text-success fa fa-thumbs-up"></i>
+										</button>
+										<span class="px-4" id="like-count"></span>
+										<small class="hash-scroll px-4"> نظر ({{comment_count}})</small>
+									</div><!-- End .post-meta -->
 									{% ratings article %}
-								</div><!-- End .post-meta -->
-								
-								<div class="post-meta">
-									<a href="#" class="hash-scroll">0 نظر</a>
-								</div><!-- End .post-meta -->
-								
-								<div class="post-content">
-									<p>{{article.description|safe|linebreaks}}</p>
+								{% endif %}
+
+								<div class="post-content myfont text-right">
+									<p class="myfont">{{article.description|safe|linebreaks}}</p>
 
 								</div><!-- End .post-content -->
 
@@ -69,75 +71,128 @@
 									</div><!-- End .author.content -->
 								</div><!-- End .post-author -->
 
-								<div class="comment-respond">
-									<h3>Leave a Reply</h3>
-
-									<form action="#">
-										<p>Your email address will not be published. Required fields are marked *</p>
-
-										<div class="form-group">
-											<label>Comment</label>
-											<textarea cols="30" rows="1" class="form-control" required=""></textarea>
-										</div><!-- End .form-group -->
-
-										<div class="form-group">
-											<label>Name</label>
-											<input type="text" class="form-control" required="">
-										</div><!-- End .form-group -->
-
-										<div class="form-group">
-											<label>Email</label>
-											<input type="email" class="form-control" required="">
-										</div><!-- End .form-group -->
-
-
-
-										<div class="form-footer my-0">
-											<button type="submit" class="btn btn-sm btn-primary">نظر مقالات</button>
-										</div><!-- End .form-footer -->
-									</form>
-								</div><!-- End .comment-respond -->
+								
 							</div><!-- End .post-body -->
 						</article><!-- End .post -->
 
-						<hr class="mt-2 mb-1">
 
-						<div class="related-posts">
-							<h4 class="myfont">مقالات <strong> مرتبط</strong></h4>
+						<!-- start comment show -->
 
-							<div class="owl-carousel owl-theme related-posts-carousel" data-owl-options="{
-								'dots': false
-							}">
-							{% for tag in similar %}		
-								<article class="post">
-									<div class="post-media zoom-effect">
-										<a href="{% url 'blog:detail' tag.slug %}">
-											<img style="max-width: 300px;" src="{{tag.thumbnail.url}}" alt="{{tag.title}}">
-										</a>
-									</div><!-- End .post-media -->
+						<div class="product-single-tabs">
+							<ul class="nav nav-tabs" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link mb-3 myfont" style="font-size: 20px;" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false">({{comment_count}}) نظر </a>
+								</li>
+							</ul>
 
-									<div class="post-body">
-										<div class="post-date">
-											<span class="day"></span>
-											<span class="month">Jun</span>
-										</div><!-- End .post-date -->
+							<div class="tab-content">
+								<div class="tab-pane fade" id="product-reviews-content" role="tabpanel" aria-labelledby="product-tab-reviews">
+									<div class="product-reviews-content " id="filter_comment">
+										<div id="comment-wrapper">
+											{% for c in comment %}
+												<div class="comment-tray">
+													<div class="comment-list comment-article-box ">
+														<div class="comments mb-1">
+															<figure class="img-thumbnail">
+																<img src="{{c.user.profile.profile_image.url}}" alt="{{c.user.first_name}}" width="80" height="80">
+															</figure>
+					
+															<div class="comment-block">
+																<h6 class="text-right">{{c.date|date:"Y / m / d"}}</h6>
+																{% if request.user.is_authenticated %} 
+																		
+																	{% if request.user.is_superuser or request.user == c.user %} 
+																		<button data-cid="{{c.id}}" class="pl-3 btn btn-sm text-danger btn-del" >
+																			<i class="fa fa-trash"></i>
+																		</button>
+																	{% endif %}
 
-										<h2 class="post-title">
-											<a href="{% url 'blog:detail' tag.slug %}">{{tag.title}}</a>
-										</h2>
-
-										<div class="post-content">
-											<p>{{tag.description|safe|linebreaks|truncatewords:15}}</p>
-
-											<a href="{% url 'blog:detail' tag.slug %}" class="read-more myfont">خواندن بیشتر <i class="fas fa-angle-right"></i></a>
-										</div><!-- End .post-content -->
-									</div><!-- End .post-body -->
-								</article>
-								{% endfor %}
-
+																{% endif %}
+					
+																<div class="comment-content text-right">
+																	<p>{{c.comment|safe}}</p>
+																</div>
+															</div>
+														</div>
+													</div>	
+												</div>
+											{% endfor %}
+										
+											<button class="btn my-3 btn-sm btn-dark myfont" id="loadMoreComment" data-slug="{{article.slug}}" data-limit="10" data-total="{{total_comment}}">نظرات بیشتر<i class="fa fa-sync load-more-icon px-2"></i></button>
 							
-							</div><!-- End .owl-carousel -->
-						</div><!-- End .related-posts -->
+											<div class="add-product-review">
+												
+												{% if request.user.is_authenticated %} 
+													<h3 class="review-title myfont text-right">نظری در مورد این محصول بنویسید</h3>
+												
+													<form action="{% url 'blog:detail' article.slug %}" id="comment_form" method='post' class="comment-form m-0">
+														{% csrf_token %}
+															<div class="form-group mt-1">
+																<input name="id" id="id" type="hidden" value="{{article.id}}">
+																<label class="myfont float-right">نظر شما<span class="required">*</span></label>
+																<textarea id="comment" required oninvalid="setCustomValidity('ارسال نظر')" cols="5" rows="6" name="comment" class="form-control text-right myfont form-control-sm"></textarea>
+															</div> 
+														{% if rate %}
+															
+														{% endif %}
+														<input type="submit" class="btn btn-primary myfont" value="ارسال نظر">
+													</form>
+												{% else %}
+													<h3 class="review-title myfont text-right"> برای نظر دادن ابتدا  <a href="{% url 'accounts:login' %}">وارد </a> شوید</h3>
+												{% endif %}
+
+											</div>
+											<!-- End .add-product-review -->
+										</div>
+									</div>
+									<!-- End .product-reviews-content -->
+								</div>
+								<!-- End .tab-pane -->
+							</div>
+							<!-- End .tab-content -->
+						</div>
+
+						<!-- end comment show -->
+
+						{% if similar %}
+							<div class="related-posts">
+								<h4 class="myfont">مقالات <strong> مرتبط</strong></h4>
+
+								<div class="owl-carousel owl-theme related-posts-carousel" data-owl-options="{
+									'dots': false
+								}">
+								{% for tag in similar %}		
+									<article class="post">
+										<div class="post-media zoom-effect">
+											<a href="{% url 'blog:detail' tag.slug %}">
+												<img style="max-width: 300px;max-height: 290px;" src="{{tag.thumbnail.url}}" alt="{{tag.title}}">
+											</a>
+										</div><!-- End .post-media -->
+
+										<div class="post-body">
+											<div class="post-date">
+												<span class="day">{{tag.jpublish}}</span>
+											</div><!-- End .post-date -->
+
+											<h2 class="post-title text-right myfont">
+												<a href="{% url 'blog:detail' tag.slug %}">{{tag.title}}</a>
+											</h2>
+
+											<div class="post-content text-right">
+												<p>{{tag.description|safe|linebreaks|truncatewords:15}}</p>
+
+											</div><!-- End .post-content -->
+											<div class="float-right">
+												<a href="{% url 'blog:detail' tag.slug %}" class="read-more myfont text-right"> <i class="fas fa-angle-left"></i> خواندن بیشتر</a>
+											</div>
+										</div><!-- End .post-body -->
+									</article>
+									{% endfor %}
+
+								
+								</div><!-- End .owl-carousel -->
+							</div><!-- End .related-posts -->
+						{% endif %}
 					</div><!-- End .col-lg-9 -->
 
 					<div class="sidebar-toggle custom-sidebar-toggle">
@@ -155,32 +210,33 @@
 								</ul>
 							</div><!-- End .widget -->
 
-							<div class="widget">
-								<h4 class="widget-title text-right myfont">مقالات مرتبط</h4>
+							{% if similar %}
+								<div class="widget">
+									<h4 class="widget-title text-right myfont">مقالات مرتبط</h4>
 
-								<ul class="simple-post-list">
-									{% for tag in similar %}		
-										<li>
-											<div class="post-media">
-												<a href="{% url 'blog:detail' tag.slug %}">
-													<img src="{{tag.thumbnail.url}}" alt="{{tag.title}}" style="max-width:392px;max-height:290px;">
-												</a>
-											</div><!-- End .post-media -->
-											<div class="post-info text-right">
-												<a href="{% url 'blog:detail' tag.slug %}">{{tag.title}}</a>
-												<div class="post-meta">
-												  {{tag.jpublish}}
-												</div><!-- End .post-meta -->
-											</div><!-- End .post-info -->
-										</li>
-									{% endfor %}
-								</ul>
-							</div><!-- End .widget -->
-
+									<ul class="simple-post-list">
+										{% for tag in similar %}		
+											<li>
+												<div class="post-media">
+													<a href="{% url 'blog:detail' tag.slug %}">
+														<img src="{{tag.thumbnail.url}}" alt="{{tag.title}}" style="max-width:392px;max-height:290px;">
+													</a>
+												</div><!-- End .post-media -->
+												<div class="post-info text-right">
+													<a href="{% url 'blog:detail' tag.slug %}">{{tag.title}}</a>
+													<div class="post-meta">
+													{{tag.jpublish}}
+													</div><!-- End .post-meta -->
+												</div><!-- End .post-info -->
+											</li>
+										{% endfor %}
+									</ul>
+								</div><!-- End .widget -->
+							{% endif %}
 							<div class="widget">
 								<h4 class="widget-title text-right myfont">تگ</h4>
 
-								<div class="tagcloud">
+								<div class="tagcloud text-right">
 									{% for t in tag %}
 										<a href="#">{{t}}</a>
 									{% endfor %}
@@ -192,4 +248,157 @@
 			</div><!-- End .container -->
 		</main><!-- End .main -->
 
+{% endblock %}
+
+{% block script %}
+		<script type="text/javascript">
+			$(document).on('submit', '#comment_form', function(e){
+				e.preventDefault()
+				let _comment = $("#comment").val()
+				console.log(_comment);
+				
+				$.ajax({
+					type: "POST",
+					url: "{% url 'blog:save-comment' %}",
+					data: {
+						id: $('#id').val(),
+						comment: _comment,
+						csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+					},
+					success: function(){
+						console.log('Comment passed to backend');
+			
+						$('#comment').val('')
+			
+						
+						let _html = '<div class="comment-list comment-box">\
+										<div class="comments mb-1">\
+											<figure class="img-thumbnail">\
+												<img src="{{request.user.profile.profile_image.url}}" alt="{{request.user.first_name}}" width="80" height="80">\
+											</figure>\
+											<div class="comment-block">\
+												<h6 class="text-right myfont">{{request.user}}</h6>\
+												<div class="comment-content text-right">\
+													<p>'+ _comment +'</p>\
+												</div>\
+											</div>\
+										</div>\
+									</div>\
+									'
+			
+						$('#comment-wrapper').prepend(_html)
+						$('#comment').val('')
+							
+					},
+			
+					error: function(error){
+						console.log(error);
+					}
+			
+				})
+			});
+
+			  //   Delete Comment
+			  $('#comment-wrapper').on('click', '.btn-del', function(){
+				//console.log("Delete Comment Button is clicked.")
+		
+				let id = $(this).attr('data-cid')
+		
+				mydata = {
+					cid:id
+				}
+		
+				mythis = $(this)
+				
+				$.ajax({
+					type: "POST",
+					url: "{% url 'blog:delete-comment' %}",
+					data: mydata,
+		
+		
+					success: function(data){
+						//console.log(dara);
+						if(data.status === 1){
+							//console.log("comment deleted");
+							$(mythis).closest('.comment-tray').fadeOut();
+						}
+		
+						if(data.status === 0){
+						  //  console.log("Unable to Deleted comment");
+							alert("حذف نظر با موفقیت انجام نشد لطفا دوباره امتحان کنید")
+						}
+					}
+				})
+			})
+		</script>
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		
+		
+		<script type="text/javascript">
+			let likescounter = document.getElementById('like-count')		
+			like_button = document.getElementById('like-button')
+			likes_added = []
+
+			function addlike(){
+				axios
+				.get("{% url 'blog:add_like' article.slug %}")
+				.then(like_response => {
+					this.like_response = like_response.data;
+					like_button.innerHTML = this.like_response;
+					loadlike()
+				})
+			}
+			function loadlike(){
+				axios
+				.get("{% url 'blog:likeLoad' article.slug %}")
+				.then(like_response => {
+					this.like_response = like_response.data;
+					likes_added = this.like_response
+					likescounter.innerHTML = likes_added.length
+				})
+			}
+			window.onload = loadlike();
+		</script>
+
+
+
+
+		<script>
+			$(document).ready(function(){
+				$('#loadMoreComment').on('click',function(){
+					var _currentProducts=$('.comment-article-box').length;
+					var _limit=$(this).attr('data-limit');
+					var _total=$(this).attr('data-total');
+					var _slug=$(this).attr('data-slug');
+				
+			
+					$.ajax({
+						url:"{% url 'blog:load_more_data_comment' %}",
+						data:{
+							limit:_limit,
+							slug:_slug,
+							offset:_currentProducts
+						},
+						dataType:'json',
+						beforeSend:function(){
+							$('#loadMoreComment').attr('disabled',true);
+							$('.load-more-icon').addClass('fa-spin');
+						},
+						success:function(res){
+							$('#filter_comment').prepend(res.data);
+							$('#loadMoreComment').attr('disabled',false);
+							$('.load-more-icon').removeClass('fa-spin');
+			
+							var _totalShowing=$('.comment-article-box').length;
+							if(_totalShowing==_total){
+								$('#loadMoreComment').remove();
+							}
+						}
+					});
+				});
+			});
+		</script>
+		
 {% endblock %}

@@ -12,12 +12,13 @@
                 </div><!-- End .post-media -->
 
                 <div class="post-body">
-                    <h2 class="post-title">
-                        <a href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
+                    <h2 class="post-title text-right">
+                        <a class="myfont" href="{% url 'blog:detail' article.slug %}">{{article.title}}</a>
                     </h2>
-                    <div class="post-content">
+                    <div class="post-content text-right">
                         <p>{{article.description|truncatewords:15|safe}}</p>
                     </div><!-- End .post-content -->
+               
                     <a href="{% url 'blog:detail' article.slug %}" class="post-comment">0 نظر</a>
                     {% for cat in article.category.active %}
                         {% if cat.children.active %}

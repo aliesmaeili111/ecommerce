@@ -2,13 +2,11 @@ from django.shortcuts import render,get_object_or_404,redirect
 from home.models import Product,Variants
 from django.contrib import messages
 # compare for product with session
-
 # from cart.compare import NewCompare
 from cart.cart import NewCart
 from cart.forms import CartAddForm
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.template.loader import render_to_string
 
 
 # Cart detail views
@@ -217,3 +215,5 @@ def cart_show(request):
 # def new_compare(request):
 #     data = NewCompare(request)
 #     return render(request,'cart/compare.html',{'data':data})
+
+

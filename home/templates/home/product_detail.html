@@ -58,9 +58,18 @@
                             {% endif %}
 
                             <div class="product-single-carousel owl-carousel owl-theme show-nav-hover">
+
                                 <div class="product-item">
                                     <img class="product-single-image" src="{{product.image.url}}" data-zoom-image="{{product.image.url}}" width="468" height="468" alt="{{product.name}}">
                                 </div>
+                                
+                                {% if images %}
+                                    {% for img in images %} 
+                                        <div class="product-item">
+                                            <img class="product-single-image" src="{{img.image.url}}" data-zoom-image="{{img.image.url}}" width="468" height="468" alt="{{img.name}}">
+                                        </div>                         
+                                    {% endfor %} 
+                                {% endif %}
                        
                             </div>
                             <!-- End .product-single-carousel -->
@@ -69,17 +78,6 @@
                             </span>
                         </div>
 
-                        <!-- start gallery image product -->
-                        <div class="prod-thumbnail owl-dots">
-                            {% if images %}
-                                {% for img in images %}
-                                    <div class="owl-dot">
-                                        <img src="{{img.image.url}}" width="110" height="110" alt="{{img.name}}">
-                                    </div>
-                                {% endfor %} 
-                            {% endif %}
-                        </div>
-                        <!-- end gallery image product -->
                     </div>
                     <!-- End .product-single-gallery -->
 
@@ -87,19 +85,9 @@
                         <h1 class="product-title myfont text-right">{{product.name}}</h1>
 
                         <div class="ratings-container comment-rating">
-                            {% if product.average >= 5 %}
-                                <i class="fa fa-star"style='color:gold'></i>
-                                <i class="fa fa-star"style='color:gold'></i>
-                                <i class="fa fa-star"style='color:gold'></i>
-                                <i class="fa fa-star"style='color:gold'></i>
-                                <i class="fa fa-star"style='color:gold'></i>
-                            {% elif 0 <= product.average < 5 %}
-                                <i class="fa fa-star{% if product.average < 1 %}-o empty{% endif %}" style='color:gold'></i>
-                                <i class="fa fa-star{% if product.average < 2 %}-o empty{% endif %}" style='color:gold'></i>
-                                <i class="fa fa-star{% if product.average < 3 %}-o empty{% endif %}" style='color:gold'></i>
-                                <i class="fa fa-star{% if product.average < 4 %}-o empty{% endif %}" style='color:gold'></i>
-                            {% endif %}
-                            <a href="#" class="rating-link text-right">( {{comment.count }} نظر )</a>
+                                <i class="fa fa-star text-warning"></i>&nbsp;<small>{{product.average}}</small>
+                      
+                            <a href="#" class="rating-link text-right">( {{total_comment}} نظر )</a>
                         </div>
                         <!-- End .ratings-container -->
 
@@ -163,7 +151,7 @@
                                 </form>
                             {% elif product.status == 'Color' %}
                             رنگ:
-                                <form action="" method="post"> {% csrf_token %}   
+                                <form action="" method="POST"> {% csrf_token %}   
                                     
                                     {% for data in variant %}    
                                         <li class="d-flex align-items-center float-right ">
@@ -183,6 +171,10 @@
                                     <a href="#" class="product-category">
                                         {% for cat in product.category.all %} 
                                             <a href="{% url 'home:category' cat.slug cat.id %}" class="product-category">
+                                                {% if forloop.first %}{% else %}
+                                                    {% if forloop.last %} و {% else %}و
+                                                    {% endif %}
+                                                {% endif %}
                                                 {{cat.name}}
                                             </a>
                                         {% endfor %}
@@ -191,19 +183,24 @@
                             </li>
                         </ul>
 
-                        <div class="product-action">
+                        <div class="product-action product_data">
 
                                 <form action="{% url 'cart:newadd'  %}" method="post">
                                     {% csrf_token %}
+
+                                    <i class="fa fa-minus decrement-btn text-dark"></i>
+
                                     <div class="product-single-qty"> 
                                         <!-- <input type="hidden" name='test' value='{{variants.id}}'> -->
                                         <input type="hidden" name="select" value="{{variants.id}}"> 
-                       
-                                     
-                                        <input type="number" class="w-100 px-5" name="quantity" min="1" value="1" max="{{ variants.amount }}" required
+                                        <input type="number" class="text-center w-100 bg-light qty_input" name="quantity" min="1" value="1" max="{{ variants.amount }}" required
                                         oninvalid="setCustomValidity('شما میتوانید تا {{ variants.amount }} انتخاب کنید')"> 
                                     </div>
+
+                                    <i class=" fa fa-plus increment-btn text-dark"  data-add="{{variants.amount}}" ></i>
+
                                         <button type="submit" class="btn btn-dark mr-2 myfont" title="اضافه به سبد خرید">اضافه به سبد خرید</button>
+
                                 </form>
                             <!-- End .product-single-qty -->
                             
@@ -217,38 +214,21 @@
 
                                 <div class="social-icons mr-2">
                                     {% if request.user.is_authenticated %}
-                       
-                                        
-                                    لایک: {{product.total_like}}
-                
-                                            <a href="{% url 'home:product_like' product.id %}" class="social-icon social-like fa fa-thumbs-up {% if is_unlike %} d-none {% endif %}" title="Dislike"></a>
-                              
 
-                                        دیس لایک: {{product.total_unlike}}
-                                 
-                                            <a href="{% url 'home:product_unlike' product.id %}" class="social-icon social-like fa fa-thumbs-down {% if is_like %} d-none {% endif %}" title="like "></a>
-                                  
+                                        <button onclick="addnewlike()" class="btn btn-sm" id="like-product">
+                                            <i class="social-icon social-like text-success fa fa-thumbs-up"></i>
+                                        </button>
+                                        <span class="px-1" id="like_count_new"></span>     
+
                                     {% endif %}
                                  
                                 </div>
                                 <!-- End .social-icons -->
-                                {% if request.user.is_authenticated %}
-                                    {% if request.user in product.favourite.all %}
-                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="text-danger test " title="Remove to Wishlist">
-                                            <i class="icon-wishlist-2"></i>
-                                            <span>
-                                                حذف از علاقه مندی ها
-                                            </span>
-                                        </a>
-                                    {% else %}
-                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="text-primary test" title="Add to Wishlist">
-                                            <i class="icon-wishlist-2"></i>
-                                            <span>
-                                                اضافه به لیست علاقه مندی
-                                            </span>
-                                        </a>
-                                    {% endif %}
-                                {% endif %}
+
+                                <button onclick="addnewfav()" class="btn " id="fav-product" >
+                                    <i class="far fa-heart fa-lg"></i>
+                                </button>
+                         
                             </div>
                         <!-- end share social btn -->
 
@@ -264,17 +244,17 @@
             <div class="product-single-tabs">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link mb-3 myfont" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false"> نظر {{comment.count}}</a>
+                        <a class="nav-link mb-3 myfont" style="font-size: 20px;" id="product-tab-reviews" data-toggle="tab" href="#product-reviews-content" role="tab" aria-controls="product-reviews-content" aria-selected="false"> نظر {{total_comment}} </a>
                     </li>
                 </ul>
 
                 <div class="tab-content">
                     <div class="tab-pane fade" id="product-reviews-content" role="tabpanel" aria-labelledby="product-tab-reviews">
-                        <div class="product-reviews-content">
+                        <div class="product-reviews-content" id="comment-wrapper" >
 
-                            <div class="comment-list">
-                                {% for com in comment %}
-                                    <div class="comments mb-1">
+                            {% for com in comment %}
+                                <div class="comment-list comment-box comment-tray">
+                                    <div class="comments mb-1 ">
                                         <figure class="img-thumbnail">
                                             <img src="{{com.user.profile.profile_image.url}}" alt="{{com.user.first_name}}" width="80" height="80">
                                         </figure>
@@ -297,24 +277,32 @@
                                                     <strong>{{com.user.username}}</strong> – {{com.jpublish}}
                                                 </span>
                                             </div>
+                                            
                                             {% if request.user.is_authenticated %} 
-                                                <a class="pl-3" href="{% url 'home:comment_like' com.id %}">
-                                                    <i class="fa fa-thumbs-up"></i> لایک:
-                                                </a>{{com.total_comment_like}}
+                                                    <a class="pl-3" href="{% url 'home:comment_like' com.id %}">
+                                                        <i class="fa fa-thumbs-up"></i> لایک:
+                                                    </a>{{com.total_comment_like}}
                                             {% endif %}
- 
+
+                                            {% if request.user.is_superuser or request.user == c.user %} 
+                                                <button data-cmid="{{com.id}}" class="pl-3 btn btn-sm text-danger btn-del-cm" >
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            {% endif %}
+    
                                             <div class="comment-content">
-                                                <p class="text-right">{{com.comment}}</p>
+                                                <p class="text-right">{{com.comment|safe}}</p>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <!-- start reply -->
                                     {% if request.user.is_authenticated %} 
                                         <form action="{% url 'home:product_reply' product.id com.id %}" method="post">
                                             {% csrf_token %}
                                             <div class="form-group mt-1">
                                                 <label class="myfont float-right">پاسخ به نظر</label>
-                                                <textarea  required oninvalid="setCustomValidity('لطفا پاسخی بنویسید')" placeholder="پاسخ به نظر" id="comment" cols="1" rows="1" name="comment" class="form-control text-right myfont form-control-sm myfont text-right"></textarea>
+                                                <textarea required oninvalid="setCustomValidity('لطفا پاسخی بنویسید')" placeholder="پاسخ به نظر" id="comment" cols="1" rows="1" name="comment" class="form-control text-right myfont form-control-sm myfont text-right"></textarea>
                                             </div> 
 
                                             <input type="submit" class="mt-2 btn btn-sm btn--outline-primary myfont" value="ارسال پاسخ">
@@ -341,8 +329,11 @@
                                         {% endfor %}
                                         <!-- end reply -->
                                     {% endif %}
-                                {% endfor %}
-                            </div>
+                                </div>
+                            {% endfor %}
+                            {% if total_comment > 1 %}
+                                <button class="btn my-4 btn-sm btn-dark myfont" id="loadMorecom" data-limit="5" data-total="{{total_comment}}">نظرات بیشتر<i class="fa fa-sync load-more-icon px-2"></i></button>
+                            {% endif %}
 
                             <div class="divider"></div>
 
@@ -357,11 +348,11 @@
                                             <div class="rating-form">
                                                 <label for="rating" class="myfont">امتیاز شما <span class="required">*</span></label>
                                                 <div class="rating">
-                                                    <input type="radio" name="rate" id="5" value="5"><label for="5">&star;</label>
-                                                    <input type="radio" name="rate" id="4" value="4"><label for="4">&star;</label>
-                                                    <input type="radio" name="rate" id="3" value="3"><label for="3">&star;</label>
-                                                    <input type="radio" name="rate" id="2" value="2"><label for="2">&star;</label>
-                                                    <input type="radio" name="rate" id="1" value="1"><label for="1">&star;</label>
+                                                    <input  type="radio" name="rate" id="5" value="5"><label for="5">&star;</label>
+                                                    <input  type="radio" name="rate" id="4" value="4"><label for="4">&star;</label>
+                                                    <input  type="radio" name="rate" id="3" value="3"><label for="3">&star;</label>
+                                                    <input  type="radio" name="rate" id="2" value="2"><label for="2">&star;</label>
+                                                    <input  type="radio" name="rate" id="1" value="1"><label for="1">&star;</label>
                                                 </div>
                                             </div><br>
                                             
@@ -369,11 +360,13 @@
                                                 <label class="myfont float-right">نظر شما<span class="required">*</span></label>
                                                 <textarea required oninvalid="setCustomValidity('ارسال نظر')" cols="5" rows="6" name="comment" class="form-control text-right myfont form-control-sm"></textarea>
                                             </div> 
-
+                                        {% if rate %}
+                                            
+                                        {% endif %}
                                         <input type="submit" class="btn btn-primary myfont" value="ارسال نظر">
                                     </form>
                                 {% else %}
-                                    <h3 class="review-title myfont"> برای نظر دادن ابتدا  <a href="{% url 'accounts:login' %}">وارد </a> شوید</h3>
+                                    <h3 class="review-title myfont text-right"> برای نظر دادن ابتدا  <a href="{% url 'accounts:login' %}">وارد </a> شوید</h3>
                                 {% endif %}
                             </div>
                             <!-- End .add-product-review -->
@@ -387,14 +380,14 @@
             <!-- End .product-single-tabs -->
             {% if similar %}
             <div class="products-section pt-0">
-                <h2 class="section-title myfont text-right">محصولات مرتبط</h2>
+                <h2 class="section-title myfont text-center py-4">محصولات مرتبط</h2>
 
                 <div class="products-slider owl-carousel owl-theme dots-top dots-small">
                     {% for tag in similar %}  
                         <div class="product-default">
                             <figure>
                                 <a href="{% url 'home:detail' tag.slug tag.id %}">
-                                    <img src="{{tag.image.url}}" width="280" height="280" alt="{{tag.name}}">
+                                    <img src="{{tag.image.url}}" style="max-width: 280px;max-height: 280px;" width="280" height="280" alt="{{tag.name}}">
                                 </a>
                                 <div class="label-group">
                                     {% if tag.discount %}
@@ -418,39 +411,18 @@
                                 <h3 class="product-title">
                                     <a class="myfont" href="{% url 'home:detail' tag.slug tag.id %}">{{tag.name}}</a>
                                 </h3>
-                                <div class="ratings-container comment-rating" style='color:gold;'>
-                                    {% if tag.average >= 5 %}
-                                        <i class="fa fa-star"style='color:gold'></i>
-                                        <i class="fa fa-star"style='color:gold'></i>
-                                        <i class="fa fa-star"style='color:gold'></i>
-                                        <i class="fa fa-star"style='color:gold'></i>
-                                        <i class="fa fa-star"style='color:gold'></i>
-                                    {% elif 0 <= tag.average < 5 %}
-                                        <i class="fa fa-star{% if tag.average < 1 %}-o empty{% endif %}" style='color:gold'></i>
-                                        <i class="fa fa-star{% if tag.average < 2 %}-o empty{% endif %}" style='color:gold'></i>
-                                        <i class="fa fa-star{% if tag.average < 3 %}-o empty{% endif %}" style='color:gold'></i>
-                                        <i class="fa fa-star{% if tag.average < 4 %}-o empty{% endif %}" style='color:gold'></i>
-                                    {% endif %}
+                                <div class="ratings-container comment-rating">
+                                        <i class="fa fa-star text-warning"></i> <small>{{tag.average}}</small>
+                             
                                 </div>
                                 <!-- End .product-container -->
                                 {% include 'home/price_box.html' %}
                                 <!-- End .price-box -->
-
-                                {% if request.user.is_authenticated %}
-                                
-                                {% if request.user in product.favourite.all %}
+                                  
                                     <div class="product-action">
-                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-danger text-white" title="لبست علاقه مندی"><i class="icon-wishlist-2"></i></a>
                                         <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
                                     </div>
-                                {% else %}
-                                    <div class="product-action">
-                                        <a href="{% url 'home:favourite' product.slug product.id %}" class="bg-white text-danger" title="لیست علاقه مندی"><i class="icon-wishlist-2"></i></a>
-                                        <a href="{{product.get_absolute_url}}" class="btn-icon btn-add-cart myfont"><i class="fa fa-arrow-right"></i><span>جزئیات کالا</span></a>
-                                    </div>
-                                {% endif %}
-                                {% endif %}
-
+                  
                             </div>
                             <!-- End .product-details -->
                         </div>
@@ -463,14 +435,15 @@
         
 
             {% block script %}
+                <script src="{% static 'assets/js/load-more-com.js' %}"></script>
                 {% if product.status != 'None' %}
-                    <script>
+
+                        <script>
                         var ctx = document.getElementById('myChart').getContext('2d');
-                    
                         var myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
-                                labels: [{% for i in change %}{% if variants.id == i.variant_id %}'{{ i.update|jformat:"%A %d %b %Y" }}'{% endif %},{% endfor %}],
+                                labels: [{% for i in change %}{% if variants.id == i.variant_id %}'{{ i.update|jformat:"%Y/%m/%d" }}'{% endif %},{% endfor %}],
                                 datasets: [{
                                 label: '# نمودار تغییر قیمت',
                                 data: [{% for i in change %}{% if variants.id == i.variant_id %}{{ i.unit_price}}{% endif %},{% endfor %}],
@@ -503,7 +476,8 @@
                                 }
                             }
                             });
-                    </script>
+
+                        </script>
                 {% else %}
                     <script>
                         var ctx = document.getElementById('myChart').getContext('2d');
@@ -557,29 +531,135 @@
     </main>
     <!-- End .main -->
 
+
+    
 {% endblock %}
 
 {% block script_fav %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+    let likescounter = document.getElementById('like_count_new')		
+    like_button_product = document.getElementById('like-product')
+    likes_added = []
+
+    function addnewlike(){
+        axios
+        .get("{% url 'home:add_new_like_product' product.slug product.id %}")
+        .then(like_response_product => {
+            this.like_response_product = like_response_product.data;
+            like_button_product.innerHTML = this.like_response_product;
+            loadnewlike()
+        })
+    }
+    function loadnewlike(){
+        axios
+        .get("{% url 'home:load_product_likes' product.slug product.id %}")
+        .then(like_response_product => {
+            this.like_response_product = like_response_product.data;
+            likes_added = this.like_response_product
+            likescounter.innerHTML = likes_added.length
+        })
+    }
+    window.onload = loadnewlike();
+</script>
+
+
+    <script type="text/javascript">
+        fav_button_product = document.getElementById('fav-product')
+        fav_added = []
+
+        function addnewfav(){
+            axios
+            .get("{% url 'home:add_new_fav_product' product.slug product.id %}")
+            .then(fav_response_product => {
+                this.fav_response_product = fav_response_product.data;
+                fav_button_product.innerHTML = this.fav_response_product;
+                loadnewfav()
+            })
+        }
+        function loadnewfav(){
+            axios
+            .get("{% url 'home:load_product_fav' product.slug product.id %}")
+            .then(fav_response_product => {
+                this.fav_response_product = fav_response_product.data;
+                fav_added = this.fav_response_product
+            })
+        }
+        window.onload = loadnewfav();
+    </script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
     
-        $(document).on('click','.test',function(event){
-            event.preventDefault();
+    <script>
+
+           //   Delete Comment
+           $('#comment-wrapper').on('click', '.btn-del-cm', function(){
+            //console.log("Delete Comment Button is clicked.")
+    
+            let id_cm = $(this).attr('data-cmid')
+    
+            mydata_cm = {
+                comment_id:id_cm
+            }
+            console.log(id_cm)
+    
+            mythis_cm = $(this)
+            
             $.ajax({
-                type : 'GET',
-                url : $(this).attr('href'),
-                data : $(this).serialize(),
-                dataType : 'json',
-                success : function(response){
-                    alert('add to wish list');
-                    console.log('add to wishlist');
-                },
-                error : function(error){
-                    alert('remove to wish list');
-                    console.log('remove to wishlist');
-                },
+                type: "POST",
+                url: "{% url 'home:ajax_delete_comment_product' %}",
+                data: mydata_cm,
+    
+                success: function(data){
+                    //console.log(dara);
+                    if(data.status_cm === 1){
+                        //console.log("comment deleted");
+                        $(mythis_cm).closest('.comment-tray').fadeOut();
+                    }
+    
+                    if(data.status_cm === 0){
+                        //  console.log("Unable to Deleted comment");
+                        alert("حذف نظر با موفقیت انجام نشد لطفا دوباره امتحان کنید")
+                    }
+                }
+            })
+        })
+    </script>
+
+
+    <script>
+        $(document).ready(function(){
+
+            $('.increment-btn').click(function(e){
+                e.preventDefault();
+
+                var inc_value = $(this).closest('.product_data').find('.qty_input').val();
+                var value = parseInt(inc_value,10);
+                var amount = $('.increment-btn').attr('data-add');
+                var amount_new = parseInt(amount);
+                value = isNaN(value) ? 0 : value;
+                if (value < amount_new){
+                    value++;
+                    $(this).closest('.product_data').find('.qty_input').val(value);
+                }
+            });
+            
+            $('.decrement-btn').click(function(e){
+                e.preventDefault();
+
+                var dec_value = $(this).closest('.product_data').find('.qty_input').val();
+                var value = parseInt(dec_value,10);
+           
+                value = isNaN(value) ? 0 : value;
+                if (value > 1){
+                    value--;
+                    $(this).closest('.product_data').find('.qty_input').val(value);
+                }
             });
         });
     </script>
+
 
 {% endblock %}

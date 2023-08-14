@@ -38,6 +38,11 @@
     {% block src_chart %}
     
     {% endblock %}
+    <style>
+      input[type=number]::-webkit-inner-spin-button {
+        opacity: 0;
+    }
+    </style>
     
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
     <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
@@ -234,54 +239,10 @@
       }, 5000); //
     </script>
     <!-- Main JS File -->
-    <script>
-      var rangeOne = document.querySelector('input[name="price_1"]'),
-        rangeTwo = document.querySelector('input[name="price_2"]'),
-        outputOne = document.querySelector(".outputOne"),
-        outputTwo = document.querySelector(".outputTwo"),
-        inclRange = document.querySelector(".incl-range"),
-        updateView = function () {
-          if (this.getAttribute("name") === "price_1") {
-            outputOne.innerHTML = this.value;
-            outputOne.style.left =
-              (this.value / this.getAttribute("max")) * 100 + "%";
-          } else {
-            outputTwo.style.left =
-              (this.value / this.getAttribute("max")) * 100 + "%";
-            outputTwo.innerHTML = this.value;
-          }
-          if (parseInt(rangeOne.value) > parseInt(rangeTwo.value)) {
-            inclRange.style.width =
-              ((rangeOne.value - rangeTwo.value) / this.getAttribute("max")) *
-                100 +
-              "%";
-            inclRange.style.left =
-              (rangeTwo.value / this.getAttribute("max")) * 100 + "%";
-          } else {
-            inclRange.style.width =
-              ((rangeTwo.value - rangeOne.value) / this.getAttribute("max")) *
-                100 +
-              "%";
-            inclRange.style.left =
-              (rangeOne.value / this.getAttribute("max")) * 100 + "%";
-          }
-        };
-
-      document.addEventListener("DOMContentLoaded", function () {
-        updateView.call(rangeOne);
-        updateView.call(rangeTwo);
-        $('input[type="range"]')
-          .on("mouseup", function () {
-            this.blur();
-          })
-          .on("mousedown input", function () {
-            updateView.call(this);
-          });
-      });
-    </script>
 
 
     {% block script %}{% endblock %}
+    {% block script_chart %}{% endblock %}
     {% block script_fav %}{% endblock %}
     {% block pass_strength %}{% endblock %}
   </body>
